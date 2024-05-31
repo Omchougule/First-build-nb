@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Navbar from '../../components/Navbar/Navbar';
-import {auth } from '../../views/Login/config';
+import { auth } from '../../views/Login/config';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
@@ -11,6 +11,11 @@ import Profile from './Profile';
 import Orders from './Orders';
 
 const Dashboard = () => {
+
+
+
+  const userName = localStorage.getItem('userName');
+
 
   const [activeComponent, setActiveComponent] = useState('Dashboard'); // Initially set to Dashboard
 
@@ -21,11 +26,11 @@ const Dashboard = () => {
   let componentToRender;
 
   switch (activeComponent) {
-    case 'Users':
-      componentToRender = <Profile/>;
+    case 'Profile':
+      componentToRender = <Profile />;
       break;
-    case 'Bookings':
-      componentToRender = <Orders/>;
+    case 'Orders':
+      componentToRender = <Orders />;
       break;
     // case 'Contact Requests':
     //   componentToRender = <AContactUs />;
@@ -34,15 +39,31 @@ const Dashboard = () => {
     //   componentToRender = <AReviews />;
     //   break;
     default:
+
+
+
       componentToRender = (
+
         <div className="w-full pt-10 px-4 sm:px-6 md:px-8 lg:ps-72">
           <header>
-            <p className="mb-2 text-sm font-semibold text-blue-600">Welcome {auth.currentUser.displayName} 💙</p>
+            {userName ? (
+              <p className="mb-2 text-3xl font-semibold font-hand text-red-600">
+                Welcome {userName} ❤️
+              </p>
+            ) : (
+              <p className="mb-2 text-3xl font-semibold font-hand text-red-600 ">
+                Please Login to explore the Dashboard ,
+                <span className="text-green-600 underline mx-3">
+                  <Link to="/login">Login? </Link>
+
+                </span>
+              </p>
+            )}
             <h1 className="block text-2xl font-bold text-gray-800 sm:text-3xl">User Dashboard : Control all Insights of Your Orders</h1>
             <p className="mt-2 text-lg text-gray-800">Surf through all the insights </p>
             <div className="mt-5 flex flex-col items-center gap-2 sm:flex-row sm:gap-3">
               <Link className="w-full sm:w-auto py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent text-blue-600 hover:text-blue-800 disabled:opacity-50 disabled:pointer-events-none" to="/">
-                <svg className="flex-shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+                <svg className="flex-shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6" /></svg>
                 Go to HomePage
               </Link>
             </div>
@@ -50,6 +71,9 @@ const Dashboard = () => {
         </div>
       );
   }
+
+
+
 
 
 
@@ -124,20 +148,20 @@ const Dashboard = () => {
                 </button>
               </li>
               <li>
-                {/* Users button */}
+                {/* Profile button */}
                 <button
-                  className={`w-full flex items-center gap-x-3.5 py-2 px-2.5 text-sm rounded-lg focus:outline-none focus:ring-1 focus:blue-gray-600 ${activeComponent === 'Users' ? 'bg-gray-700 text-white' : 'text-black hover:bg-gray-800 hover:text-white'}`}
-                  onClick={() => handleComponentClick('Users')}
+                  className={`w-full flex items-center gap-x-3.5 py-2 px-2.5 text-sm rounded-lg focus:outline-none focus:ring-1 focus:blue-gray-600 ${activeComponent === 'Profile' ? 'bg-gray-700 text-white' : 'text-black hover:bg-gray-800 hover:text-white'}`}
+                  onClick={() => handleComponentClick('Profile')}
                 >
                   <svg className="flex-shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M22 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" /></svg>
                   Profile
                 </button>
               </li>
               <li>
-                {/* Bookings button */}
+                {/* Orders button */}
                 <button
-                  className={`w-full flex items-center gap-x-3.5 py-2 px-2.5 text-sm rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-600 ${activeComponent === 'Bookings' ? 'bg-gray-700 text-white' : 'text-black hover:bg-gray-800 hover:text-white'}`}
-                  onClick={() => handleComponentClick('Bookings')}
+                  className={`w-full flex items-center gap-x-3.5 py-2 px-2.5 text-sm rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-600 ${activeComponent === 'Orders' ? 'bg-gray-700 text-white' : 'text-black hover:bg-gray-800 hover:text-white'}`}
+                  onClick={() => handleComponentClick('Orders')}
                 >
                   <svg className="flex-shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="18" height="18" x="3" y="4" rx="2" ry="2" /><line x1="16" x2="16" y1="2" y2="6" /><line x1="8" x2="8" y1="2" y2="6" /><line x1="3" x2="21" y1="10" y2="10" /><path d="M8 14h.01" /><path d="M12 14h.01" /><path d="M16 14h.01" /><path d="M8 18h.01" /><path d="M12 18h.01" /><path d="M16 18h.01" /></svg>
                   Orders
@@ -145,7 +169,7 @@ const Dashboard = () => {
               </li>
 
 
-                {/* Note : You can add more components here */}
+              {/* Note : You can add more components here */}
 
               {/* <li>
                 Contact Requests button
@@ -170,7 +194,7 @@ const Dashboard = () => {
               </li> */}
 
 
-              
+
             </ul>
           </nav>
         </div>
