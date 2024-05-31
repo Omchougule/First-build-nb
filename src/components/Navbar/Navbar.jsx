@@ -126,7 +126,7 @@ const Navbar = () => {
         // </nav>
 
 
-        <nav className="bg-transperent  text-white  w-full md:static md:text-sm shadow-lg z-50" id='navbar'    >
+        <nav className="bg-transperent    text-white  w-full md:static md:text-sm shadow-lg z-50" id='navbar'    >
             <div className="items-center px-4 max-w-screen-xl mx-auto md:flex md:px-8">
                 <div className="flex items-center justify-between py-3 md:py-5 md:block">
                     <Link to="/" className='font-hand'>

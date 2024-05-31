@@ -49,7 +49,23 @@ export default function Reviews() {
 
   return (
     <>
-      <Navbar />
+
+      <div className='
+       md:bg-[url("https://dt-faryita.myshopify.com/cdn/shop/files/breadcrumb_bc57e145-dc2e-410c-9c11-4c22d1a357eb.png?v=1655187284")] 
+      bg-inherit bg-no-repeat bg-cover  flex flex-col justify-between items-center
+      '>
+
+        <Navbar />
+
+        <h1 className='font-hand text-5xl py-36 mt-2 text-orange-400'>Review</h1>
+
+        {/* <button className='text-white bg-transparent z-50 border py-2 px- w-32 focus:outline-none hover:bg-white hover:text-black active:scale-90 duration-200  rounded-full text-lg mb-10 -translate-y-20'>Shop Now</button> */}
+
+      </div>
+
+
+
+      {/* <Navbar /> */}
       <div className="container mt-10 mx-auto w-3/5">
         <div className=" card m-auto shadow-md border border-t-white rounded p-4 mt-5 animate-fade-up ">
           <h1 className="text-center mb-10 text-info-emphasis text-4xl font-bold">Add Review</h1>
@@ -84,7 +100,7 @@ export default function Reviews() {
         </div>
       </div>
 
-      
+
       <div className="container mt-5 mx-auto">
 
         <section className="text-gray-600 body-font">

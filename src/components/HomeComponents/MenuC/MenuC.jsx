@@ -3,7 +3,7 @@ import "./MenuC.css"
 
 const MenuC = () => {
     return (
-        <div className='bg-[#f76d3c] h-screen   flex justify-center flex-col 
+        <div className='bg-[#f76d3c]    flex justify-center flex-col 
           '>
             {/* <div class="custom-shape-2  ">
                 <svg className='custom-shape-2-svg ' data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
@@ -12,12 +12,40 @@ const MenuC = () => {
             </div> */}
 
             <div>
-                <img className=' hidden md:block md:-translate-y-48 rotate-180' src='https://dt-faryita.myshopify.com/cdn/shop/files/after_image-orange_top.png?v=1657021307' alt="" />
+                <img className=' hidden md:block md:-translate-y-24 rotate-180' src='https://dt-faryita.myshopify.com/cdn/shop/files/after_image-orange_top.png?v=1657021307' alt="" />
             </div>
 
-            <div className=' flex flex-col space-y-10     justify-center items-center'>
-                <h1 className='font-hand text-4xl'>Menu Us</h1>
-                <img className='w-96     object-cover' src="https://dt-faryita.myshopify.com/cdn/shop/files/grid15_8c36583c-9f32-498a-9e44-59507412669e.png?v=1655093327" alt="" />
+
+
+            <div className=' flex flex-col text-white  justify-center items-center mb-20 md:-translate-y-24'>
+                <img className='w-12 opacity-90 invert  ' src='https://dt-faryita.myshopify.com/cdn/shop/files/icon04.png?v=1654245124' />
+                <h1 className='font-hand text-4xl '>Our Delicious Appetizers</h1>
+                <h1 className='font-hand text-3xl my-5 opacity-80'>Menu List</h1>
+                {/* <img className='w-96     object-cover' src="https://dt-faryita.myshopify.com/cdn/shop/files/grid15_8c36583c-9f32-498a-9e44-59507412669e.png?v=1655093327" alt="" /> */}
+
+                <div className='grid px-10 grid-cols-1 md:grid-cols-2 gap-10 '>
+                    <div className='bg-yellow-400 h-72 px-10 w-full flex justify-center items-center rounded-md shadow-md space-x-5'>
+                        <div className="bg-white h-56 w-44 rounded-md"></div>
+                        <div className="bg-black h-56 w-96 rounded-md"></div>
+                    </div>
+                    <div className='bg-yellow-400 h-72 px-10 w-full flex justify-center items-center rounded-md shadow-md space-x-5'>
+                        <div className="bg-white h-56 w-44 rounded-md"></div>
+                        <div className="bg-black h-56 w-96 rounded-md"></div>
+                    </div>
+                    <div className='bg-yellow-400 h-72 px-10 w-full flex justify-center items-center rounded-md shadow-md space-x-5'>
+                        <div className="bg-white h-56 w-44 rounded-md"></div>
+                        <div className="bg-black h-56 w-96 rounded-md"></div>
+                    </div>
+                    <div className='bg-yellow-400 h-72 px-10 w-full flex justify-center items-center rounded-md shadow-md space-x-5'>
+                        <div className="bg-white h-56 w-44 rounded-md"></div>
+                        <div className="bg-black h-56 w-96 rounded-md"></div>
+                    </div>
+                    
+
+
+                </div>
+
+
             </div>
         </div>
     )

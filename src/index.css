@@ -10,3 +10,11 @@
     font-style: normal;
     font-weight: 400;
   }
+
+  body{
+    overflow-x: hidden;
+  }
+
+  ::selection {
+    background: red;
+  }
