@@ -3,7 +3,7 @@ import React from 'react'
 const MenuList = () => {
     return (
         <div className='bg-[#b4c817]     flex justify-center flex-col 
-          '>
+          '  >
 
 
             <div>

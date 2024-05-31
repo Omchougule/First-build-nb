@@ -125,8 +125,8 @@ const Navbar = () => {
         //     </div>
         // </nav>
 
-
-        <nav className="bg-transperent    text-white  w-full md:static md:text-sm shadow-lg z-50" id='navbar'    >
+        // bg-opacity-90  backdrop-filter backdrop-blur-sm -----------use this to blur the navbar
+        <nav className="    text-white  w-full md:static md:text-sm shadow-lg z-50" id='navbar'    >
             <div className="items-center px-4 max-w-screen-xl mx-auto md:flex md:px-8">
                 <div className="flex items-center justify-between py-3 md:py-5 md:block">
                     <Link to="/" className='font-hand'>
@@ -168,7 +168,7 @@ const Navbar = () => {
                         <ul className='space-y-3 items-center gap-x-6 md:flex md:space-y-0 navbar-item  '>
                             {user ? (
                                 <div className="flex items-center space-x-6">
-                                    <Link to="/" className='flex items-center'>
+                                    <Link to="/dashboard" className='flex items-center'>
                                         <img src={user.photoURL} alt="Profile" className="rounded-full w-8 h-8 mr-2" />
                                         <span className="text-green-600">{user.displayName}</span>
                                     </Link>

@@ -11,8 +11,23 @@ const ProductsPage = () => {
     Aos.init({ duration: 1000, delay: 300 });
   })
 
+  useEffect(() => {
+
+    const scroll = new LocomotiveScroll({
+      el: document.querySelector('[data-scroll-container]'),
+      smooth: true,
+      lerp: 0.05,
+      // lerp : 0.95,
+
+    });
+
+    
+
+
+  }, [])
+
   return (
-    <>
+    <div data-scroll-container className='pb-20' >
 
       <div className='
        md:bg-[url("https://dt-faryita.myshopify.com/cdn/shop/files/breadcrumb_bc57e145-dc2e-410c-9c11-4c22d1a357eb.png?v=1655187284")] 
@@ -31,7 +46,7 @@ const ProductsPage = () => {
       <Products />
 
 
-    </>
+    </div>
   )
 }
 

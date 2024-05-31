@@ -4,8 +4,8 @@ import { Link } from 'react-router-dom';
 export default function ProductCard({ imageUrl, title, description, productId, idx }) {
   return (
     <div className="max-w-sm bg-white border border-gray-200 rounded-lg shadow overflow-hidden"
-    data-aos="fade-up"
-    data-aos-delay={`${500 + idx * 400}`}
+    // data-aos="fade-up"
+    // data-aos-delay={`${500 + idx * 400}`}
     >
       <Link to={`/product/${productId}`}>
         <img

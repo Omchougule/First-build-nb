@@ -1,10 +1,30 @@
 import React from 'react';
 import Navbar from '../../components/Navbar/Navbar';
 import Founder from '../../components/HomeComp/Founder/Founder';
+import Aos from 'aos';
+import 'aos/dist/aos.css'
+import { useEffect } from 'react';
+// import LocomotiveScroll from 'locomotive-scroll';
 
 export default function Contact() {
+
+  useEffect(() => {
+
+    const scroll = new LocomotiveScroll({
+      el: document.querySelector('[data-scroll-container]'),
+      smooth: true,
+      lerp: 0.05,
+      // lerp : 0.95,
+
+    });
+
+    
+
+
+  }, [])
+
   return (
-    <>
+    <div data-scroll-container>
 
       <div className='
        md:bg-[url("https://dt-faryita.myshopify.com/cdn/shop/files/breadcrumb_bc57e145-dc2e-410c-9c11-4c22d1a357eb.png?v=1655187284")] 
@@ -66,6 +86,6 @@ export default function Contact() {
 
       <Founder />
 
-    </>
+    </div>
   );
 }

@@ -28,50 +28,74 @@ export default function Home() {
     Aos.init({ duration: 1000, delay: 300 });
   })
 
+  useEffect(() => {
+
+    const scroll = new LocomotiveScroll({
+      el: document.querySelector('[data-scroll-container]'),
+      smooth: true,
+      lerp: 0.05,
+      // lerp : 0.95,
+
+    });
+
+    document.querySelector("#scroll-to-top").addEventListener("click", () => {
+
+      scroll.scrollTo(0)
+    })
+
+
+  }, [])
+
   return (
-    <div >
+    <div className='bg-[#ff679a]' data-scroll-container >
       <div className='
        md:bg-[url("https://dt-faryita.myshopify.com/cdn/shop/files/slider01_c82beff2-7ccb-48cb-8194-98e1e197b1e9.jpg?v=1658472890")] bg-[url("https://dt-faryita.myshopify.com/cdn/shop/files/slider01_c82beff2-7ccb-48cb-8194-98e1e197b1e9.jpg?v=1658472890")]
-      bg-cover bg-center bg-no-repeat h-screen flex flex-col justify-between items-center
+      bg-cover bg-center bg-no-repeat h-screen flex flex-col justify-between items-center mb-20  
       '>
 
         <Navbar />
 
-        <button className='text-white bg-transparent z-50 border py-2 px- w-32 focus:outline-none hover:bg-white hover:text-black active:scale-90 duration-200  rounded-full text-lg mb-10 -translate-y-20'>Shop Now</button>
+        <button className='text-white bg-transparent z-50 border py-2 px- w-32 focus:outline-none hover:bg-white hover:text-black active:scale-90 duration-200  rounded-full text-lg mb-10 -translate-y-20 '>Shop Now</button>
+
+      </div>
+
+      <div className=' bg-slate-700  ' data-scroll data-scroll-speed="-1">
+        <AboutUs />
+
+      </div>
+
+      <div className=' bg-slate-700  '  >
+        <MenuC />
+
+      </div>
+
+      <div className=' bg-slate-700  ' data-scroll data-scroll-speed="-1" >
+        <MenuList />
 
       </div>
 
       <div className=' bg-slate-700  '>
-        <AboutUs/>
+        <SpecialItems />
 
       </div>
 
       <div className=' bg-slate-700  '>
-        <MenuC/>
+        <OurBlogs />
 
       </div>
 
       <div className=' bg-slate-700  '>
-        <MenuList/>
+        <TestimonialsComp />
 
       </div>
 
-      <div className=' bg-slate-700  '>
-        <SpecialItems/>
-
+      <div className='fixed bottom-5 right-5'>
+        <button className='' id="scroll-to-top">
+          <img src='https://cdn-icons-png.flaticon.com/128/833/833102.png' className='w-10 h-10' alt='Go Up' />
+        </button>
       </div>
 
-      <div className=' bg-slate-700  '>
-        <OurBlogs/>
-
-      </div>
-
-      <div className=' bg-slate-700  '>
-        <TestimonialsComp/>
-
-      </div>
-
-      <Footer/>
+      <Footer />
 
 
 

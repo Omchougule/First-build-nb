@@ -3,7 +3,7 @@ import "./MenuC.css"
 
 const MenuC = () => {
     return (
-        <div className='bg-[#f76d3c]    flex justify-center flex-col 
+        <div className='bg-[#f76d3c] pb-32    flex justify-center flex-col 
           '>
             {/* <div class="custom-shape-2  ">
                 <svg className='custom-shape-2-svg ' data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
@@ -12,7 +12,7 @@ const MenuC = () => {
             </div> */}
 
             <div>
-                <img className=' hidden md:block md:-translate-y-24 rotate-180' src='https://dt-faryita.myshopify.com/cdn/shop/files/after_image-orange_top.png?v=1657021307' alt="" />
+                <img className=' hidden md:block md:-translate-y-16 rotate-180' src='https://dt-faryita.myshopify.com/cdn/shop/files/after_image-orange_top.png?v=1657021307' alt="" />
             </div>
 
 

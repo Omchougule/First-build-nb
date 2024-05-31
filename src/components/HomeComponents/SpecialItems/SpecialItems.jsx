@@ -1,8 +1,8 @@
 import React from 'react'
 
 const SpecialItems = () => {
-  return (
-    <div className='bg-[#ff679a]    flex justify-center flex-col 
+    return (
+        <div className='bg-[#ff679a]    flex justify-center flex-col 
           '>
             {/* <div class="custom-shape-2  ">
                 <svg className='custom-shape-2-svg ' data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
@@ -11,37 +11,43 @@ const SpecialItems = () => {
             </div> */}
 
             <div>
-                <img className=' hidden md:block md:-translate-y-24 ' src='https://dt-faryita.myshopify.com/cdn/shop/t/6/assets/background2.svg?v=90659865673969550361712826037' alt="" />
+                <img className=' hidden md:block md:-translate-y-14 ' src='https://dt-faryita.myshopify.com/cdn/shop/t/6/assets/background2.svg?v=90659865673969550361712826037' alt="" />
             </div>
 
 
-            <div className=' flex flex-col text-white pt-10 md:pt-0  justify-center items-center mb-20 md:-translate-y-24'>
+            <div className=' flex flex-col text-white pt-28 md:pt-0  justify-center items-center mb-20 md:-translate-y-24'>
                 <img className='w-12 opacity-90 invert  ' src='https://dt-faryita.myshopify.com/cdn/shop/files/icon04.png?v=1654245124' />
                 <h1 className='font-hand text-4xl '>Our Delicious Smothies</h1>
                 <h1 className='font-hand text-3xl my-5 opacity-80'>Menu List</h1>
                 {/* <img className='w-96     object-cover' src="https://dt-faryita.myshopify.com/cdn/shop/files/grid15_8c36583c-9f32-498a-9e44-59507412669e.png?v=1655093327" alt="" /> */}
 
-                <div className='grid sm:grid-col-1 md:grid-cols-2 lg:grid-cols-4 gap-10 '>
-                    <div className='bg-yellow-400 h-80 w-56 flex justify-center items-center rounded-md shadow-md space-x-5'>
+                <div className='grid sm:grid-col-1 md:grid-cols-2 lg:grid-cols-4 gap-20 '>
+
+                    <div className='bg-yellow-400 h-80 w-56 flex justify-center items-center rounded-md shadow-md space-x-5' data-scroll data-scroll-speed="-1" data-scroll-direction="horizontal" >
                         <div className="bg-white hover:bg-[#5a2f96] duration-150 ease-in-out shadow-lg h-64 w-32 rounded-md"></div>
                         {/* <div className="bg-black h-16 w-44 rounded-md"></div> */}
                     </div>
-                    <div className='bg-yellow-400 h-80 w-56 flex justify-center items-center rounded-md shadow-md space-x-5'>
+
+                    <div className='bg-yellow-400 h-80 w-56  flex justify-center items-center rounded-md shadow-md space-x-5' data-scroll data-scroll-speed="-1" data-scroll-direction="horizontal">
                         <div className="bg-white hover:bg-[#5a2f96] duration-150 ease-in-out shadow-lg h-64 w-32 rounded-md"></div>
                         {/* <div className="bg-black h-16 w-44 rounded-md"></div> */}
                     </div>
-                    <div className='bg-yellow-400 h-80 w-56 flex justify-center items-center rounded-md shadow-md space-x-5'>
+
+
+
+                    <div className='bg-yellow-400 h-80 w-56 flex justify-center items-center rounded-md shadow-md space-x-5'data-scroll data-scroll-speed="1" data-scroll-direction="horizontal">
                         <div className="bg-white hover:bg-[#5a2f96] duration-150 ease-in-out shadow-lg h-64 w-32 rounded-md"></div>
                         {/* <div className="bg-black h-16 w-44 rounded-md"></div> */}
                     </div>
-                    <div className='bg-yellow-400 h-80 w-56 flex justify-center items-center rounded-md shadow-md space-x-5'>
+
+                    <div className='bg-yellow-400 h-80 w-56 flex justify-center items-center rounded-md shadow-md space-x-5'data-scroll data-scroll-speed="1" data-scroll-direction="horizontal">
                         <div className="bg-white hover:bg-[#5a2f96] duration-150 ease-in-out shadow-lg h-64 w-32 rounded-md"></div>
                         {/* <div className="bg-black h-16 w-44 rounded-md"></div> */}
                     </div>
-                    
-                    
-                    
-                    
+
+
+
+
 
 
                 </div>
@@ -49,7 +55,7 @@ const SpecialItems = () => {
 
             </div>
         </div>
-  )
+    )
 }
 
 export default SpecialItems
