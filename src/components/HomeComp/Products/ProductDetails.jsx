@@ -3,6 +3,7 @@ import { Link, useParams } from 'react-router-dom';
 import products from './productsConfig';
 import Navbar from '../../Navbar/Navbar';
 import Footer from '../../Footer/Footer';
+import toast from 'react-hot-toast';
 
 export default function ProductDetail() {
   const { id } = useParams();
@@ -13,105 +14,92 @@ export default function ProductDetail() {
   }
 
   useEffect(() => {
-
     const scroll = new LocomotiveScroll({
       el: document.querySelector('[data-scroll-container]'),
       smooth: true,
       lerp: 0.05,
-      // lerp : 0.95,
-
     });
+  }, []);
 
-  }, [])
+  const handleAddToCart = () => {
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const isProductInCart = cart.some(item => item.imageUrl === product.imageUrl);
 
+    if (isProductInCart) {
+      // If the product is already in the cart, display a toast message
+      toast.error("Product is already in Cart!");
+    } else {
+      const productToAdd = { ...product, quantity: 1 }; // Initialize quantity to 1
+      cart.push(productToAdd);
+      localStorage.setItem('cart', JSON.stringify(cart));
+      toast.success("Product added to Cart!");
+    }
+  };
+
+  const handleAddToFavorites = () => {
+    let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+    const isProductInFavorites = favorites.some(item => item.imageUrl === product.imageUrl);
+
+    if (isProductInFavorites) {
+      // If the product is already in the favorites, display a toast message
+      toast.error("Product is already in Favorites!");
+    } else {
+      favorites.push(product);
+      localStorage.setItem('favorites', JSON.stringify(favorites));
+      toast.success("Product added to Favorites!");
+    }
+  };
   return (
-    <div div data-scroll-container className='bg-[#b5c817]'>
-
-        <div className=''>
-      <div className='
-       bg-[url("https://dt-faryita.myshopify.com/cdn/shop/files/breadcrumb_bc57e145-dc2e-410c-9c11-4c22d1a357eb.png?v=1655187284")] 
-      bg-inherit bg-no-repeat bg-cover  flex flex-col justify-between items-center
-      '>
-
-        <Navbar />
-
-        <h1 className='font-hand text-5xl py-36 mt-2 text-orange-400'>Product Details</h1>
-
-        {/* <button className='text-white bg-transparent z-50 border py-2 px- w-32 focus:outline-none hover:bg-white hover:text-black active:scale-90 duration-200  rounded-full text-lg mb-10 -translate-y-20'>Shop Now</button> */}
-
-
-
-      </div>
-      </div>
-
-      {/* <div>
-        <img className=' hidden md:block  ' src='https://dt-faryita.myshopify.com/cdn/shop/files/bgimg24_98fe6de9-83dd-40b2-95ff-537503fbebf9.png?v=1657021064' alt="" />
-      </div> */}
-      
-
-
-
-
-      {/* <Navbar/> */}
-
-      {/* <section className="text-gray-600 body-font">
-        <div className="container mx-auto flex px-5 py-16 items-center justify-center flex-col">
-          <img className="h-96 mb-10 object-cover object-center rounded animate-fade-down" alt="hero" src={product.imageUrl} />
-          <div className="text-center lg:w-2/3 animate-fade-up w-full">
-            <h1 className="title-font sm:text-4xl text-3xl mb-4 font-medium  text-gray-900">{product.title}</h1>
-            <p className="mb-8 leading-relaxed">Meggings kinfolk echo park stumptown DIY, kale chips beard jianbing tousled. Chambray dreamcatcher trust fund, kitsch vice godard disrupt ramps hexagon mustache umami snackwave tilde chillwave ugh. Pour-over meditation PBR&B pickled ennui celiac mlkshk freegan photo booth af fingerstache pitchfork.</p>
-            <div className="flex justify-center">
-              <Link to={`/reciept/${id}`}> 
-                <button className="inline-flex text-white bg-green-500 border-0 py-2 px-6 focus:outline-none hover:bg-green-600 rounded text-lg">Buy Now</button>
-              </Link>
-              <button className="ml-4 inline-flex text-gray-700 bg-gray-100 border-0 py-2 px-6 focus:outline-none hover:bg-gray-200 rounded text-lg">Add To Wishlist</button>
-            </div>
-          </div>
+    <div data-scroll-container className='bg-[#b5c817]'>
+      <div className=''>
+        <div className='
+          bg-[url("https://dt-faryita.myshopify.com/cdn/shop/files/breadcrumb_bc57e145-dc2e-410c-9c11-4c22d1a357eb.png?v=1655187284")] 
+          bg-inherit bg-no-repeat bg-cover  flex flex-col justify-between items-center
+        '>
+          <Navbar />
+          <h1 className='font-hand text-5xl py-36 mt-2 text-orange-400'>Product Details</h1>
         </div>
-      </section> */}
+      </div>
 
-
-
-      <section className=" bg-[#b5c817] body-font    overflow-hidden "  >
-
+      <section className="bg-[#b5c817] body-font overflow-hidden">
         <div className="container px-5 py-24 mx-auto">
           <div className="lg:w-4/5 mx-auto flex flex-wrap justify-center">
-            <img alt="ecommerce" className="  h-96 object-cover object-center rounded-lg "  src={product.imageUrl} />
+            <img alt="ecommerce" className="h-96 object-cover object-center rounded-lg" src={product.imageUrl} />
             <div className="lg:w-1/2 w-full lg:pl-10 lg:py-6 mt-6 lg:mt-0">
               <h2 className="text-sm title-font text-gray-500 tracking-widest">BRAND NAME</h2>
               <h1 className="text-white text-5xl title-font font-medium mb-1 font-hand">{product.title}</h1>
               <div className="flex mb-4">
                 <span className="flex items-center text-white">
-                  <svg fill="currentColor" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" className="w-4 h-4 text-white" viewBox="0 0 24 24">
+                  <svg fill="currentColor" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" className="w-4 h-4 text-white" viewBox="0 0 24 24">
                     <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
                   </svg>
-                  <svg fill="currentColor" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" className="w-4 h-4 text-white" viewBox="0 0 24 24">
+                  <svg fill="currentColor" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" className="w-4 h-4 text-white" viewBox="0 0 24 24">
                     <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
                   </svg>
-                  <svg fill="currentColor" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" className="w-4 h-4 text-white" viewBox="0 0 24 24">
+                  <svg fill="currentColor" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" className="w-4 h-4 text-white" viewBox="0 0 24 24">
                     <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
                   </svg>
-                  <svg fill="currentColor" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" className="w-4 h-4 text-white" viewBox="0 0 24 24">
+                  <svg fill="currentColor" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" className="w-4 h-4 text-white" viewBox="0 0 24 24">
                     <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
                   </svg>
-                  <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" className="w-4 h-4 text-white" viewBox="0 0 24 24">
+                  <svg fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" className="w-4 h-4 text-white" viewBox="0 0 24 24">
                     <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
                   </svg>
                   <span className="text-gray-600 ml-3">4 Reviews</span>
                 </span>
                 <span className="flex ml-3 pl-3 py-2 border-l-2 border-gray-200 space-x-2s">
                   <a className="text-gray-500">
-                    <svg fill="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" className="w-5 h-5" viewBox="0 0 24 24">
+                    <svg fill="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" className="w-5 h-5" viewBox="0 0 24 24">
                       <path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"></path>
                     </svg>
                   </a>
                   <a className="text-gray-500">
-                    <svg fill="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" className="w-5 h-5" viewBox="0 0 24 24">
+                    <svg fill="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" className="w-5 h-5" viewBox="0 0 24 24">
                       <path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z"></path>
                     </svg>
                   </a>
                   <a className="text-gray-500">
-                    <svg fill="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" className="w-5 h-5" viewBox="0 0 24 24">
+                    <svg fill="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" className="w-5 h-5" viewBox="0 0 24 24">
                       <path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"></path>
                     </svg>
                   </a>
@@ -135,7 +123,7 @@ export default function ProductDetail() {
                       <option>XL</option>
                     </select>
                     <span className="absolute right-0 top-0 h-full w-10 text-center text-gray-600 pointer-events-none flex items-center justify-center">
-                      <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" className="w-4 h-4" viewBox="0 0 24 24">
+                      <svg fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" className="w-4 h-4" viewBox="0 0 24 24">
                         <path d="M6 9l6 6 6-6"></path>
                       </svg>
                     </span>
@@ -143,18 +131,14 @@ export default function ProductDetail() {
                 </div>
               </div>
               <div className="flex justify-between">
-                <span className="title-font font-medium text-2xl text-gray-900"> ₹ { product.price }</span>
-
-                {/* <button className="flex ml-auto text-white bg-green-500 border-0 py-2 px-6 focus:outline-none hover:bg-green-600 rounded">Button</button> */}
-
-
-                {/* <Link to={`/reciept/${id}`}> */}
+                <span className="title-font font-medium text-2xl text-gray-900">₹ {product.price}</span>
                 <Link to="/cart">
-                  <button className="inline-flex text-white bg-green-500 border-0 py-2 px-6 focus:outline-none hover:bg-green-600 rounded ">Add to Cart</button>
+                  <button className="inline-flex text-white bg-green-500 border-0 py-2 px-6 focus:outline-none hover:bg-green-600 rounded" onClick={handleAddToCart}>
+                    Add to Cart
+                  </button>
                 </Link>
-
-                <button className="rounded-full w-10 h-10 bg-gray-200 p-0 border-0 inline-flex items-center justify-center text-gray-500  active:text-green-500 ml-4">
-                  <svg fill="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" className="w-5 h-5" viewBox="0 0 24 24">
+                <button onClick={handleAddToFavorites} className="rounded-full w-10 h-10 bg-gray-200 p-0 border-0 inline-flex items-center justify-center text-gray-500 active:text-green-500 ml-4">
+                  <svg fill="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" className="w-5 h-5" viewBox="0 0 24 24">
                     <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"></path>
                   </svg>
                 </button>
@@ -164,10 +148,7 @@ export default function ProductDetail() {
         </div>
       </section>
 
-      <Footer/>
-
-
-
+      <Footer />
     </div>
   );
 }
