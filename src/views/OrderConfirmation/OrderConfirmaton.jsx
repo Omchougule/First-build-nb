@@ -40,7 +40,7 @@ const OrderConfirmation = () => {
     }, []);
 
 
-    const randomId = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+    const randomId = Math.random().toString(16).substring(2, 8) + Math.random().toString(16).substring(2, 8);
     localStorage.setItem('randomId', randomId);
     const storedRandomId = localStorage.getItem('randomId') || randomId;
 
@@ -50,7 +50,10 @@ const OrderConfirmation = () => {
     const today = new Date();
     const todayDate = today.toISOString().slice(0, 10);
 
-    const address = selectedAddress.gym_name + ', '  + selectedAddress.city + ', ' + selectedAddress.country;
+    localStorage.setItem('todayDate', todayDate);
+
+
+    const address = selectedAddress.gym_name + ', ' + selectedAddress.city + ', ' + selectedAddress.country;
 
     return (
         <>
