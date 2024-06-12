@@ -1,0 +1,16 @@
+@import url('https://fonts.googleapis.com/css2?family=Just+Another+Hand&display=swap');
+
+.font-hand {
+  font-family: "Just Another Hand", cursive;
+  /* font-weight: 500; */
+  font-style: normal;
+  font-weight: 400;
+}
+
+body {
+  overflow-x: hidden;
+}
+
+::selection {
+  background: red;
+}
