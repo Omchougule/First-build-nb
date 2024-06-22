@@ -2,11 +2,17 @@ import { auth, provider } from "./config";
 import { signInWithPopup } from "firebase/auth";
 import React, { useState, useEffect } from "react";
 import { toast } from "react-hot-toast";
-import { Link, Navigate } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useUserContext } from "../../context/Authcontext";
 
 const Login = () => {
+  const {user, setUser} = useUserContext()
   const [loggedIn, setLoggedIn] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const navigate = useNavigate();
 
   const handleLogin = async () => {
     try {
@@ -18,7 +24,7 @@ const Login = () => {
       localStorage.setItem("userPhoto", user.photoURL);
       setLoggedIn(true);
 
-      await axios.post(`http://localhost:5000/user`, {
+      await axios.post(`http://localhost:5000/signin`, {
         email: user.email,
         userName: user.displayName,
         userPhoto: user.photoURL,
@@ -30,6 +36,58 @@ const Login = () => {
       toast.error("Login Failed");
     }
   };
+
+  const login = async () => {
+    try {
+      // axios.post('http://localhost:5000/signin',{email, password})
+      // .then((res)=>{
+      //   if(res.data.message == "User already exists!")
+      //     alert("User already exists!");
+      //   else
+      //   {
+      //     navigate('/');
+      //   }
+      // })
+      // .catch((err) => {
+      //   console.log(err);
+      // })
+      let pass = encodeURIComponent(password);
+      let eml = encodeURIComponent(email);
+      axios.get(`http://localhost:5000/login?email=${eml}&password=${pass}`)
+      .then((res)=>{
+        // console.log(res.data);
+        if(res.data.message == "User not found")
+        {
+          alert("User not found");
+        }
+        else if(res.data.message == "Wrong password")
+        {
+          alert("Incorrect Password");
+        }
+        else
+        {
+          // console.log(res.data);
+          const auth = {email: res.data.data.email, sessionId: res.data.data.sessionId};
+          localStorage.setItem("auth", JSON.stringify(auth));
+          setUser({
+            id : res.data.data._id, 
+            email : res.data.data.email, 
+            sessionId: res.data.data.sessionId,
+            userName : res.data.data.userName,
+            phoneNumber : res.data.data.phoneNumber,
+            address : res.data.data.address
+          })
+          navigate('/');
+        }
+      })
+      .catch((err)=>{
+        console.error(err);
+      })
+
+    } catch (error) {
+      console.error("Login Failed: ", error);
+    }
+  }
 
   useEffect(() => {
     if (localStorage.getItem("email")) {
@@ -47,11 +105,11 @@ const Login = () => {
         <div className="text-center">
           <h1 className="font-bold text-4xl text-green-600 mt-6">NUTRIBITES</h1>
           <div className="mt-5 space-y-2">
-            <h3 className="text-gray-800 text-2xl font-bold sm:text-3xl">Sign up</h3>
+            <h3 className="text-gray-800 text-2xl font-bold sm:text-3xl">Login</h3>
             <p>
-              Already have an account?{" "}
-              <Link to="/" className="font-medium text-green-600 hover:text-green-500">
-                Log in
+              Don't have an account?{" "}
+              <Link to="/signup" className="font-medium text-green-600 hover:text-green-500">
+                Sign Up
               </Link>
             </p>
           </div>
@@ -61,6 +119,8 @@ const Login = () => {
             <label className="font-medium">Email</label>
             <input
               type="email"
+              value={email}
+              onChange={(e)=>setEmail(e.target.value)}
               required
               className="w-full mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border focus:border-green-600 shadow-sm rounded-lg"
             />
@@ -69,11 +129,13 @@ const Login = () => {
             <label className="font-medium">Password</label>
             <input
               type="password"
+              value={password}
+              onChange={(e)=>setPassword(e.target.value)}
               required
               className="w-full mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border focus:border-green-600 shadow-sm rounded-lg"
             />
           </div>
-          <button className="w-full px-4 py-2 text-white font-medium bg-green-600 hover:bg-green-500 active:bg-green-600 rounded-lg duration-150">
+          <button onClick={login} className="w-full px-4 py-2 text-white font-medium bg-green-600 hover:bg-green-500 active:bg-green-600 rounded-lg duration-150">
             Create account
           </button>
         </form>

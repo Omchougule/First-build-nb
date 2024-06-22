@@ -2,13 +2,25 @@ import React, { useState, useEffect } from 'react';
 import Navbar from '../../components/Navbar/Navbar';
 import Footer from '../../components/Footer/Footer';
 import toast from 'react-hot-toast';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useUserContext } from '../../context/Authcontext';
+import axios from 'axios';
+
 
 const Checkout = () => {
+    const {user, summary, order} = useUserContext()
     const [orderSummary, setOrderSummary] = useState(null);
+    const [addresses, setAddresses] = useState([]);
+
+    const navigate = useNavigate()
+
     useEffect(() => {
-        const storedOrderSummary = JSON.parse(localStorage.getItem('orderSummary')) || null;
-        setOrderSummary(storedOrderSummary);
+        // const storedOrderSummary = JSON.parse(localStorage.getItem('orderSummary')) || null;
+        setOrderSummary(summary);
+        if(order.length == 0 )
+        {
+            navigate('/cart')
+        }
     }, []);
 
     const [formData, setFormData] = useState({
@@ -20,18 +32,26 @@ const Checkout = () => {
         phone: ''
     });
 
-    const [addresses, setAddresses] = useState([]);
-
+    const getAdd = async () =>{
+        const res = await axios.post('http://localhost:5000/getadd', {userId : user?.id})
+        if(res.data.success)
+        {
+            const storedAddresses = JSON.parse(res.data.data?.address)
+            setAddresses(storedAddresses);
+        }
+    }
     useEffect(() => {
-        const storedAddresses = JSON.parse(localStorage.getItem('addresses')) || [];
-        setAddresses(storedAddresses);
+       if(user?.id) 
+       {
+            getAdd()
+       }
 
         // Load selected address from local storage
-        const selectedAddress = JSON.parse(localStorage.getItem('selectedAddress')) || null;
-        if (selectedAddress) {
-            setFormData(selectedAddress);
-        }
-    }, []);
+        // const selectedAddress = JSON.parse(localStorage.getItem('selectedAddress')) || null;
+        // if (selectedAddress) {
+        //     setFormData(selectedAddress);
+        // }
+    }, [user?.id]);
 
     const handleChange = (e) => {
         const { id, value } = e.target;
@@ -41,25 +61,34 @@ const Checkout = () => {
         });
     };
 
-    const handleAddressSelect = (selectedAddress) => {
-        const address = JSON.parse(selectedAddress);
-        setFormData(address);
-        localStorage.setItem('selectedAddress', JSON.stringify(address));
+    const handleAddressSelect = (index) => {
+        // const address = JSON.parse(selectedAddress);
+        if(index == "select")
+            return
+        setFormData(addresses[index]);
+        localStorage.setItem('selectedAddress', JSON.stringify(addresses[index]));
     };
 
-    const handleAddressSubmit = (e) => {
+    const handleAddressSubmit = async (e) => {
         e.preventDefault();
-        const addressString = JSON.stringify(formData);
-
-        if (addresses.includes(addressString)) {
+        // const addressString = JSON.stringify(formData);
+        if (addresses.includes(formData)) {
             toast.error('Address already exists');
         } else {
-            const updatedAddresses = [...addresses, addressString];
-            localStorage.setItem('addresses', JSON.stringify(updatedAddresses));
+            const updatedAddresses = [...addresses, formData];
+            // localStorage.setItem('addresses', JSON.stringify(updatedAddresses));
             toast.success('Address added successfully');
-            setAddresses(updatedAddresses);
+            const res = await axios.post('http://localhost:5000/address', {userId : user.id, addresses : updatedAddresses})
+            if(res.data.success)
+            {
+                getAdd()
+            }
         }
     };
+
+    const updateOrderSummary = () => {
+        
+    }
 
     return (
         <>
@@ -114,10 +143,11 @@ const Checkout = () => {
                                                     className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-green-500 focus:ring-green-500 light:border-gray-600 light:bg-gray-700 light:text-white light:placeholder:text-gray-400 light:focus:border-green-500 light:focus:ring-green-500"
                                                     onChange={(e) => handleAddressSelect(e.target.value)}
                                                 >
-                                                    <option value="" disabled selected>Select an address</option>
+                                                    <option value="select" >Select an address</option>
                                                     {addresses.map((address, index) => (
-                                                        <option key={index} value={address}>{JSON.parse(address).your_name}</option>
+                                                        <option key={index} value={index}>{address.your_name}</option>
                                                     ))}
+                                                    {/* <option value="" >{user?.address}</option> */}
                                                 </select>
                                             </div>
                                         </div>
@@ -202,7 +232,7 @@ const Checkout = () => {
                                                 <div>
                                                     <label htmlFor="phone" className="mb-2 block text-sm font-medium text-gray-900 light:text-white">Phone number</label>
                                                     <input
-                                                        type="tel"
+                                                        type="number"
                                                         id="phone"
                                                         value={formData.phone}
                                                         onChange={handleChange}

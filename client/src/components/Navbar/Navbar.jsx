@@ -5,9 +5,11 @@ import toast from 'react-hot-toast';
 import axios from 'axios';
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
+import { useUserContext } from '../../context/Authcontext';
 
 const Navbar = () => {
-    const [user, setUser] = useState(null);
+    // const [user, setUser] = useState(null);
+    const {user, setUser} = useUserContext()
     const [state, setState] = useState(false);
 
     useGSAP(() => {
@@ -30,26 +32,20 @@ const Navbar = () => {
             });
     }, []);
 
-    useEffect(() => {
-        const unsubscribe = auth.onAuthStateChanged(user => {
-            setUser(user);
-        });
-
-        return () => {
-            unsubscribe();
-        };
-    }, []);
-
+    
     const handleLogout = async () => {
         try {
             if (!user) {
                 throw new Error("User not found");
             }
             const response = await axios.post(`http://localhost:5000/user/logout`, { email: user.email });
+
             toast.success(response.data.message);
             localStorage.clear();
             await auth.signOut();
-            window.location.reload();
+            setUser(null)
+            // window.location.reload();
+            // setIslogedin(false)
         } catch (error) {
             console.error("Error logging out:", error);
         }
@@ -166,11 +162,11 @@ const Navbar = () => {
                 <div className={`flex items-center justify-between py-3 md:py-5 md:block ${state ? 'block' : 'hidden'}`}>
                
                         <ul className='space-y-3 items-center gap-x-6 md:flex md:space-y-0 navbar-item  '>
-                            {user ? (
+                            {user?.id ? (
                                 <div className="flex items-center space-x-6">
                                     <Link to="/dashboard" className='flex items-center'>
-                                        <img src={user.photoURL} alt="Profile" className="rounded-full w-8 h-8 mr-2" />
-                                        <span className="text-green-600">{user.displayName}</span>
+                                        <img src={user?.photoURL || "https://cdn-icons-png.flaticon.com/512/456/456212.png"} alt="Profile" className="rounded-full w-8 h-8 mr-2" />
+                                        {/* <span className="text-green-600">{user.displayName}</span> */}
                                     </Link>
                                     <li>
                                         <Link onClick={handleLogout}  className="block py-2 px-4 font-medium text-center text-white bg-green-600 hover:bg-green-500 active:bg-green-700 active:shadow-none rounded-lg shadow md:inline-block">

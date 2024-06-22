@@ -21,9 +21,10 @@ import MenuList from '../../components/HomeComponents/MenuList/MenuList';
 import SpecialItems from '../../components/HomeComponents/SpecialItems/SpecialItems';
 import { OurBlogs } from '../../components/HomeComponents/OurBlogs/OurBlogs';
 import { TestimonialsComp } from '../../components/HomeComponents/TestimonialsComps/TestimonialsComp';
-
+import { useUserContext } from '../../context/Authcontext';
 export default function Home() {
 
+  const {user, products} = useUserContext();
   useEffect(() => {
     Aos.init({ duration: 1000, delay: 300 });
   })
