@@ -17,7 +17,7 @@ import Checkout from './views/Checkout/Checkout';
 import Cart from './views/Cart/Cart';
 import Payment from './views/Payment/Payment';
 import OrderConfirmaton from './views/OrderConfirmation/OrderConfirmaton';
-import { SignUp } from './views/Login/SignUp';
+// import { SignUp } from './views/Login/SignUp';
 import './App.css'
 import AuthProvider from './context/Authcontext';
 import { SignUp } from './views/Login/SignUp';

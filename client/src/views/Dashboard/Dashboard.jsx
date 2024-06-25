@@ -10,9 +10,10 @@ import { toast } from 'react-hot-toast';
 import Profile from './Profile';
 import Orders from './Orders';
 import { useUserContext } from '../../context/Authcontext';
+import Favourites from './Favourites';
 
 const Dashboard = () => {
-  const {user} = useUserContext()
+  const { user } = useUserContext()
   const userName = user?.userName || null
   // const userName = localStorage.getItem('userName');
   const [activeComponent, setActiveComponent] = useState('Dashboard'); // Initially set to Dashboard
@@ -30,7 +31,10 @@ const Dashboard = () => {
     case 'Orders':
       componentToRender = <Orders />;
       break;
-    // case 'Contact Requests':
+    case 'Favourites':
+      componentToRender = <Favourites />;
+      break;
+    // case 'Favourites':
     //   componentToRender = <AContactUs />;
     //   break;
     // case 'Reviews':
@@ -166,17 +170,28 @@ const Dashboard = () => {
                 </button>
               </li>
 
+              <li>
+                {/* Favourites button */}
+                <button
+                  className={`w-full flex items-center gap-x-3.5 py-2 px-2.5 text-sm rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-600 ${activeComponent === 'Favourites' ? 'bg-gray-700 text-white' : 'text-black hover:bg-gray-800 hover:text-white'}`}
+                  onClick={() => handleComponentClick('Favourites')}
+                >
+                  <svg className="flex-shrink-0 mt-0.5 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="18" cy="15" r="3" /><circle cx="9" cy="7" r="4" /><path d="M10 15H6a4 4 0 0 0-4 4v2" /><path d="m21.7 16.4-.9-.3" /><path d="m15.2 13.9-.9-.3" /><path d="m16.6 18.7.3-.9" /><path d="m19.1 12.2.3-.9" /><path d="m19.6 18.7-.4-1" /><path d="m16.8 12.3-.4-1" /><path d="m14.3 16.6 1-.4" /><path d="m20.7 13.8 1-.4" /></svg>
+                  Favourites
+                </button>
+              </li>
+
 
               {/* Note : You can add more components here */}
 
               {/* <li>
-                Contact Requests button
+                Favourites button
                 <button
-                  className={`w-full flex items-center gap-x-3.5 py-2 px-2.5 text-sm rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-600 ${activeComponent === 'Contact Requests' ? 'bg-gray-700 text-white' : 'text-black hover:bg-gray-800 hover:text-white'}`}
-                  onClick={() => handleComponentClick('Contact Requests')}
+                  className={`w-full flex items-center gap-x-3.5 py-2 px-2.5 text-sm rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-600 ${activeComponent === 'Favourites' ? 'bg-gray-700 text-white' : 'text-black hover:bg-gray-800 hover:text-white'}`}
+                  onClick={() => handleComponentClick('Favourites')}
                 >
                   <svg className="flex-shrink-0 mt-0.5 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="18" cy="15" r="3" /><circle cx="9" cy="7" r="4" /><path d="M10 15H6a4 4 0 0 0-4 4v2" /><path d="m21.7 16.4-.9-.3" /><path d="m15.2 13.9-.9-.3" /><path d="m16.6 18.7.3-.9" /><path d="m19.1 12.2.3-.9" /><path d="m19.6 18.7-.4-1" /><path d="m16.8 12.3-.4-1" /><path d="m14.3 16.6 1-.4" /><path d="m20.7 13.8 1-.4" /></svg>
-                  Contact Requests
+                  Favourites
                 </button>
               </li>
 

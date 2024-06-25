@@ -1,4 +1,5 @@
 import React from 'react'
+import OrangeTop from  '../../../assets/orange_top.webp';
 
 export const TestimonialsComp = () => {
     return (
@@ -13,7 +14,7 @@ export const TestimonialsComp = () => {
             </div> */}
 
                 <div>
-                    <img className=' shade hidden md:block md:-translate-y-28 rotate-180   ' src='https://dt-faryita.myshopify.com/cdn/shop/files/after_image-orange_top.png?v=1657021307' alt="" />
+                    <img className=' shade hidden md:block md:-translate-y-28 rotate-180   ' src={OrangeTop} alt="" />
                 </div>
 
                 <div className=' flex flex-col space-y-10     justify-center items-center'>

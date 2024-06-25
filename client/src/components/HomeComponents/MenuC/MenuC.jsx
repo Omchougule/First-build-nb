@@ -1,5 +1,6 @@
 import React from 'react'
 import "./MenuC.css"
+import OrangeTop from  '../../../assets/orange_top.webp';
 
 const MenuC = () => {
     return (
@@ -12,7 +13,7 @@ const MenuC = () => {
             </div> */}
 
             <div>
-                <img className=' hidden md:block md:-translate-y-28 rotate-180' src='https://dt-faryita.myshopify.com/cdn/shop/files/after_image-orange_top.png?v=1657021307' alt="" />
+                <img className=' hidden md:block md:-translate-y-28 rotate-180' src={OrangeTop} alt="" />
             </div>
 
 

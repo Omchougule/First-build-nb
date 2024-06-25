@@ -1,4 +1,5 @@
 import React from 'react'
+import PinkTop from  '../../../assets/pink_top.svg';
 
 const SpecialItems = () => {
     return (
@@ -11,7 +12,7 @@ const SpecialItems = () => {
             </div> */}
 
             <div>
-                <img className=' hidden md:block md:-translate-y-28 ' src='https://dt-faryita.myshopify.com/cdn/shop/t/6/assets/background2.svg?v=90659865673969550361712826037' alt="" />
+                <img className=' hidden md:block md:-translate-y-28 ' src={PinkTop} alt="" />
             </div>
 
 

@@ -24,7 +24,7 @@ import { TestimonialsComp } from '../../components/HomeComponents/TestimonialsCo
 import { useUserContext } from '../../context/Authcontext';
 export default function Home() {
 
-  const {user, products} = useUserContext();
+  const { user, products } = useUserContext();
   useEffect(() => {
     Aos.init({ duration: 1000, delay: 300 });
   })
@@ -48,13 +48,39 @@ export default function Home() {
   // }, [])
 
   return (
+
     <div className='bg-[#ff679a]' data-scroll-container >
+      {/* md:bg-[url("https://dt-faryita.myshopify.com/cdn/shop/files/slider01_c82beff2-7ccb-48cb-8194-98e1e197b1e9.jpg?v=1658472890")] bg-[url("https://dt-faryita.myshopify.com/cdn/shop/files/slider01_c82beff2-7ccb-48cb-8194-98e1e197b1e9.jpg?v=1658472890")] */}
       <div className='
-       md:bg-[url("https://dt-faryita.myshopify.com/cdn/shop/files/slider01_c82beff2-7ccb-48cb-8194-98e1e197b1e9.jpg?v=1658472890")] bg-[url("https://dt-faryita.myshopify.com/cdn/shop/files/slider01_c82beff2-7ccb-48cb-8194-98e1e197b1e9.jpg?v=1658472890")]
-      bg-cover bg-center bg-no-repeat h-screen flex flex-col justify-between items-center mb-20  
+        md:bg-[#fe669e] 
+       bg-cover bg-center bg-no-repeat h-screen flex flex-col justify-between items-center mb-20  
       '>
 
         <Navbar />
+
+        <div className=' flex space-x-10 justify-center items-center ' >
+          <div>
+
+            <img className='w-36' src="https://faryita.wpengine.com/wp-content/uploads/2024/03/grap-fruit.png" alt="" />
+            <img className='w-36' src="https://faryita.wpengine.com/wp-content/uploads/2024/03/sberry-fruit.png" alt="" />
+          </div>
+
+
+          <div className='text-center flex justify-center flex-col items-center'>
+
+            <img className='w-20' src="https://faryita.wpengine.com/wp-content/uploads/2024/03/Mint-leaves-Img.png" alt="" />
+            <h1 className=' drop-shadow text-white text-[#ffc935]  text-9xl mb-10 font-title italic text-center' >Healthy <br /> <span className='text-[#3596C9] '>Smoothies </span>
+
+              & <br /> <span className='text-white'>Appetizers</span>
+            </h1>
+
+            <img className='w-20' src="https://faryita.wpengine.com/wp-content/uploads/2024/03/Mint-leaves-Img.png" alt="" />
+          </div>
+
+          <div>
+            <img className='w-20' src="https://faryita.wpengine.com/wp-content/uploads/2024/03/cub.png" alt="" />
+          </div>
+        </div>
 
         <button className='text-white bg-transparent z-50 border py-2 px- w-32 focus:outline-none hover:bg-white hover:text-black active:scale-90 duration-200  rounded-full text-lg mb-10 -translate-y-20 '>Shop Now</button>
 

@@ -90,7 +90,7 @@ const Orders = () => {
     return (
         <div className='overflow-y-auto '  >
 
-            <h1>Orders</h1>
+            {/* <h1>Orders</h1> */}
 
             <section className="bg-white py-8 antialiased light:bg-gray-900 md:py-16">
                 <div className="mx-auto max-w-screen-xl px-4 2xl:px-0">

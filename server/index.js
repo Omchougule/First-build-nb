@@ -24,8 +24,8 @@ const userN = encodeURIComponent("AmitKumbhar4_24")
 
 const connectDB = async () => {
     try {
-        // await mongoose.connect("mongodb+srv://OmNandurkar:9881954344@mongodb.mmqhprc.mongodb.net/nutribites");
-        await mongoose.connect(`mongodb+srv://${userN}:${pass}@cluster0.qkvogem.mongodb.net/Nutribites?retryWrites=true&w=majority&appName=Cluster0`);
+        await mongoose.connect("mongodb+srv://OmNandurkar:9881954344@mongodb.mmqhprc.mongodb.net/nutribites");
+        // await mongoose.connect(`mongodb+srv://${userN}:${pass}@cluster0.qkvogem.mongodb.net/Nutribites?retryWrites=true&w=majority&appName=Cluster0`);
         console.log('Database Connected');
     } catch (error) {
         console.log(error.message);

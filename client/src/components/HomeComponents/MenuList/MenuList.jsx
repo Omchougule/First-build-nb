@@ -1,4 +1,5 @@
 import React from 'react'
+import GreenTop from  '../../../assets/green_top.webp';
 
 const MenuList = () => {
     return (
@@ -7,7 +8,7 @@ const MenuList = () => {
 
 
             <div>
-                <img className=' hidden md:block md:-translate-y-28 ' src='https://dt-faryita.myshopify.com/cdn/shop/files/bgimg24_98fe6de9-83dd-40b2-95ff-537503fbebf9.png?v=1657021064' alt="" />
+                <img className=' hidden md:block md:-translate-y-28 ' src={GreenTop} alt="" />
             </div>
 
             <div className=' flex flex-col text-white  justify-center items-center mb-20 md:-translate-y-24'>
