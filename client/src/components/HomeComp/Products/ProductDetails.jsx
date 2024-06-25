@@ -1,5 +1,5 @@
 import React, { useEffect,useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 // import products from './productsConfig';
 import Navbar from '../../Navbar/Navbar';
 import Footer from '../../Footer/Footer';
@@ -17,6 +17,7 @@ export default function ProductDetail() {
   const [favourites, setFavourites] = useState([]);
   const [product, setProduct] = useState(null);
 
+  const navigate = useNavigate()
   
   useEffect(()=>{
     const fetchProducts = async () => {
@@ -33,9 +34,9 @@ export default function ProductDetail() {
       }
     };
 
-    if (user?.id) {
-      fetchProducts();
-    }
+    
+    fetchProducts();
+    
 
       axios.post('http://localhost:5000/getfav', {userId : user?.id})
       .then((res)=>{
@@ -92,9 +93,11 @@ export default function ProductDetail() {
       {
         toast.error("Product already in Cart!");
       }
+      navigate('/cart')
     }
     else
     {
+      navigate('/login')
       toast.error("Please login first!");
     }
 
@@ -103,7 +106,7 @@ export default function ProductDetail() {
   const handleAddToFavorites = () => {
   //   let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
   //   const isProductInFavorites = favorites.some(item => item.imageUrl === product.imageUrl);
-  if(user.id)
+  if(user?.id)
   {
     let updatedFavourites = [];
     if(!isLiked)
@@ -228,11 +231,9 @@ export default function ProductDetail() {
               </div>
               <div className="flex justify-between">
                 <span className="title-font font-medium text-2xl text-gray-900">₹ {product.price}</span>
-                <Link to="/cart">
                   <button className="inline-flex text-white bg-green-500 border-0 py-2 px-6 focus:outline-none hover:bg-green-600 rounded" onClick={handleAddToCart}>
                     Add to Cart
                   </button>
-                </Link>
                 <button onClick={handleAddToFavorites} className="rounded-full w-10 h-10 bg-gray-200 p-0 border-0 inline-flex items-center justify-center text-gray-500 active:text-green-500 ml-4">
                   <svg fill={isLiked?'red':'currentcolor'} strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" className="w-5 h-5" viewBox="0 0 24 24">
                     <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"></path>

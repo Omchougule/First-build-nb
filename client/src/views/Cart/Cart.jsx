@@ -88,11 +88,13 @@ const ProductCartItem = ({ imageUrl, initialQuantity, price, description, onQuan
 };
 
 const Cart = () => {
-    const { user, setOrder, setSummary } = useUserContext()
+    const { user, setOrder, setSummary, summary } = useUserContext()
     const [cart, setCart] = useState([]);
     const [isloading, setIsloading] = useState(true)
     const [originalPrice, setOriginalPrice] = useState(0);
     const [finalTotal, setFinalTotal] = useState(0);
+    const [discountcode, setDiscountcode] = useState('')
+    const [discount, setDiscount] = useState(0)
 
     async function fetch_cart() {
         const res = await axios.get('http://localhost:5000/getcart')
@@ -103,11 +105,11 @@ const Cart = () => {
     }
 
     const updateOrderSummary = (Newcart) => {
-        const totalPrice = Newcart.reduce((acc, item) => acc + item.quantity * item.price, 0);
+        const totalPrice = Newcart.reduce((acc, item) => acc + item.quantity * item.price, 0); 
         const storePickup = 99;
         const tax = 799;
-        const total = totalPrice + storePickup + tax;
-
+        const discountedAmmount = ((discount / 100) * totalPrice).toFixed(2);
+        const total = totalPrice - discountedAmmount + storePickup + tax;
         setOriginalPrice(totalPrice);
         setFinalTotal(total);
 
@@ -115,6 +117,7 @@ const Cart = () => {
             // cartItems, // Include cart items in the order summary
             originalPrice: totalPrice,
             storePickup,
+            discountedAmmount,
             tax,
             finalTotal: total,
         };
@@ -129,10 +132,10 @@ const Cart = () => {
         }
     }, [user]);
 
-    if (isloading) {
-        return (<h1>Loading</h1>)
-    }
-
+    useEffect(() => {
+        updateOrderSummary(cart)
+    },[discount])
+    
     const updateCart = async (index) => {
         const res = await axios.post('http://localhost:5000/removecart', { userId: user?.id, proId: index })
         if (res.data.success) {
@@ -151,10 +154,10 @@ const Cart = () => {
             updateCart(index);
         }
     };
-
+    
 
     // const updateItemQuantity = (itemId, newQuantity) => {
-    //     setCart(prevCart =>
+        //     setCart(prevCart =>
     //       prevCart.map(item =>
     //         item._id === itemId ? { ...item, quantity: newQuantity } : item
     //       )
@@ -183,6 +186,24 @@ const Cart = () => {
         updateOrderSummary(cart)
     }
 
+    const handleCode = async (code) => {
+        const res = await axios.post('http://localhost:5000/getcode', {code : discountcode})
+
+        if(res.data.success)
+        {
+            setDiscount(res.data.data.discountPercentage)
+            toast.success("Code applied successfully!")
+        }
+        else
+        {
+            toast.error('Invalid code!')
+        }
+    }
+    
+
+    if (isloading) {
+        return (<h1>Loading</h1>)
+    }
 
     return (
         <>
@@ -222,17 +243,17 @@ const Cart = () => {
 
                                         <dl className="flex items-center justify-between gap-4">
                                             <dt className="text-base font-normal text-gray-500 light:text-gray-400">Savings</dt>
-                                            <dd className="text-base font-medium text-green-600">-$00.00</dd>
+                                            <dd className="text-base font-medium text-green-600">-${summary?.discountedAmmount}</dd>
                                         </dl>
 
                                         <dl className="flex items-center justify-between gap-4">
                                             <dt className="text-base font-normal text-gray-500 light:text-gray-400">Store Pickup</dt>
-                                            <dd className="text-base font-medium text-gray-900 light:text-white">$99</dd>
+                                            <dd className="text-base font-medium text-gray-900 light:text-white">${summary?.storePickup}</dd>
                                         </dl>
 
                                         <dl className="flex items-center justify-between gap-4">
                                             <dt className="text-base font-normal text-gray-500 light:text-gray-400">Tax</dt>
-                                            <dd className="text-base font-medium text-gray-900 light:text-white">$799</dd>
+                                            <dd className="text-base font-medium text-gray-900 light:text-white">${summary?.tax}</dd>
                                         </dl>
                                     </div>
 
@@ -259,13 +280,13 @@ const Cart = () => {
                                     </Link>
                                 </div>
                                 <div className="space-y-4 rounded-lg border border-gray-200 bg-white p-4 shadow-sm light:border-gray-700 light:bg-gray-800 sm:p-6">
-                                    <form className="space-y-4">
+                                    <div className="space-y-4">
                                         <div>
                                             <label htmlFor="voucher" className="mb-2 block text-sm font-medium text-gray-900 light:text-white"> Do you have a voucher or gift card? </label>
-                                            <input type="text" id="voucher" className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-green-500 focus:ring-green-500 light:border-gray-600 light:bg-gray-700 light:text-white light:placeholder-gray-400 light:focus:border-green-500 light:focus:ring-green-500" placeholder="" required />
+                                            <input maxLength={6} value={discountcode} onChange={(e)=>setDiscountcode(e.target.value.toUpperCase())} type="text" id="voucher" className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-green-500 focus:ring-green-500 light:border-gray-600 light:bg-gray-700 light:text-white light:placeholder-gray-400 light:focus:border-green-500 light:focus:ring-green-500 font-bold" placeholder="" required />
                                         </div>
-                                        <button type="submit" className="flex w-full items-center justify-center rounded-lg bg-green-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-green-800 focus:outline-none focus:ring-4 focus:ring-green-300 light:bg-green-600 light:hover:bg-green-700 light:focus:ring-green-800">Apply Code</button>
-                                    </form>
+                                        <button onClick={(e) => handleCode(discountcode)}className="flex w-full items-center justify-center rounded-lg bg-green-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-green-800 focus:outline-none focus:ring-4 focus:ring-green-300 light:bg-green-600 light:hover:bg-green-700 light:focus:ring-green-800">Apply Code</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>

@@ -32,7 +32,7 @@ const Order = ({ orderID, date, price, status }) => {
                 <dt className="text-base font-medium text-gray-500 light:text-gray-400">Status:</dt>
                 <dd className={`me-2 mt-1.5 inline-flex items-center rounded px-2.5 py-0.5 text-xs font-medium ${status === "Confirmed" || status === "Pre-order" ? "bg-green-100 text-green-800" : (status === "Cancelled" ? "bg-red-100 text-red-800" : "bg-yellow-100 text-yellow-800")}`}>
                     {/* Status Icon */}
-                    {status === "Confirmed" && (
+                    {status === "Processing" && (
                         <svg className="me-1 h-3 w-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                             <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 11.917 9.724 16.5 19 7.5" />
                         </svg>
@@ -42,12 +42,18 @@ const Order = ({ orderID, date, price, status }) => {
                             <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18 18 6M6 6 18 18" />
                         </svg>
                     )}
-                    {status === "Out For Delivery" && (
+                    {status === "In Transit" && (
                         <svg className="me-1 h-3 w-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                             <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 7h6l2 4m-8-4v8m0-8V6a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v9h2m8 0H9m4 0h2m4 0h2v-4m0 0h-5m3.5 5.5a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0Zm-10 0a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0Z" />
                         </svg>
                     )}
-                    {status === "Pre-order" && (
+                    {status === "Shipped" && (
+                        <svg className="me-1 h-3 w-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                            <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M18.5 4h-13m13 16h-13M8 20v-3.333a2 2 0 0 1 .4-1.2L10 12.6a1 1 0 0 0 0-1.2L8.4 8.533a2 2 0 0 1-.4-1.2V4h8v3.333a2 2 0 0 1-.4 1.2L13.957 11.4a1 1 0 0 0 0 1.2l1.643 2.867a2 2 0 0 1 .4 1.2V20H8Z" />
+                        </svg>
+
+                    )}
+                    {status === "Delivered" && (
                         <svg className="me-1 h-3 w-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                             <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M18.5 4h-13m13 16h-13M8 20v-3.333a2 2 0 0 1 .4-1.2L10 12.6a1 1 0 0 0 0-1.2L8.4 8.533a2 2 0 0 1-.4-1.2V4h8v3.333a2 2 0 0 1-.4 1.2L13.957 11.4a1 1 0 0 0 0 1.2l1.643 2.867a2 2 0 0 1 .4 1.2V20H8Z" />
                         </svg>
@@ -137,7 +143,7 @@ const Orders = () => {
                                             orderID={product.orderId}
                                             date={product.date}
                                             price={product.paymentAmmount}
-                                            status="Pre-order"
+                                            status={product.status}
                                         />
                                     </div>
 
@@ -157,21 +163,21 @@ const Orders = () => {
                                     orderID="#FWB127364372"
                                     date="20.12.2023"
                                     price="4,756"
-                                    status="Pre-order"
+                                    status="In Transit"
                                 />
 
                                 <Order
                                     orderID="#FWB125467980"
                                     date="11.12.2023"
                                     price="499"
-                                    status="Out For Delivery"
+                                    status="In Transit"
                                 />
 
                                 <Order
                                     orderID="#FWB139485607"
                                     date="08.12.2023"
                                     price="85"
-                                    status="Confirmed"
+                                    status="Delivered"
                                 />
 
                                 <Order

@@ -10,6 +10,7 @@ import Favourite from './models/favourite.js'
 import Cart from './models/cart.js'
 import Address from './models/addresses.js'
 import Orders from './models/orders.js'
+import DiscountCode from './models/code.js'
 
 dotenv.config();
 
@@ -99,6 +100,7 @@ app.post("/signin", async (req, res) => {
         password,
         phoneNumber,
         userName,
+        createdAt : new Date() ,
         address : "",
         isLoggedIn: true
       });
@@ -230,6 +232,18 @@ app.post('/getuser',async (req,res)=>{
   }
 })
 
+app.get('/getusers', async (req,res) => {
+  try {
+    const users = await User.find()
+    res.json({
+      success : true,
+      data : users
+    })
+  } catch (error) {
+    console.log(error);
+  }
+})
+
 // address
 app.post('/address', async (req, res) => {
   try {
@@ -284,13 +298,25 @@ app.post('/getadd', async (req, res) => {
 
 app.post('/addproduct', async (req, res) => {
   try {
-    await Products.create(req.body);
-    res.send('ok')
+    const res = await Products.create(req.body);
+    if(res)
+    {
+      res.send({
+        success : true,
+        data : res
+      })
+    }
+    else
+    {
+      res.send({
+        success : false,
+        data : null
+      })
+    }
   } catch (error) {
     console.error(error);
   }
 })
-
 
 app.get('/getproducts',async (req, res) => {
   try {
@@ -302,6 +328,49 @@ app.get('/getproducts',async (req, res) => {
     else
     {
       res.json([])
+    }
+  } catch (error) {
+    console.log(error);
+  }
+})
+
+app.post('/getproduct', async(req,res) => {
+  try {
+    const {id} = req.body
+    const product = await Products.findOne({_id : id})
+    if(product)
+    {
+      res.json({
+        success : true,
+        data : product
+      })
+    }
+    else
+    {
+      res.json({
+        success : false,
+        data : null
+      })
+    }
+  } catch (error) {
+    console.log(error);
+  }
+})
+
+app.delete('/deleteproduct/:id', async (req,res) => {
+  try {
+    const id = req.params.id
+    const prod = Products.findOne({_id : id})
+    if(prod)
+    {
+      await Products.deleteOne({_id : id})
+      res.json({success : true})
+    }
+    else
+    {
+      res.json({
+        success : false
+      })
     }
   } catch (error) {
     console.log(error);
@@ -483,3 +552,106 @@ app.post('/getorder', async (req,res) => {
     console.log(error);
   }
 })
+
+app.get('/orders', async (req,res) => {
+  try {
+    const orders = await Orders.find();
+    if(orders)
+    {
+      res.json({
+        success : true,
+        data : orders
+      })
+    }
+    else
+    {
+      res.json({
+        success : false,
+        data : []
+      })
+    }
+  } catch (error) {
+    console.log(error);
+  }
+})
+
+app.put('/updatestatus/:orderId', async (req,res)=>{
+  try {
+    const orderId = req.params.orderId
+    const {status} = req.body
+    const order = await Orders.findOneAndUpdate({orderId}, {status},{new : true})
+    if(order)
+    {
+      res.json({
+        success :true,
+        data : order
+      })
+    }
+    else
+    {
+      res.json({
+        success : false
+      })
+    }
+  } catch (error) {
+    console.log(error);
+  }
+})
+
+// -----------------------------------------------------codes--------------------------------------------------------
+
+app.post('/addcode', async (req, res) => {
+  try {
+    
+    const code = await DiscountCode.create(req.body);
+    if(code)
+    {
+      res.json({
+        success : true,
+        data : code
+      })
+    }
+    else
+    {
+      res.json({success : false, data : null})
+    }
+  } catch (error) {
+    res.json({success :false, data : null, message: error.message})
+    console.error(error);
+  }
+})
+
+app.post('/getcode', async (req,res) => {
+  try {
+    const {code} = req.body
+    const val = await DiscountCode.findOne({code});
+    if(val)
+    {
+      res.json({
+        success : true,
+        data : val
+      })
+    }
+    else
+    {
+      res.json({
+        success : false,
+        data : null
+      })
+    }
+  } catch (error) {
+    console.log(error);
+  }
+})
+
+const deactivateExpiredDiscountCodes = async () => {
+  const now = new Date();
+  await DiscountCode.updateMany(
+    { expirationDate: { $lt: now }, isActive: true },
+    { isActive: false }
+  );
+  console.log('Expired discount codes deactivated');
+};
+
+// Example usage: run this function periodically (e.g., with setInterval or a cron job)
+setInterval(deactivateExpiredDiscountCodes, 3600000); // Run every hour

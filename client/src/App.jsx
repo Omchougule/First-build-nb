@@ -123,7 +123,7 @@ function App() {
         <Route path='/cart' element={<Cart/>}/>
         <Route path='/cart/checkout' element={<Checkout/>}/>
         <Route path='cart/checkout/payment' element={<Payment/>}/>
-        <Route path='cart/checkout/payment/confirmation' element={<OrderConfirmaton/>}/>
+        <Route path='cart/checkout/payment/confirmation/:id' element={<OrderConfirmaton/>}/>
         <Route path='/orders/trackorder/:id' element={<TrackOrder/>}/>
         <Route path='/dash' element={<Dashboard/>}/>
         <Route path='/signup' element={<SignUp/>}/>

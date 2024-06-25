@@ -164,6 +164,10 @@ const Navbar = () => {
                         <ul className='space-y-3 items-center gap-x-6 md:flex md:space-y-0 navbar-item  '>
                             {user?.id ? (
                                 <div className="flex items-center space-x-6">
+                                    <Link to='/cart'>
+                                        <img className='h-8 w-8 cursor-pointer' src="https://uxwing.com/wp-content/themes/uxwing/download/e-commerce-currency-shopping/shopping-cart-icon.png" alt="" />
+                                    </Link>
+
                                     <Link to="/dashboard" className='flex items-center'>
                                         <img src={user?.photoURL || "https://cdn-icons-png.flaticon.com/512/456/456212.png"} alt="Profile" className="rounded-full w-8 h-8 mr-2" />
                                         {/* <span className="text-green-600">{user.displayName}</span> */}

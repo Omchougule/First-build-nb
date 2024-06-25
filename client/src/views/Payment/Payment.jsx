@@ -48,8 +48,8 @@ const Payment = () => {
                         productName : product.title,
                         productPrice : product.price,
                         quantity : item.quantity,
+                        image : product.imageUrl
                         // total : product.price * item.quantity,
-                        // image : product.image
                     })
                 }
             })
@@ -65,12 +65,13 @@ const Payment = () => {
             date : new Date(),
             paymentAmmount : summary.finalTotal,
             order : arr,
-            summary : orderSummary
+            summary : orderSummary,
+            status : 'Processing'
         })
         if(res.data.success)
         {
             toast.success("Success !")    
-            navigate('/cart/checkout/payment/confirmation')
+            navigate(`/cart/checkout/payment/confirmation/${randomId}`)
         }
         else
         {
@@ -232,7 +233,7 @@ const Payment = () => {
 
                                             <dl className="flex items-center justify-between gap-4">
                                                 <dt className="text-base font-normal text-gray-500 light:text-gray-400">Savings</dt>
-                                                <dd className="text-base font-medium text-green-500">0</dd>
+                                                <dd className="text-base font-medium text-green-500">{orderSummary.discountedAmmount}</dd>
                                             </dl>
 
                                             <dl className="flex items-center justify-between gap-4">

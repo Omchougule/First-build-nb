@@ -6,23 +6,34 @@ import { useParams } from 'react-router-dom';
 import axios from 'axios';
 
 
-const OrderTracking = ({ trackingData }) => {
+const OrderTracking = ({ status }) => {
+
+    const statusSteps = [
+        { title: 'Processing', description: 'Your order is being processed.', iconPath: 'M5 12l5 5L20 7', status: 'Processing' },
+        { title: 'Shipped', description: 'Your order has been shipped.', iconPath: 'M5 12l5 5L20 7', status: 'Shipped' },
+        { title: 'In Transit', description: 'Your order is on its way.', iconPath: 'M5 12l5 5L20 7', status: 'In Transit' },
+        { title: 'Delivered', description: 'Your order has been delivered.', iconPath: 'M5 12l5 5L20 7', status: 'Delivered' }
+      ];
+    const currentStatusIndex = statusSteps.findIndex(step => step.status === status);
     return (
-      <ol className="relative ms-3 border-s border-gray-200 light:border-gray-700">
-        {trackingData.map((item, index) => (
-          <li key={index} className={`mb-10 ms-6 ${item.status === 'current' ? 'text-green-700 light:text-green-500' : ''}`}>
-            <span className={`absolute -start-3 flex h-6 w-6 items-center justify-center rounded-full ${item.status === 'current' ? 'bg-green-100 light:bg-green-900' : 'bg-gray-100 light:bg-gray-700'} ring-8 ring-white light:ring-gray-800`}>
-              <svg className={`h-4 w-4 ${item.status === 'current' ? 'text-green-500' : 'text-gray-500 light:text-gray-400'}`} aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d={item.iconPath} />
-              </svg>
-            </span>
-            <h4 className={`mb-0.5 text-base font-semibold ${item.status === 'current' ? 'text-gray-900 light:text-white' : ''}`}>{item.title}</h4>
-            <p className="text-sm font-normal text-gray-500 light:text-gray-400">{item.description}</p>
-          </li>
-        ))}
-      </ol>
+        <div>
+            <h2>Order Tracking</h2>
+            <ol className="relative ms-3 border-s border-gray-200 light:border-gray-700">
+                {statusSteps.map((step, index) => (
+                    <li key={index} className={`mb-10 ms-6 ${index <= currentStatusIndex ? 'text-green-700 light:text-green-500' : ''}`}>
+                        <span className={`absolute -start-3 flex h-6 w-6 items-center justify-center rounded-full ${index <= currentStatusIndex ? 'bg-green-100 light:bg-green-900' : 'bg-gray-100 light:bg-gray-700'} ring-8 ring-white light:ring-gray-800`}>
+                            <svg className={`h-4 w-4 ${index <= currentStatusIndex ? 'text-green-500' : 'text-gray-500 light:text-gray-400'}`} aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d={step.iconPath} />
+                            </svg>
+                        </span>
+                        <h4 className={`mb-0.5 text-base font-semibold ${index <= currentStatusIndex ? 'text-gray-900 light:text-white' : ''}`}>{step.title}</h4>
+                        <p className="text-sm font-normal text-gray-500 light:text-gray-400">{step.description}</p>
+                    </li>
+                ))}
+            </ol>
+        </div>
     );
-  };
+};
 
 
 
@@ -45,47 +56,7 @@ const TrackOrder = () => {
         // const storedOrderSummary = JSON.parse(localStorage.getItem('orderSummary')) || null;
         // setOrderSummary(storedOrderSummary);
     }, []);
-
-    const trackingData = [
-        {
-          title: 'Order placed - Receipt #647563',
-          description: '19 Nov 2023, 10:45',
-          status: 'completed',
-          iconPath: 'M5 11.917 9.724 16.5 19 7.5'
-        },
-        {
-          title: 'Payment accepted - VISA Credit Card',
-          description: '19 Nov 2023, 10:47',
-          status: 'completed',
-          iconPath: 'M5 11.917 9.724 16.5 19 7.5'
-        },
-        {
-          title: 'Products delivered to the courier - DHL Express',
-          description: '22 Nov 2023, 12:27',
-          status: 'completed',
-          iconPath: 'M5 11.917 9.724 16.5 19 7.5'
-        },
-        {
-          title: 'Products in the courier\'s warehouse',
-          description: '23 Nov 2023, 15:15',
-          status: 'completed',
-          iconPath: 'M5 11.917 9.724 16.5 19 7.5'
-        },
-        {
-          title: 'Today',
-          description: 'Products being delivered',
-          status: 'current',
-          iconPath: 'M13 7h6l2 4m-8-4v8m0-8V6a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v9h2m8 0H9m4 0h2m4 0h2v-4m0 0h-5m3.5 5.5a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0Zm-10 0a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0Z'
-        },
-        {
-          title: 'Estimated delivery in 24 Nov 2023',
-          description: 'Products delivered',
-          status: 'upcoming',
-          iconPath: 'm4 12 8-8 8 8M6 10.5V19a1 1 0 0 0 1 1h3v-3a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3h3a1 1 0 0 0 1-1v-8.5'
-        }
-      ];
-
-
+    console.log(orderSummary);
     const clearOrderSummaryAndNavigate = () => {
         const isConfirmed = window.confirm('Are you sure you want to clear the order summary?');
         if (isConfirmed) {
@@ -148,7 +119,7 @@ const TrackOrder = () => {
                                         <div className="space-y-4 p-6 ">
                                             <div className="flex items-center gap-6">
                                                 <a href="#" className="h-14 w-14 shrink-0">
-                                                    <img className="h-full w-full light:hidden" src={product.imageUrl} alt="imac image" />
+                                                    <img className="h-full w-full light:hidden" src={product.image} alt="imac image" />
                                                 </a>
 
                                                 <a href="#" className="min-w-0 flex-1 font-medium text-gray-900 hover:underline light:text-white"> {product.productName} </a>
@@ -180,7 +151,7 @@ const TrackOrder = () => {
 
                                         <dl className="flex items-center justify-between gap-4">
                                             <dt className="font-normal text-gray-500 light:text-gray-400">Savings</dt>
-                                            <dd className="text-base font-medium text-green-500">-$00.00</dd>
+                                            <dd className="text-base font-medium text-green-500">-${orderSummary.summary.discountedAmmount}</dd>
                                         </dl>
 
                                         <dl className="flex items-center justify-between gap-4">
@@ -280,7 +251,7 @@ const TrackOrder = () => {
                                     </div>
                                 </div>
                             </div> */}
-                            <OrderTracking trackingData={trackingData} />
+                            <OrderTracking status={orderSummary.status} />
 
                         </div>
                     </div>

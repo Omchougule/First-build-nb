@@ -45,6 +45,7 @@ const Checkout = () => {
        {
             getAdd()
        }
+       localStorage.removeItem('selectedAddress')
 
         // Load selected address from local storage
         // const selectedAddress = JSON.parse(localStorage.getItem('selectedAddress')) || null;

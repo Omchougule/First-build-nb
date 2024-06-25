@@ -6,6 +6,7 @@ const OrderItemSchema = new Schema(
     productName: { type: String, required: true },
     productPrice: { type: Number, required: true },
     quantity: { type: Number, required: true },
+    image : { type: String, required: true}
   },
   { _id: false }
 );
@@ -20,7 +21,8 @@ const orderschema = new Schema({
   date: { type: Date, default: Date.now },
   paymentAmmount: { type: Number, required: true },
   order: [OrderItemSchema],
-  summary : {type : Object, required: true}
+  summary : {type : Object, required: true},
+  status: { type: String, enum: ['Processing', 'Shipped', 'In Transit', 'Delivered'], default: 'Processing' }
 });
 
 const Orders = model("orders", orderschema);
