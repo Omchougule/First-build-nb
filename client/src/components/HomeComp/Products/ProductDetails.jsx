@@ -1,15 +1,65 @@
-import React, { useEffect } from 'react';
-import { Link, useParams } from 'react-router-dom';
-import products from './productsConfig';
+import React, { useEffect,useState } from 'react';
+import { Link, useNavigate, useParams } from 'react-router-dom';
+// import products from './productsConfig';
 import Navbar from '../../Navbar/Navbar';
 import Footer from '../../Footer/Footer';
 import toast from 'react-hot-toast';
+import axios from 'axios';
+import { useUserContext } from '../../../context/Authcontext';
+
 
 export default function ProductDetail() {
   const { id } = useParams();
-  const product = products.find((item) => item.id === parseInt(id));
+  const {user} = useUserContext()
+  const [products, setProducts] = useState([]);
+  const [isloading, setIsloading] = useState(true);
+  const [isLiked, setIsLiked] = useState(false);
+  const [favourites, setFavourites] = useState([]);
+  const [product, setProduct] = useState(null);
 
-  if (!product) {
+  const navigate = useNavigate()
+  
+  useEffect(()=>{
+    const fetchProducts = async () => {
+      try {
+        const res = await axios.get('http://localhost:5000/getproducts');
+        setProducts(res.data);
+
+        const foundProduct = res.data.find((item) => item._id === id);
+        setProduct(foundProduct);
+      } catch (error) {
+        console.error('Error fetching products:', error);
+      } finally {
+        setIsloading(false);
+      }
+    };
+
+    
+    fetchProducts();
+    
+
+      axios.post('http://localhost:5000/getfav', {userId : user?.id})
+      .then((res)=>{
+        if(res.data.success == true)
+        {
+          const fav = res.data.favourites.split(', ')
+          setFavourites(fav)
+          if(fav.includes(id))
+            setIsLiked(true)
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+
+  },[user?.id])
+
+
+  if (isloading)
+  {
+    return <div className="text-center mt-10 text-gray-800">Loading...</div>;
+  }
+  if (!product && !isloading) {
     return <div className="text-center mt-10 text-gray-800">Product not found</div>;
   }
 
@@ -21,34 +71,83 @@ export default function ProductDetail() {
   //   });
   // }, []);
 
-  const handleAddToCart = () => {
-    let cart = JSON.parse(localStorage.getItem('cart')) || [];
-    const isProductInCart = cart.some(item => item.imageUrl === product.imageUrl);
+  const handleAddToCart = async () => {
 
-    if (isProductInCart) {
-      // If the product is already in the cart, display a toast message
-      toast.error("Product is already in Cart!");
-    } else {
-      const productToAdd = { ...product, quantity: 1 }; // Initialize quantity to 1
-      cart.push(productToAdd);
-      localStorage.setItem('cart', JSON.stringify(cart));
-      toast.success("Product added to Cart!");
+    if(user?.id)
+    {
+      const res = await axios.post('http://localhost:5000/addcart', {
+        title : product.title,
+        quantity : 1,
+        userId : user.id,
+        imageUrl : product.imageUrl,
+        description : product.description,
+        price : product.price,
+        proId : product._id
+      })
+  
+      if(res.data.success == true)
+      {
+        toast.success("Product added to Cart!");
+      }
+      else
+      {
+        toast.error("Product already in Cart!");
+      }
+      navigate('/cart')
     }
-  };
+    else
+    {
+      navigate('/login')
+      toast.error("Please login first!");
+    }
+
+  }
 
   const handleAddToFavorites = () => {
-    let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
-    const isProductInFavorites = favorites.some(item => item.imageUrl === product.imageUrl);
-
-    if (isProductInFavorites) {
-      // If the product is already in the favorites, display a toast message
-      toast.error("Product is already in Favorites!");
-    } else {
-      favorites.push(product);
-      localStorage.setItem('favorites', JSON.stringify(favorites));
-      toast.success("Product added to Favorites!");
+  //   let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+  //   const isProductInFavorites = favorites.some(item => item.imageUrl === product.imageUrl);
+  if(user?.id)
+  {
+    let updatedFavourites = [];
+    if(!isLiked)
+    {
+      updatedFavourites = [...favourites, id];
+      setFavourites(updatedFavourites);
+      setIsLiked(true);
+      setIsLiked(!isLiked);
+    } 
+    else
+    {
+      console.log(typeof(favourites));
+      const updatedFavourites = favourites.filter(item => item !== id);
+      setFavourites(updatedFavourites);
+      setIsLiked(false);
     }
+    axios.post('http://localhost:5000/addfav',{userId : user.id, favourites : updatedFavourites})
+    .then((response) => {
+      
+    })
+    .catch((error) => {
+      console.log(error);
+    })
+
+  }
+  else
+  {
+    toast.error("Please login first !")
+  }
+
+    // if (isProductInFavorites) {
+    //   // If the product is already in the favorites, display a toast message
+    //   setIsLiked(!isLiked)
+    //   toast.error("Product is already in Favorites!");
+    // } else {
+    //   favorites.push(product);
+    //   localStorage.setItem('favorites', JSON.stringify(favorites));
+    //   toast.success("Product added to Favorites!");
+    // }
   };
+
   return (
     <div data-scroll-container className='bg-[#b5c817]'>
       <div className=''>
@@ -117,10 +216,10 @@ export default function ProductDetail() {
                   <span className="mr-3">Size</span>
                   <div className="relative">
                     <select className="rounded border appearance-none border-gray-300 py-2 focus:outline-none focus:ring-2 focus:ring-green-200 focus:border-green-500 text-base pl-3 pr-10">
-                      <option>SM</option>
-                      <option>M</option>
-                      <option>L</option>
-                      <option>XL</option>
+                      <option value='SM'>SM</option>
+                      <option value='M'>M</option>
+                      <option value='L'>L</option>
+                      <option value='XL'>XL</option>
                     </select>
                     <span className="absolute right-0 top-0 h-full w-10 text-center text-gray-600 pointer-events-none flex items-center justify-center">
                       <svg fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" className="w-4 h-4" viewBox="0 0 24 24">
@@ -132,13 +231,11 @@ export default function ProductDetail() {
               </div>
               <div className="flex justify-between">
                 <span className="title-font font-medium text-2xl text-gray-900">₹ {product.price}</span>
-                <Link to="/cart">
                   <button className="inline-flex text-white bg-green-500 border-0 py-2 px-6 focus:outline-none hover:bg-green-600 rounded" onClick={handleAddToCart}>
                     Add to Cart
                   </button>
-                </Link>
                 <button onClick={handleAddToFavorites} className="rounded-full w-10 h-10 bg-gray-200 p-0 border-0 inline-flex items-center justify-center text-gray-500 active:text-green-500 ml-4">
-                  <svg fill="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" className="w-5 h-5" viewBox="0 0 24 24">
+                  <svg fill={isLiked?'red':'currentcolor'} strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" className="w-5 h-5" viewBox="0 0 24 24">
                     <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"></path>
                   </svg>
                 </button>

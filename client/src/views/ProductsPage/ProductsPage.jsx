@@ -20,10 +20,6 @@ const ProductsPage = () => {
   //     // lerp : 0.95,
 
   //   });
-
-    
-
-
   // }, [])
 
   return (

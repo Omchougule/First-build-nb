@@ -1,7 +1,68 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
+import axios from 'axios'
+import React, { useState } from 'react'
+import toast from 'react-hot-toast'
+import { Link, useNavigate } from 'react-router-dom'
+import { useUserContext } from '../../context/Authcontext'
 
 export const SignUp = () => {
+    const { user, setUser } = useUserContext()
+    const [userName, setUserName] = useState("")
+    const [email, setEmail] = useState("")
+    const [password, setPassword] = useState("")
+    const [confpass, setConfpass] = useState("")
+    const [ischecked, setIschecked] = useState(false)
+    const [phoneNumber, setPhoneNumber] = useState("")
+    const navigate = useNavigate()
+    const Signup = (e) => {
+        try {
+            e.preventDefault()
+            if (!ischecked) {
+                toast.error("Please accept the terms and conditions");
+                return;
+            }
+            else if (password.length < 8) {
+                toast.error(`Password must be atleast 8 characters long! ${password.length}`);
+                return;
+            }
+            else if (password != confpass) {
+                toast.error("Password and confirm password do not match!");
+                return;
+            }
+            else {
+                axios.post('http://localhost:5000/signin', { email, password, userName, phoneNumber })
+                    .then((res) => {
+                        if (res.data.success) {
+                            if (res.data.message == "User already exists!") {
+                                toast.error("user already exists!");
+                            }
+                            else if (res.data.message == "New user created and logged in successfully") {
+                                const auth = { email: res.data.data.email, sessionId: res.data.data.sessionId };
+                                localStorage.setItem("auth", JSON.stringify(auth));
+                                setUser({
+                                    id: res.data.data._id,
+                                    email: res.data.data.email,
+                                    sessionId: res.data.data.sessionId,
+                                    userName: res.data.data.userName,
+                                    phoneNumber: res.data.data.phoneNumber,
+                                    address: res.data.data.address
+                                })
+                                toast.success("New user created and logged in successfully");
+                                navigate('/')
+                            }
+                        }
+                        else {
+                            toast.error("something went wrong!");
+                        }
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                    })
+
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
     return (
         <>
 
@@ -31,13 +92,37 @@ export const SignUp = () => {
                         <div className="py-3 flex items-center text-xs text-gray-400 uppercase before:flex-1 before:border-t before:border-gray-200 before:me-6 after:flex-1 after:border-t after:border-gray-200 after:ms-6">Or</div>
 
 
-                        <form>
+                        <form onSubmit={Signup}>
                             <div className="grid gap-y-4">
 
                                 <div>
-                                    <label for="email" className="block text-sm mb-2">Email address</label>
+                                    <label htmlFor="userName" className="block text-sm mb-2">Name </label>
                                     <div className="relative">
-                                        <input type="email" id="email" name="email" className="py-3 px-4 block w-full border-gray-500 rounded-lg text-sm focus:border-green-500 focus:ring-green-500 disabled:opacity-50 disabled:pointer-events-none" required aria-describedby="email-error" />
+                                        <input type="text" value={userName} onChange={(e) => setUserName(e.target.value)} id="userName" name="email" className="py-3 px-4 block w-full border-gray-500 rounded-lg text-sm focus:border-green-500 focus:ring-green-500 disabled:opacity-50 disabled:pointer-events-none" required aria-describedby="email-error" />
+                                        <div className="hidden absolute inset-y-0 end-0 pointer-events-none pe-3">
+                                            <svg className="size-5 text-red-500" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true">
+                                                <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8 4a.905.905 0 0 0-.9.995l.35 3.507a.552.552 0 0 0 1.1 0l.35-3.507A.905.905 0 0 0 8 4zm.002 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2z" />
+                                            </svg>
+                                        </div>
+                                    </div>
+                                    <p className="hidden text-xs text-red-600 mt-2" id="email-error">Please include a valid email address so we can get back to you</p>
+                                </div>
+                                <div>
+                                    <label htmlFor="email" className="block text-sm mb-2">Email address</label>
+                                    <div className="relative">
+                                        <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} id="email" name="email" className="py-3 px-4 block w-full border-gray-500 rounded-lg text-sm focus:border-green-500 focus:ring-green-500 disabled:opacity-50 disabled:pointer-events-none" required aria-describedby="email-error" />
+                                        <div className="hidden absolute inset-y-0 end-0 pointer-events-none pe-3">
+                                            <svg className="size-5 text-red-500" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true">
+                                                <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8 4a.905.905 0 0 0-.9.995l.35 3.507a.552.552 0 0 0 1.1 0l.35-3.507A.905.905 0 0 0 8 4zm.002 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2z" />
+                                            </svg>
+                                        </div>
+                                    </div>
+                                    <p className="hidden text-xs text-red-600 mt-2" id="email-error">Please include a valid email address so we can get back to you</p>
+                                </div>
+                                <div>
+                                    <label htmlFor="phoneno" className="block text-sm mb-2">Phone number</label>
+                                    <div className="relative">
+                                        <input type="text" value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} id="phoneno" name="email" className="py-3 px-4 block w-full border-gray-500 rounded-lg text-sm focus:border-green-500 focus:ring-green-500 disabled:opacity-50 disabled:pointer-events-none" required aria-describedby="email-error" />
                                         <div className="hidden absolute inset-y-0 end-0 pointer-events-none pe-3">
                                             <svg className="size-5 text-red-500" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true">
                                                 <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8 4a.905.905 0 0 0-.9.995l.35 3.507a.552.552 0 0 0 1.1 0l.35-3.507A.905.905 0 0 0 8 4zm.002 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2z" />
@@ -48,9 +133,9 @@ export const SignUp = () => {
                                 </div>
 
                                 <div>
-                                    <label for="password" className="block text-sm mb-2">Password</label>
+                                    <label htmlFor="password" className="block text-sm mb-2">Password</label>
                                     <div className="relative">
-                                        <input type="password" id="password" name="password" className="py-3 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-green-500 focus:ring-green-500 disabled:opacity-50 disabled:pointer-events-none" required aria-describedby="password-error" />
+                                        <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} id="password" name="password" className="py-3 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-green-500 focus:ring-green-500 disabled:opacity-50 disabled:pointer-events-none" required aria-describedby="password-error" />
                                         <div className="hidden absolute inset-y-0 end-0 pointer-events-none pe-3">
                                             <svg className="size-5 text-red-500" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true">
                                                 <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8 4a.905.905 0 0 0-.9.995l.35 3.507a.552.552 0 0 0 1.1 0l.35-3.507A.905.905 0 0 0 8 4zm.002 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2z" />
@@ -61,9 +146,9 @@ export const SignUp = () => {
                                 </div>
 
                                 <div>
-                                    <label for="confirm-password" className="block text-sm mb-2">Confirm Password</label>
+                                    <label htmlFor="confirm-password" className="block text-sm mb-2">Confirm Password</label>
                                     <div className="relative">
-                                        <input type="password" id="confirm-password" name="confirm-password" className="py-3 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-green-500 focus:ring-green-500 disabled:opacity-50 disabled:pointer-events-none" required aria-describedby="confirm-password-error" />
+                                        <input type="password" value={confpass} onChange={(e) => setConfpass(e.target.value)} id="confirm-password" name="confirm-password" className="py-3 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-green-500 focus:ring-green-500 disabled:opacity-50 disabled:pointer-events-none" required aria-describedby="confirm-password-error" />
                                         <div className="hidden absolute inset-y-0 end-0 pointer-events-none pe-3">
                                             <svg className="size-5 text-red-500" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true">
                                                 <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8 4a.905.905 0 0 0-.9.995l.35 3.507a.552.552 0 0 0 1.1 0l.35-3.507A.905.905 0 0 0 8 4zm.002 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2z" />
@@ -75,10 +160,13 @@ export const SignUp = () => {
 
                                 <div className="flex items-center">
                                     <div className="flex">
-                                        <input id="remember-me" name="remember-me" type="checkbox" className="shrink-0 mt-0.5 border-gray-200 rounded text-green-600 focus:ring-green-500" />
+                                        <input id="remember-me" checked={ischecked} onChange={() => setIschecked(!ischecked)} name="remember-me" type="checkbox" className="shrink-0 mt-0.5 border-gray-200 rounded text-green-600 focus:ring-green-500" />
                                     </div>
                                     <div className="ms-3">
-                                        <label for="remember-me" className="text-sm">I accept the <a className="text-green-600 decoration-2 hover:underline font-medium" href="#">Terms and Conditions</a></label>
+                                        <label htmlFor="remember-me" className="text-sm">I accept the <a className="text-green-600 decoration-2 hover:underline font-medium" href="#">Terms and Conditions</a></label>
+                                    </div>
+                                    <div className="ms-3">
+                                        <label htmlFor="remember-me" className={ischecked ? "hidden" : `text-sm text-red-600 font-bold`}>Required !</label>
                                     </div>
                                 </div>
 

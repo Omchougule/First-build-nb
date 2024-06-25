@@ -9,14 +9,12 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import Profile from './Profile';
 import Orders from './Orders';
+import { useUserContext } from '../../context/Authcontext';
 
 const Dashboard = () => {
-
-
-
-  const userName = localStorage.getItem('userName');
-
-
+  const {user} = useUserContext()
+  const userName = user?.userName || null
+  // const userName = localStorage.getItem('userName');
   const [activeComponent, setActiveComponent] = useState('Dashboard'); // Initially set to Dashboard
 
   const handleComponentClick = (componentName) => {

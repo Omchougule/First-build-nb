@@ -3,7 +3,16 @@ import {model, Schema} from "mongoose";
 const userSchema = new Schema({
     email : String,
     userName : String,
-    userPhoto : String,
+    address : String,
+    phoneNumber : String,
+    password : String,
+    sessionId: {
+        type : String,
+        default : '',
+        expires : '1h'
+    },
+    // userPhoto : String,
+    createdAt : Date,
     isLoggedIn : {
         type : Boolean,
         default : false

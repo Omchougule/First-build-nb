@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { createBrowserRouter, Route, RouterProvider, Routes } from 'react-router-dom';
 import Home from './views/Home/Home';
 import Contact from './views/Contact/Contact';
 import Review from './views/Review/Review';
@@ -19,6 +19,8 @@ import Payment from './views/Payment/Payment';
 import OrderConfirmaton from './views/OrderConfirmation/OrderConfirmaton';
 import { SignUp } from './views/Login/SignUp';
 import './App.css'
+import AuthProvider from './context/Authcontext';
+import { SignUp } from './views/Login/SignUp';
 
 function App() {
 
@@ -30,95 +32,29 @@ function App() {
 
   
 
-  
-
-
-  const router = createBrowserRouter([
-    {
-      path: "/",
-      element: <Home/>
-    },
-
-    {
-      path: "/contact",
-      element: <Contact/>
-    },
-
-    {
-      path: "/review",
-      element : <Review/>
-    },
-
-    {
-      path:"/signup",
-      element : <SignUp/>
-    },
-
-    {
-      path : "/login",
-      element : <Login/>
-    },
-
-    {
-      path: "/product/:id",
-      element: <ProductDetail/>
-    },
-
-    {
-      path : "/reciept/:id",
-      element : <Reciept/>
-    },
-
-    {
-      path : "/dashboard",
-      element : <Dashboard/>
-    },
-
-    {
-      path: "/products",
-      element: <ProductsPage/>
-    },
-
-    {
-      path : "/cart",
-      element : <Cart/>
-    },
-
-    {
-      path : "/cart/checkout",
-      element : <Checkout/>
-    },
-
-    {
-      path : "cart/checkout/payment",
-      element : <Payment/>
-    },
-
-    {
-      path : "cart/checkout/payment/confirmation",
-      element : <OrderConfirmaton/>
-    },
-
-    {
-      path:"/orders/trackorder",
-      element : <TrackOrder/>
-    },
-
-    {
-      path : "*",
-      element : <NotFound/>
-    }
-
-
-
-  ]);
+ 
 
   return (
-    <>
-    
-    <RouterProvider router={router} />
-  
-    </>
+      // <RouterProvider router={router} />
+      <Routes>
+        <Route path='/' element={<Home/>}/>
+        <Route path='/contact' element={<Contact/>}/>
+        <Route path='/review' element={<Review/>}/>
+        <Route path='/login' element={<Login/>}/>
+        <Route path='/product/:id' element={<ProductDetail/>}/>
+        <Route path='/reciept/:id' element={<Reciept/>}/>
+        <Route path='/dashboard' element={<Dashboard/>}/>
+        <Route path='/products' element={<ProductsPage/>}/>
+        <Route path='/cart' element={<Cart/>}/>
+        <Route path='/cart/checkout' element={<Checkout/>}/>
+        <Route path='cart/checkout/payment' element={<Payment/>}/>
+        <Route path='cart/checkout/payment/confirmation/:id' element={<OrderConfirmaton/>}/>
+        <Route path='/orders/trackorder/:id' element={<TrackOrder/>}/>
+        <Route path='/dash' element={<Dashboard/>}/>
+        <Route path='/signup' element={<SignUp/>}/>
+        <Route path='*' element={<NotFound/>}/>
+        
+      </Routes>
   );
 }
 

@@ -2,44 +2,91 @@ import { auth, provider } from "./config";
 import { signInWithPopup } from "firebase/auth";
 import React, { useState, useEffect } from "react";
 import { toast } from "react-hot-toast";
-import { Link, Navigate } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useUserContext } from "../../context/Authcontext";
 
 const Login = () => {
-  const [loggedIn, setLoggedIn] = useState(false);
+  const { user, setUser } = useUserContext()
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (user) {
+      console.log('user is already logged in');
+      navigate('/')
+    }
+  }, [user])
 
   const handleLogin = async () => {
     try {
       const data = await signInWithPopup(auth, provider);
-      const user = data.user;
+      console.log(data);
 
-      localStorage.setItem("email", user.email);
-      localStorage.setItem("userName", user.displayName);
-      localStorage.setItem("userPhoto", user.photoURL);
-      setLoggedIn(true);
-
-      await axios.post(`http://localhost:5000/user`, {
-        email: user.email,
-        userName: user.displayName,
-        userPhoto: user.photoURL,
+      const res = await axios.post(`http://localhost:5000/oauth`, {
+        email: data.user.email,
+        userName: data.user.displayName
       });
 
-      toast.success("Login Successful");
+      if (res.data.success) {
+        const auth = { email: res.data.data.email, sessionId: res.data.data.sessionId };
+        localStorage.setItem("auth", JSON.stringify(auth));
+        setUser({
+          id: res.data.data._id,
+          email: res.data.data.email,
+          sessionId: res.data.data.sessionId,
+          userName: res.data.data.userName,
+          phoneNumber: res.data.data.phoneNumber,
+          address: res.data.data.address
+        })
+        toast.success("Login Successful");
+      }
+
     } catch (error) {
       console.error("Login failed: ", error);
       toast.error("Login Failed");
     }
   };
 
-  useEffect(() => {
-    if (localStorage.getItem("email")) {
-      setLoggedIn(true);
-    }
-  }, []);
+  const login = async () => {
+    try {
+      let pass = encodeURIComponent(password);
+      let eml = encodeURIComponent(email);
+      axios.get(`http://localhost:5000/login?email=${eml}&password=${pass}`)
+        .then((res) => {
+          // console.log(res.data);
+          if (res.data.message == "User not found") {
+            alert("User not found");
+          }
+          else if (res.data.message == "Wrong password") {
+            alert("Incorrect Password");
+          }
+          else {
+            // console.log(res.data);
+            const auth = { email: res.data.data.email, sessionId: res.data.data.sessionId };
+            localStorage.setItem("auth", JSON.stringify(auth));
+            setUser({
+              id: res.data.data._id,
+              email: res.data.data.email,
+              sessionId: res.data.data.sessionId,
+              userName: res.data.data.userName,
+              phoneNumber: res.data.data.phoneNumber,
+              address: res.data.data.address
+            })
+            navigate('/');
+          }
+        })
+        .catch((err) => {
+          console.error(err);
+        })
 
-  if (loggedIn) {
-    return <Navigate to="/" replace={true} />;
+    } catch (error) {
+      console.error("Login Failed: ", error);
+    }
   }
+
 
   return (
     <main className="w-full h-screen flex flex-col items-center justify-center px-4">
@@ -47,11 +94,11 @@ const Login = () => {
         <div className="text-center">
           <h1 className="font-bold text-4xl text-green-600 mt-6">NUTRIBITES</h1>
           <div className="mt-5 space-y-2">
-            <h3 className="text-gray-800 text-2xl font-bold sm:text-3xl">Sign up</h3>
+            <h3 className="text-gray-800 text-2xl font-bold sm:text-3xl">Login</h3>
             <p>
-              Already have an account?{" "}
-              <Link to="/" className="font-medium text-green-600 hover:text-green-500">
-                Log in
+              Don't have an account?{" "}
+              <Link to="/signup" className="font-medium text-green-600 hover:text-green-500">
+                Sign Up
               </Link>
             </p>
           </div>
@@ -61,6 +108,8 @@ const Login = () => {
             <label className="font-medium">Email</label>
             <input
               type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               required
               className="w-full mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border focus:border-green-600 shadow-sm rounded-lg"
             />
@@ -69,12 +118,14 @@ const Login = () => {
             <label className="font-medium">Password</label>
             <input
               type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               required
               className="w-full mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border focus:border-green-600 shadow-sm rounded-lg"
             />
           </div>
-          <button className="w-full px-4 py-2 text-white font-medium bg-green-600 hover:bg-green-500 active:bg-green-600 rounded-lg duration-150">
-            Create account
+          <button onClick={login} className="w-full px-4 py-2 text-white font-medium bg-green-600 hover:bg-green-500 active:bg-green-600 rounded-lg duration-150">
+            Login
           </button>
         </form>
         <button

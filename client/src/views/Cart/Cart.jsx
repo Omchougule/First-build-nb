@@ -2,10 +2,12 @@ import React, { useState, useEffect } from 'react'
 import Navbar from '../../components/Navbar/Navbar'
 import { Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
+import { useUserContext } from '../../context/Authcontext';
+import axios from 'axios';
 
 const addToFavorites = (product) => {
     const favorites = JSON.parse(localStorage.getItem('favorites')) || [];
-    
+
     const isProductInFavorites = favorites.some(item => item.imageUrl === product.imageUrl);
 
     if (isProductInFavorites) {
@@ -19,7 +21,7 @@ const addToFavorites = (product) => {
 
 const ProductCartItem = ({ imageUrl, initialQuantity, price, description, onQuantityChange, removeFromCart }) => {
     const [quantity, setQuantity] = useState(parseInt(initialQuantity));
-
+    const [isLiked, setIsLiked] = useState(false);
     const decreaseQuantity = () => {
         if (quantity > 1) {
             setQuantity(quantity - 1);
@@ -36,6 +38,7 @@ const ProductCartItem = ({ imageUrl, initialQuantity, price, description, onQuan
 
     const handleAddToFavorites = () => {
         addToFavorites({ imageUrl, initialQuantity, price, description });
+        setIsLiked(!isLiked);
     };
 
     return (
@@ -66,7 +69,7 @@ const ProductCartItem = ({ imageUrl, initialQuantity, price, description, onQuan
                     <a href="#" className="text-base font-medium text-gray-900 hover:underline light:text-white">{description}</a>
                     <div className="flex items-center gap-4">
                         <button type="button" onClick={handleAddToFavorites} className="inline-flex items-center text-sm font-medium text-gray-500 hover:text-gray-900 hover:underline light:text-gray-400 light:hover:text-white">
-                            <svg className="me-1.5 h-5 w-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                            <svg className="me-1.5 h-5 w-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill={isLiked ? 'red' : 'none'} viewBox="0 0 24 24">
                                 <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12.01 6.001C6.5 1 1 8 5.782 13.001L12.011 20l6.23-7C23 8 17.5 1 12.01 6.002Z" />
                             </svg>
                             Add to Favorites
@@ -85,56 +88,122 @@ const ProductCartItem = ({ imageUrl, initialQuantity, price, description, onQuan
 };
 
 const Cart = () => {
+    const { user, setOrder, setSummary, summary } = useUserContext()
     const [cart, setCart] = useState([]);
+    const [isloading, setIsloading] = useState(true)
     const [originalPrice, setOriginalPrice] = useState(0);
     const [finalTotal, setFinalTotal] = useState(0);
+    const [discountcode, setDiscountcode] = useState('')
+    const [discount, setDiscount] = useState(0)
+
+    async function fetch_cart() {
+        const res = await axios.get('http://localhost:5000/getcart')
+        const Newcart = res.data.filter(cart => cart.userId == user?.id)
+        setCart(Newcart);
+        updateOrderSummary(Newcart);
+        setIsloading(false)
+    }
+
+    const updateOrderSummary = (Newcart) => {
+        const totalPrice = Newcart.reduce((acc, item) => acc + item.quantity * item.price, 0); 
+        const storePickup = 99;
+        const tax = 799;
+        const discountedAmmount = ((discount / 100) * totalPrice).toFixed(2);
+        const total = totalPrice - discountedAmmount + storePickup + tax;
+        setOriginalPrice(totalPrice);
+        setFinalTotal(total);
+
+        const orderSummary = {
+            // cartItems, // Include cart items in the order summary
+            originalPrice: totalPrice,
+            storePickup,
+            discountedAmmount,
+            tax,
+            finalTotal: total,
+        };
+        setSummary(orderSummary)
+        // localStorage.setItem('orderSummary', JSON.stringify(orderSummary));
+    };
 
     useEffect(() => {
-        const storedCart = JSON.parse(localStorage.getItem('cart')) || [];
-        setCart(storedCart);
-        updateOrderSummary(storedCart);
-    }, []);
+        if (user?.id) {
+            fetch_cart()
+            // updateOrderSummary()
+        }
+    }, [user]);
 
-    const updateCart = (updatedCart) => {
-        setCart(updatedCart);
-        localStorage.setItem('cart', JSON.stringify(updatedCart));
-        updateOrderSummary(updatedCart);
+    useEffect(() => {
+        updateOrderSummary(cart)
+    },[discount])
+    
+    const updateCart = async (index) => {
+        const res = await axios.post('http://localhost:5000/removecart', { userId: user?.id, proId: index })
+        if (res.data.success) {
+            fetch_cart()
+            toast.success("Product removed!")
+        }
+        else {
+            toast.error("Something went wrong!")
+        }
     };
 
     const removeFromCart = (index) => {
         const isConfirmed = window.confirm('Are you sure you want to remove this item from the cart?');
         if (isConfirmed) {
-            const updatedCart = [...cart];
-            updatedCart.splice(index, 1);
-            updateCart(updatedCart);
+            const updatedCart = cart.filter(item => item.proId != index)
+            updateCart(index);
         }
     };
+    
 
-    const changeQuantity = (index, newQuantity) => {
-        const updatedCart = [...cart];
-        updatedCart[index].quantity = newQuantity;
-        updateCart(updatedCart);
-    };
+    // const updateItemQuantity = (itemId, newQuantity) => {
+        //     setCart(prevCart =>
+    //       prevCart.map(item =>
+    //         item._id === itemId ? { ...item, quantity: newQuantity } : item
+    //       )
+    //     );
+    //   };
 
-    const updateOrderSummary = (cartItems) => {
-        const totalPrice = cartItems.reduce((acc, item) => acc + item.quantity * item.price, 0);
-        const storePickup = 99;
-        const tax = 799;
-        const total = totalPrice + storePickup + tax;
+    const updateItemQuantity = async (itemId, newQuantity) => {
+        const newcart = cart.filter(item => item.proId === itemId)
+        const updatedCart = { ...newcart[0], quantity: newQuantity }
+        const res = await axios.post('http://localhost:5000/addcart', updatedCart)
+        if (res.data.success == true) {
+            toast.success(+1)
+        }
+        fetch_cart()
+    }
 
-        setOriginalPrice(totalPrice);
-        setFinalTotal(total);
+    const handlecheckout = () => {
+        // set order
+        const order = cart.map((item) => {
+            return {
+                proId: item.proId,
+                quantity: item.quantity
+            }
+        })
+        setOrder(order)
+        updateOrderSummary(cart)
+    }
 
-        const orderSummary = {
-            cartItems, // Include cart items in the order summary
-            originalPrice: totalPrice,
-            storePickup,
-            tax,
-            finalTotal: total,
-        };
+    const handleCode = async (code) => {
+        const res = await axios.post('http://localhost:5000/getcode', {code : discountcode})
 
-        localStorage.setItem('orderSummary', JSON.stringify(orderSummary));
-    };
+        if(res.data.success)
+        {
+            setDiscount(res.data.data.discountPercentage)
+            toast.success("Code applied successfully!")
+        }
+        else
+        {
+            toast.error('Invalid code!')
+        }
+    }
+    
+
+    if (isloading) {
+        return (<h1>Loading</h1>)
+    }
 
     return (
         <>
@@ -151,13 +220,13 @@ const Cart = () => {
                             <div className="space-y-6">
                                 {cart.map((product, index) => (
                                     <ProductCartItem
-                                        key={index}
+                                        key={product.proId}
                                         imageUrl={product.imageUrl}
                                         initialQuantity={product.quantity}
                                         price={product.price}
                                         description={product.description}
-                                        onQuantityChange={(newQuantity) => changeQuantity(index, newQuantity)}
-                                        removeFromCart={() => removeFromCart(index)}
+                                        onQuantityChange={(newQuantity) => updateItemQuantity(product.proId, newQuantity)}
+                                        removeFromCart={() => removeFromCart(product.proId)}
                                     />
                                 ))}
                             </div>
@@ -174,17 +243,17 @@ const Cart = () => {
 
                                         <dl className="flex items-center justify-between gap-4">
                                             <dt className="text-base font-normal text-gray-500 light:text-gray-400">Savings</dt>
-                                            <dd className="text-base font-medium text-green-600">-$00.00</dd>
+                                            <dd className="text-base font-medium text-green-600">-${summary?.discountedAmmount}</dd>
                                         </dl>
 
                                         <dl className="flex items-center justify-between gap-4">
                                             <dt className="text-base font-normal text-gray-500 light:text-gray-400">Store Pickup</dt>
-                                            <dd className="text-base font-medium text-gray-900 light:text-white">$99</dd>
+                                            <dd className="text-base font-medium text-gray-900 light:text-white">${summary?.storePickup}</dd>
                                         </dl>
 
                                         <dl className="flex items-center justify-between gap-4">
                                             <dt className="text-base font-normal text-gray-500 light:text-gray-400">Tax</dt>
-                                            <dd className="text-base font-medium text-gray-900 light:text-white">$799</dd>
+                                            <dd className="text-base font-medium text-gray-900 light:text-white">${summary?.tax}</dd>
                                         </dl>
                                     </div>
 
@@ -196,7 +265,7 @@ const Cart = () => {
                                 <Link
                                     to="/cart/checkout"
                                     className="flex w-full items-center justify-center rounded-lg bg-green-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-green-800 focus:outline-none focus:ring-4 focus:ring-green-300 light:bg-green-600 light:hover:bg-green-700 light:focus:ring-green-800"
-                                    onClick={() => updateOrderSummary(cart)} // Ensure the order summary is updated before navigating
+                                    onClick={handlecheckout} // Ensure the order summary is updated before navigating
                                 >
                                     Proceed to Checkout
                                 </Link>
@@ -211,13 +280,13 @@ const Cart = () => {
                                     </Link>
                                 </div>
                                 <div className="space-y-4 rounded-lg border border-gray-200 bg-white p-4 shadow-sm light:border-gray-700 light:bg-gray-800 sm:p-6">
-                                    <form className="space-y-4">
+                                    <div className="space-y-4">
                                         <div>
                                             <label htmlFor="voucher" className="mb-2 block text-sm font-medium text-gray-900 light:text-white"> Do you have a voucher or gift card? </label>
-                                            <input type="text" id="voucher" className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-green-500 focus:ring-green-500 light:border-gray-600 light:bg-gray-700 light:text-white light:placeholder-gray-400 light:focus:border-green-500 light:focus:ring-green-500" placeholder="" required />
+                                            <input maxLength={6} value={discountcode} onChange={(e)=>setDiscountcode(e.target.value.toUpperCase())} type="text" id="voucher" className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-green-500 focus:ring-green-500 light:border-gray-600 light:bg-gray-700 light:text-white light:placeholder-gray-400 light:focus:border-green-500 light:focus:ring-green-500 font-bold" placeholder="" required />
                                         </div>
-                                        <button type="submit" className="flex w-full items-center justify-center rounded-lg bg-green-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-green-800 focus:outline-none focus:ring-4 focus:ring-green-300 light:bg-green-600 light:hover:bg-green-700 light:focus:ring-green-800">Apply Code</button>
-                                    </form>
+                                        <button onClick={(e) => handleCode(discountcode)}className="flex w-full items-center justify-center rounded-lg bg-green-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-green-800 focus:outline-none focus:ring-4 focus:ring-green-300 light:bg-green-600 light:hover:bg-green-700 light:focus:ring-green-800">Apply Code</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
