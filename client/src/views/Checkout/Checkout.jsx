@@ -8,21 +8,9 @@ import axios from 'axios';
 
 
 const Checkout = () => {
-    const {user, summary, order} = useUserContext()
+    const {user, summary, order, setAddress} = useUserContext()
     const [orderSummary, setOrderSummary] = useState(null);
     const [addresses, setAddresses] = useState([]);
-
-    const navigate = useNavigate()
-
-    useEffect(() => {
-        // const storedOrderSummary = JSON.parse(localStorage.getItem('orderSummary')) || null;
-        setOrderSummary(summary);
-        if(order.length == 0 )
-        {
-            navigate('/cart')
-        }
-    }, []);
-
     const [formData, setFormData] = useState({
         your_name: '',
         your_email: '',
@@ -32,6 +20,25 @@ const Checkout = () => {
         phone: ''
     });
 
+    const navigate = useNavigate()
+
+    useEffect(() => {
+        setOrderSummary(summary);
+        if(order.length == 0 )
+        {
+            navigate('/cart')
+        }
+    }, []);
+
+    useEffect(() => {
+       if(user?.id) 
+       {
+            getAdd()
+       }
+       localStorage.removeItem('selectedAddress')
+    }, [user?.id]);
+
+
     const getAdd = async () =>{
         const res = await axios.post('http://localhost:5000/getadd', {userId : user?.id})
         if(res.data.success)
@@ -40,19 +47,6 @@ const Checkout = () => {
             setAddresses(storedAddresses);
         }
     }
-    useEffect(() => {
-       if(user?.id) 
-       {
-            getAdd()
-       }
-       localStorage.removeItem('selectedAddress')
-
-        // Load selected address from local storage
-        // const selectedAddress = JSON.parse(localStorage.getItem('selectedAddress')) || null;
-        // if (selectedAddress) {
-        //     setFormData(selectedAddress);
-        // }
-    }, [user?.id]);
 
     const handleChange = (e) => {
         const { id, value } = e.target;
@@ -63,11 +57,9 @@ const Checkout = () => {
     };
 
     const handleAddressSelect = (index) => {
-        // const address = JSON.parse(selectedAddress);
         if(index == "select")
             return
         setFormData(addresses[index]);
-        localStorage.setItem('selectedAddress', JSON.stringify(addresses[index]));
     };
 
     const handleAddressSubmit = async (e) => {
@@ -87,8 +79,9 @@ const Checkout = () => {
         }
     };
 
-    const updateOrderSummary = () => {
-        
+    const topayment = () => {
+        setAddress(formData);
+        navigate('/cart/checkout/payment')
     }
 
     return (
@@ -279,7 +272,7 @@ const Checkout = () => {
 
                                                 <dl className="flex items-center justify-between gap-4 py-3">
                                                     <dt className="text-base font-normal text-gray-500 light:text-gray-400">Savings</dt>
-                                                    <dd className="text-base font-medium text-green-500">0</dd>
+                                                    <dd className="text-base font-medium text-green-500">-{orderSummary.discountedAmmount}</dd>
                                                 </dl>
 
                                                 <dl className="flex items-center justify-between gap-4 py-3">
@@ -302,9 +295,9 @@ const Checkout = () => {
                                 </div>
 
                                 <div className="space-y-3">
-                                    <Link to="payment">
-                                        <button type="submit" className="flex w-full items-center justify-center rounded-lg bg-green-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-green-800 focus:outline-none focus:ring-4  focus:ring-green-300 light:bg-green-600 light:hover:bg-green-700 light:focus:ring-green-800">Proceed to Payment</button>
-                                    </Link>
+                                    
+                                        <button onClick={topayment} type="submit" className="flex w-full items-center justify-center rounded-lg bg-green-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-green-800 focus:outline-none focus:ring-4  focus:ring-green-300 light:bg-green-600 light:hover:bg-green-700 light:focus:ring-green-800">Proceed to Payment</button>
+                                    
 
                                     <p className="text-sm font-normal text-gray-500 light:text-gray-400">One or more items in your cart require an account. <a href="#" title="" className="font-medium text-green-700 underline hover:no-underline light:text-green-500">Sign in or create an account now.</a>.</p>
                                 </div>

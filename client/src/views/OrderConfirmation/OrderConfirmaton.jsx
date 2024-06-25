@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Link, useParams } from 'react-router-dom';
+import { useUserContext } from '../../context/Authcontext';
 
 const OrderConfirmation = () => {
+    const {address} = useUserContext()
     const {id} = useParams()
-    const [orderSummary, setOrderSummary] = useState(null);
     const [paymentMethod, setPaymentMethod] = useState(() => localStorage.getItem('paymentMethod') || '');
     const [selectedAddress, setSelectedAddress] = useState({
         name: '',
@@ -12,17 +13,11 @@ const OrderConfirmation = () => {
     });
 
     useEffect(() => {
-        const storedOrderSummary = JSON.parse(localStorage.getItem('orderSummary')) || null;
-        setOrderSummary(storedOrderSummary);
-    }, []);
-
-    useEffect(() => {
         localStorage.setItem('paymentMethod', paymentMethod);
     }, [paymentMethod]);
 
     useEffect(() => {
-        const storedSelectedAddress = JSON.parse(localStorage.getItem('selectedAddress')) || {};
-        setSelectedAddress(storedSelectedAddress);
+        setSelectedAddress(address);
     }, []);
 
 
@@ -54,7 +49,7 @@ const OrderConfirmation = () => {
     localStorage.setItem('todayDate', todayDate);
 
 
-    const address = selectedAddress.gym_name + ', ' + selectedAddress.city + ', ' + selectedAddress.country;
+    const add = selectedAddress.gym_name + ', ' + selectedAddress.city + ', ' + selectedAddress.country;
 
     return (
         <>
@@ -79,7 +74,7 @@ const OrderConfirmation = () => {
                         </dl>
                         <dl className="sm:flex items-center justify-between gap-4">
                             <dt className="font-normal mb-1 sm:mb-0 text-gray-500 light:text-gray-400">Address</dt>
-                            <dd className="font-medium text-gray-900 light:text-white sm:text-end">{address}</dd>
+                            <dd className="font-medium text-gray-900 light:text-white sm:text-end">{add}</dd>
                         </dl>
                         <dl className="sm:flex items-center justify-between gap-4">
                             <dt className="font-normal mb-1 sm:mb-0 text-gray-500 light:text-gray-400">Phone</dt>

@@ -1,13 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { auth } from '../../views/Login/config';
 import { useUserContext } from '../../context/Authcontext';
 import axios from 'axios';
-// import Order from './Order';
 
 
 const Order = ({ orderID, date, price, status }) => {
 
-    
 
     return (
         <div className="flex flex-wrap items-center gap-y-4 py-6">
@@ -20,12 +17,12 @@ const Order = ({ orderID, date, price, status }) => {
 
             <dl className="w-1/2 sm:w-1/4 lg:w-auto lg:flex-1">
                 <dt className="text-base font-medium text-gray-500 light:text-gray-400">Date:</dt>
-                <dd className="mt-1.5 text-base font-semibold text-gray-900 light:text-white">{date.slice(0,10)}</dd>
+                <dd className="mt-1.5 text-base font-semibold text-gray-900 light:text-white">{date.slice(0, 10)}</dd>
             </dl>
 
             <dl className="w-1/2 sm:w-1/4 lg:w-auto lg:flex-1">
                 <dt className="text-base font-medium text-gray-500 light:text-gray-400">Price:</dt>
-                <dd className="mt-1.5 text-base font-semibold text-gray-900 light:text-white">{'$'+`${price}`}</dd>
+                <dd className="mt-1.5 text-base font-semibold text-gray-900 light:text-white">{'$' + `${price}`}</dd>
             </dl>
 
             <dl className="w-1/2 sm:w-1/4 lg:w-auto lg:flex-1">
@@ -75,47 +72,20 @@ const Order = ({ orderID, date, price, status }) => {
 };
 
 
-
-
 const Orders = () => {
-    const {user} = useUserContext()
-    // const [orderSummary, setOrderSummary] = useState({
-    //     cartItems: [],
-    //     originalPrice: 0,
-    //     storePickup: false,
-    //     tax: 0,
-    //     finalTotal: 0
-    // });
-
+    const { user } = useUserContext()
     const [orders, setOrders] = useState([])
 
     const fetch_orders = async () => {
-        const res = await axios.post('http://localhost:5000/getorders', {userId : user.id})
-        if(res.data.success)
-        {
+        const res = await axios.post('http://localhost:5000/getorders', { userId: user.id })
+        if (res.data.success) {
             setOrders(res.data.data)
         }
     }
     useEffect(() => {
-        // const storedOrderSummary = JSON.parse(localStorage.getItem('orderSummary')) || null;
         fetch_orders()
-        // setOrderSummary(storedOrderSummary);
     }, []);
 
-    // const { cartItems, originalPrice, storePickup, tax, finalTotal } = orderSummary;
-
-    // const proId = localStorage.getItem('randomId');
-
-    // const date = localStorage.getItem('todayDate');
-
-
-
-
-
-
-    // if (!auth.currentUser) {
-    //     return <div className="text-center text-5xl font-hand md:-translate-x-28 items-center text-gray-500">User information is not available.</div>;
-    // }
 
     return (
         <div className='overflow-y-auto '  >
@@ -130,7 +100,6 @@ const Orders = () => {
 
                             {/* Dropdowns for filtering orders */}
                         </div>
-
                         <div className="mt-6 flow-root sm:mt-8">
                             <div className="divide-y divide-gray-200 light:divide-gray-700">
                                 {/* Orders */}
@@ -146,52 +115,9 @@ const Orders = () => {
                                             status={product.status}
                                         />
                                     </div>
-
                                 ))}
-
-                                {/* <Order
-                                    orderID={"#" + proId}
-                                    date={date}
-                                    price={"$" + finalTotal}
-                                    status="Out For Delivery"
-                                /> */}
-
-
-
-
-                                <Order
-                                    orderID="#FWB127364372"
-                                    date="20.12.2023"
-                                    price="4,756"
-                                    status="In Transit"
-                                />
-
-                                <Order
-                                    orderID="#FWB125467980"
-                                    date="11.12.2023"
-                                    price="499"
-                                    status="In Transit"
-                                />
-
-                                <Order
-                                    orderID="#FWB139485607"
-                                    date="08.12.2023"
-                                    price="85"
-                                    status="Delivered"
-                                />
-
-                                <Order
-                                    orderID="#FWB146284623"
-                                    date="26.09.2023"
-                                    price="180"
-                                    status="Cancelled"
-                                />
-
-                                {/* Pagination */}
                             </div>
                         </div>
-
-                        {/* Pagination */}
                     </div>
                 </div>
             </section>

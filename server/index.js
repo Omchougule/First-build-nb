@@ -75,10 +75,43 @@ app.post('/updateuser', async (req, res) => {
 
 })
 
+app.post('/oauth', async (req,res) => {
+  try {
+    const sid = uuidv4()
+    const {email, userName} = req.body
+    const user = await User.findOne({email})
+    if(user)
+    {
+      user.sessionId = sid
+      user.save()
+      res.json({
+        success: true,
+        data: user
+      });
+    }
+    else
+    {
+      const newUser = await User.create({
+        email,
+        userName,
+        sessionId : sid,
+        createdAt : new Date() ,
+        address : "",
+        isLoggedIn: true
+      });
+      res.json({
+        success: true,
+        data: newUser
+      });
+    }
+  } catch (error) {
+    console.log(error);
+  }
+})
 
 app.post("/signin", async (req, res) => {
   const { email, password, userName, phoneNumber} = req.body;
-
+  const sid = uuidv4()
   try {
 
     let existingUser = await User.findOne({ email });
@@ -100,6 +133,7 @@ app.post("/signin", async (req, res) => {
         password,
         phoneNumber,
         userName,
+        sessionId : sid,
         createdAt : new Date() ,
         address : "",
         isLoggedIn: true

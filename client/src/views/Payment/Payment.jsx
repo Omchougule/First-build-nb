@@ -8,7 +8,7 @@ import toast from 'react-hot-toast';
 
 
 const Payment = () => {
-    const { user, products, order, summary } = useUserContext()
+    const { user, products, order, summary, address } = useUserContext()
     const [orderSummary, setOrderSummary] = useState(null);
     const [paymentMethod, setPaymentMethod] = useState('credit-card');
     const [selectedAddress, setSelectedAddress] = useState({
@@ -22,8 +22,8 @@ const Payment = () => {
     
     useEffect(() => {
         // const storedOrderSummary = JSON.parse(localStorage.getItem('orderSummary')) || null;
-        const storedSelectedAddress = JSON.parse(localStorage.getItem('selectedAddress')) || {};
-        setSelectedAddress(storedSelectedAddress);
+        // const storedSelectedAddress = JSON.parse(localStorage.getItem('selectedAddress')) || {};
+        setSelectedAddress(address);
 
         setOrderSummary(summary);
         if(order.length == 0 )
@@ -34,7 +34,7 @@ const Payment = () => {
         
 
     }, []);
-
+    console.log(address);
     const handleorder = async () => {
         const randomId = Math.random().toString(16).substring(2, 8) + Math.random().toString(16).substring(2, 8);
         const address = selectedAddress.gym_name + ', ' + selectedAddress.city + ', ' + selectedAddress.country;

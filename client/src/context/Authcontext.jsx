@@ -22,11 +22,13 @@ import { useNavigate } from "react-router-dom";
     products : [],
     order : [],
     summary : {},
+    address : {},
     setUser: (user)=>{},
     setOrder: (order)=>{},
     setSummary : (summary)=>{},
     setIsAuthenticated: (val)=>{},
     checkAuthUser: async () => false,
+    setAddress : (address)=>{},
  }
 
  const Authcontext = createContext(INITIAL_STATE);
@@ -40,6 +42,7 @@ const AuthProvider = ({children}) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [order, setOrder] = useState([])
   const [summary, setSummary] = useState({})
+  const [address, setAddress] = useState({})
 
   const  checkAuthUser = async () => {
     try {
@@ -95,7 +98,9 @@ const AuthProvider = ({children}) => {
     order,
     setOrder,
     summary,
-    setSummary
+    setSummary,
+    address,
+    setAddress
   }
 
 

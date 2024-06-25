@@ -5,7 +5,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useUserContext } from '../../context/Authcontext'
 
 export const SignUp = () => {
-    const {user, setUser} = useUserContext()
+    const { user, setUser } = useUserContext()
     const [userName, setUserName] = useState("")
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
@@ -16,8 +16,7 @@ export const SignUp = () => {
     const Signup = (e) => {
         try {
             e.preventDefault()
-            if (!ischecked)
-            {
+            if (!ischecked) {
                 toast.error("Please accept the terms and conditions");
                 return;
             }
@@ -30,21 +29,23 @@ export const SignUp = () => {
                 return;
             }
             else {
-                axios.post('http://localhost:5000/signin', { email, password, userName, phoneNumber})
+                axios.post('http://localhost:5000/signin', { email, password, userName, phoneNumber })
                     .then((res) => {
                         if (res.data.success) {
                             if (res.data.message == "User already exists!") {
                                 toast.error("user already exists!");
                             }
                             else if (res.data.message == "New user created and logged in successfully") {
+                                const auth = { email: res.data.data.email, sessionId: res.data.data.sessionId };
+                                localStorage.setItem("auth", JSON.stringify(auth));
                                 setUser({
-                                    id : res.data.data._id, 
-                                    email : res.data.data.email, 
+                                    id: res.data.data._id,
+                                    email: res.data.data.email,
                                     sessionId: res.data.data.sessionId,
-                                    userName : res.data.data.userName,
-                                    phoneNumber : res.data.data.phoneNumber,
-                                    address : res.data.data.address
-                                  })
+                                    userName: res.data.data.userName,
+                                    phoneNumber: res.data.data.phoneNumber,
+                                    address: res.data.data.address
+                                })
                                 toast.success("New user created and logged in successfully");
                                 navigate('/')
                             }
@@ -134,7 +135,7 @@ export const SignUp = () => {
                                 <div>
                                     <label htmlFor="password" className="block text-sm mb-2">Password</label>
                                     <div className="relative">
-                                        <input type="password" value={password} onChange={(e)=>setPassword(e.target.value)} id="password" name="password" className="py-3 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-green-500 focus:ring-green-500 disabled:opacity-50 disabled:pointer-events-none" required aria-describedby="password-error" />
+                                        <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} id="password" name="password" className="py-3 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-green-500 focus:ring-green-500 disabled:opacity-50 disabled:pointer-events-none" required aria-describedby="password-error" />
                                         <div className="hidden absolute inset-y-0 end-0 pointer-events-none pe-3">
                                             <svg className="size-5 text-red-500" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true">
                                                 <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8 4a.905.905 0 0 0-.9.995l.35 3.507a.552.552 0 0 0 1.1 0l.35-3.507A.905.905 0 0 0 8 4zm.002 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2z" />
@@ -147,7 +148,7 @@ export const SignUp = () => {
                                 <div>
                                     <label htmlFor="confirm-password" className="block text-sm mb-2">Confirm Password</label>
                                     <div className="relative">
-                                        <input type="password" value={confpass} onChange={(e)=>setConfpass(e.target.value)} id="confirm-password" name="confirm-password" className="py-3 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-green-500 focus:ring-green-500 disabled:opacity-50 disabled:pointer-events-none" required aria-describedby="confirm-password-error" />
+                                        <input type="password" value={confpass} onChange={(e) => setConfpass(e.target.value)} id="confirm-password" name="confirm-password" className="py-3 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-green-500 focus:ring-green-500 disabled:opacity-50 disabled:pointer-events-none" required aria-describedby="confirm-password-error" />
                                         <div className="hidden absolute inset-y-0 end-0 pointer-events-none pe-3">
                                             <svg className="size-5 text-red-500" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true">
                                                 <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8 4a.905.905 0 0 0-.9.995l.35 3.507a.552.552 0 0 0 1.1 0l.35-3.507A.905.905 0 0 0 8 4zm.002 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2z" />
