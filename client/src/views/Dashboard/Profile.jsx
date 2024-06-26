@@ -5,12 +5,13 @@ import { useUserContext } from '../../context/Authcontext';
 import axios from 'axios';
 
 const Profile = () => {
-    const { user, setUser } = useUserContext()
+    const { user, setUser } = useUserContext();
     const [userName, setUserName] = useState("");
     const [userEmail, setUserEmail] = useState("");
     const [phoneNumber, setPhoneNumber] = useState("");
     const [address, setAddress] = useState("");
-    const [userPhoto, setUserPhoto] = useState("")
+    const [userPhoto, setUserPhoto] = useState("");
+    const [selectedImg, setSelectedImg] = useState(null);
 
     useEffect(() => {
         if (user?.id) {
@@ -18,10 +19,9 @@ const Profile = () => {
             setUserEmail(user.email);
             setPhoneNumber(user.phoneNumber);
             setAddress(user.address);
-            // setUserPhoto(user.photoURL);
+            setUserPhoto(user.userPhoto);
         }
-    }, [user?.id])
-
+    }, [user?.id]);
 
     const handlePhoneNumberChange = (e) => {
         setPhoneNumber(e.target.value);
@@ -32,19 +32,17 @@ const Profile = () => {
     };
 
     const handleUpdateProfile = async () => {
-        // localStorage.setItem('phoneNumber', phoneNumber);
-        // localStorage.setItem('address', address);
         const res = await axios.post('http://localhost:5000/updateuser', {
             email: user?.email,
             updatedemail: userEmail,
             userName: userName,
             phoneNumber: phoneNumber,
             address: address,
-            userPhoto : userPhoto
-        })
+            userPhoto: userPhoto
+        });
 
         if (res.data.success) {
-            if (res.data.message == "User updated successfully") {
+            if (res.data.message === "User updated successfully") {
                 setUser({
                     id: res.data.data._id,
                     email: res.data.data.email,
@@ -52,24 +50,27 @@ const Profile = () => {
                     userName: res.data.data.userName,
                     phoneNumber: res.data.data.phoneNumber,
                     address: res.data.data.address,
-                    userPhoto : res.data.data.userPhoto
-                })
+                    userPhoto: res.data.data.userPhoto
+                });
                 toast.success('Profile updated!');
+            } else if (res.data.message === "User not found!") {
+                toast.error('User not found!');
             }
-            else if (res.data.message == "User not found!") {
-                toast.error('User not found!')
-            }
+        } else {
+            toast.error('Something went wrong!');
         }
-        else {
-            toast.error('Something went wrong!')
-        }
-
     };
 
-    const selectimg = (e)=>{
-        // console.log(e.target.src);
-        setUserPhoto(e.target.src)
-    }
+    const selectImg = (index, src) => {
+        setSelectedImg(index);
+        setUserPhoto(src);
+    };
+
+    const images = [
+        "https://i.pinimg.com/564x/13/ac/c5/13acc5169bb5040b48a38168be255cde.jpg",
+        "https://i.pinimg.com/564x/3d/d5/5c/3dd55c1301ff9bf6ace8d7760625c07c.jpg",
+        "https://i.pinimg.com/564x/6b/6e/f3/6b6ef332144043c71979051af05a842e.jpg"
+    ];
 
     return (
         <div className="bg-white overflow-hidden shadow rounded-lg border max-w-2xl mx-auto my-5">
@@ -82,7 +83,7 @@ const Profile = () => {
                         This is some information about the user.
                     </p>
                 </div>
-                {/* <img src={userPhoto} alt="User" className="h-20 w-20 rounded-full ml-auto" /> */}
+                <img src={userPhoto} alt="User" className="h-20 w-20 rounded-full ml-auto" />
             </div>
             <div className="border-t border-gray-200 px-4 py-5 sm:p-0">
                 <dl className="sm:divide-y sm:divide-gray-200">
@@ -133,10 +134,15 @@ const Profile = () => {
                             Avatar
                         </dt>
                         <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2 flex justify-between">
-
-                            <img onClick={selectimg} className='h-20 w-20 rounded-full object-cover cursor-pointer border-black ' src="https://i.pinimg.com/564x/13/ac/c5/13acc5169bb5040b48a38168be255cde.jpg" alt="" />
-                            <img onClick={selectimg} className='h-20 w-20 rounded-full object-cover cursor-pointer' src="https://i.pinimg.com/564x/3d/d5/5c/3dd55c1301ff9bf6ace8d7760625c07c.jpg" alt="" />
-                            <img onClick={selectimg}  className='h-20 w-20 rounded-full object-cover cursor-pointer' src="https://i.pinimg.com/564x/6b/6e/f3/6b6ef332144043c71979051af05a842e.jpg" alt="" />
+                            {images.map((src, index) => (
+                                <img
+                                    key={index}
+                                    onClick={() => selectImg(index, src)}
+                                    className={`h-20 w-20 rounded-full object-cover cursor-pointer ${selectedImg === index ? 'border-4 border-green-500' : ''}`}
+                                    src={src}
+                                    alt={`image-${index}`}
+                                />
+                            ))}
                         </dd>
                     </div>
                 </dl>

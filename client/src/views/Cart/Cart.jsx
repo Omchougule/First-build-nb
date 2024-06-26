@@ -4,6 +4,9 @@ import { Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { useUserContext } from '../../context/Authcontext';
 import axios from 'axios';
+import { confirmAlert } from 'react-confirm-alert';
+import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
+
 
 const addToFavorites = (product) => {
     const favorites = JSON.parse(localStorage.getItem('favorites')) || [];
@@ -19,7 +22,7 @@ const addToFavorites = (product) => {
     }
 };
 
-const ProductCartItem = ({ imageUrl, initialQuantity, price, description, onQuantityChange, removeFromCart }) => {
+const ProductCartItem = ({ imageUrl, initialQuantity, price, description, onQuantityChange, productName, removeFromCart }) => {
     const [quantity, setQuantity] = useState(parseInt(initialQuantity));
     const [isLiked, setIsLiked] = useState(false);
     const decreaseQuantity = () => {
@@ -37,7 +40,7 @@ const ProductCartItem = ({ imageUrl, initialQuantity, price, description, onQuan
     };
 
     const handleAddToFavorites = () => {
-        addToFavorites({ imageUrl, initialQuantity, price, description });
+        addToFavorites({ imageUrl, initialQuantity, price, productName, description });
         setIsLiked(!isLiked);
     };
 
@@ -66,7 +69,7 @@ const ProductCartItem = ({ imageUrl, initialQuantity, price, description, onQuan
                     </div>
                 </div>
                 <div className="w-full min-w-0 flex-1 space-y-4 md:order-2 md:max-w-md">
-                    <a href="#" className="text-base font-medium text-gray-900 hover:underline light:text-white">{description}</a>
+                    <a href="#" className="text-base font-medium text-gray-900 hover:underline light:text-white">{productName}</a>
                     <div className="flex items-center gap-4">
                         <button type="button" onClick={handleAddToFavorites} className="inline-flex items-center text-sm font-medium text-gray-500 hover:text-gray-900 hover:underline light:text-gray-400 light:hover:text-white">
                             <svg className="me-1.5 h-5 w-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill={isLiked ? 'red' : 'none'} viewBox="0 0 24 24">
@@ -148,11 +151,24 @@ const Cart = () => {
     };
 
     const removeFromCart = (index) => {
-        const isConfirmed = window.confirm('Are you sure you want to remove this item from the cart?');
-        if (isConfirmed) {
-            const updatedCart = cart.filter(item => item.proId != index)
-            updateCart(index);
-        }
+        confirmAlert({
+            title: 'Confirm to remove',
+            message: 'Are you sure you want to remove this item from the cart?',
+            buttons: [
+                {
+                    label: 'Yes',
+                    onClick: () => {
+                        const updatedCart = cart.filter(item => item.proId !== index);
+                        updateCart(index);
+                        setCart(updatedCart); // Update the cart state after filtering out the item
+                    }
+                },
+                {
+                    label: 'No',
+                    onClick: () => { }
+                }
+            ]
+        });
     };
 
 
@@ -201,8 +217,25 @@ const Cart = () => {
 
 
     if (isloading) {
-        return (<h1>Loading</h1>)
+        return (<h1>Loading</h1>);
     }
+
+    if (cart.length === 0) {
+        return (
+            <>
+                <div className="md:bg-[url('https://dt-faryita.myshopify.com/cdn/shop/files/breadcrumb_bc57e145-dc2e-410c-9c11-4c22d1a357eb.png?v=1655187284')] bg-inherit bg-no-repeat bg-cover flex flex-col justify-between items-center">
+                    <Navbar />
+                    <h1 className="font-hand text-5xl py-44 mt-2 text-orange-400">Shopping Cart Is Empty</h1>
+                </div>
+                <section>
+                    <div className='flex flex-col  justify-between items-center my-20'>
+                        <Link to='/products' className='text-3xl font-semibold text-green-500  underline '>Explore Products</Link>
+                    </div>
+                </section>
+            </>
+        );
+    }
+
 
     return (
         <>
@@ -223,6 +256,7 @@ const Cart = () => {
                                         imageUrl={product.imageUrl}
                                         initialQuantity={product.quantity}
                                         price={product.price}
+                                        productName={product.title}
                                         description={product.description}
                                         onQuantityChange={(newQuantity) => updateItemQuantity(product.proId, newQuantity)}
                                         removeFromCart={() => removeFromCart(product.proId)}
