@@ -110,7 +110,7 @@ const Navbar = () => {
                                     </Link>
 
                                     <Link to="/dashboard" className='flex items-center'>
-                                        <img src={user?.photoURL || "https://cdn-icons-png.flaticon.com/512/456/456212.png"} alt="Profile" className="rounded-full w-8 h-8 mr-2" />
+                                        <img src={user?.userPhoto || "https://cdn-icons-png.flaticon.com/512/456/456212.png"} alt="Profile" className="rounded-full w-8 h-8 mr-2" />
                                         {/* <span className="text-green-600">{user.displayName}</span> */}
                                     </Link>
                                     <li>

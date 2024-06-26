@@ -23,25 +23,28 @@ const Login = () => {
   const handleLogin = async () => {
     try {
       const data = await signInWithPopup(auth, provider);
-      console.log(data);
+      
+      if (data) {
+        const res = await axios.post(`http://localhost:5000/oauth`, {
+          email: data.user.email,
+          userName: data.user.displayName
+        });
 
-      const res = await axios.post(`http://localhost:5000/oauth`, {
-        email: data.user.email,
-        userName: data.user.displayName
-      });
+        if (res.data.success) {
+          const auth = { email: res.data.data.email, sessionId: res.data.data.sessionId };
+          localStorage.setItem("auth", JSON.stringify(auth));
+          setUser({
+            id: res.data.data._id,
+            email: res.data.data.email,
+            sessionId: res.data.data.sessionId,
+            userName: res.data.data.userName,
+            phoneNumber: res.data.data.phoneNumber,
+            address: res.data.data.address,
+            userPhoto : res.data.data.userPhoto
+          })
+          toast.success("Login Successful");
+        }
 
-      if (res.data.success) {
-        const auth = { email: res.data.data.email, sessionId: res.data.data.sessionId };
-        localStorage.setItem("auth", JSON.stringify(auth));
-        setUser({
-          id: res.data.data._id,
-          email: res.data.data.email,
-          sessionId: res.data.data.sessionId,
-          userName: res.data.data.userName,
-          phoneNumber: res.data.data.phoneNumber,
-          address: res.data.data.address
-        })
-        toast.success("Login Successful");
       }
 
     } catch (error) {
@@ -73,7 +76,8 @@ const Login = () => {
               sessionId: res.data.data.sessionId,
               userName: res.data.data.userName,
               phoneNumber: res.data.data.phoneNumber,
-              address: res.data.data.address
+              address: res.data.data.address,
+              userPhoto : res.data.data.userPhoto
             })
             navigate('/');
           }

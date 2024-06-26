@@ -44,7 +44,8 @@ export const SignUp = () => {
                                     sessionId: res.data.data.sessionId,
                                     userName: res.data.data.userName,
                                     phoneNumber: res.data.data.phoneNumber,
-                                    address: res.data.data.address
+                                    address: res.data.data.address,
+                                    userPhoto : res.data.data.userPhoto
                                 })
                                 toast.success("New user created and logged in successfully");
                                 navigate('/')

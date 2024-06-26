@@ -11,6 +11,7 @@ import Cart from './models/cart.js'
 import Address from './models/addresses.js'
 import Orders from './models/orders.js'
 import DiscountCode from './models/code.js'
+import Reviews from './models/review.js'
 
 dotenv.config();
 
@@ -51,12 +52,12 @@ app.get("/health", (req, res) => {
 
 app.post('/updateuser', async (req, res) => {
 
-  const {email, updatedemail, userName, phoneNumber, address} = req.body
+  const {email, updatedemail, userName, phoneNumber, address, userPhoto} = req.body
   const user = await User.find({email})
 
   if(user)
   {
-    const updateuser = {userName, phoneNumber, address, email : updatedemail}
+    const updateuser = {userName, phoneNumber, address, email : updatedemail, userPhoto}
     const updateduser = await User.findOneAndUpdate({email}, updateuser, {new : true, runValidators : true})
     res.json({
       success : true,
@@ -632,6 +633,29 @@ app.put('/updatestatus/:orderId', async (req,res)=>{
   }
 })
 
+app.post('/cancelorder', async(req,res)=>{
+  try {
+    const {userId, orderID} = req.body
+    const order = await Orders.findOneAndUpdate({userId,orderId : orderID}, {status : 'Cancelled'}, {new : true})
+    if(order)
+    {
+      res.json({
+        success : true,
+        data : order
+      })
+    }
+    else
+    {
+      res.json({
+        success : false,
+        data : null
+      })
+    }
+  } catch (error) {
+    console.log(error);
+  }
+})
+
 // -----------------------------------------------------codes--------------------------------------------------------
 
 app.post('/addcode', async (req, res) => {
@@ -689,3 +713,27 @@ const deactivateExpiredDiscountCodes = async () => {
 
 // Example usage: run this function periodically (e.g., with setInterval or a cron job)
 setInterval(deactivateExpiredDiscountCodes, 3600000); // Run every hour
+
+
+
+// ----------------------------------------------------------Review-------------------------------------------------------
+
+app.post('/addreview', async (req, res) => {
+  try {
+    const review = await Reviews.create(req.body);
+    if(review)
+    {
+      res.json({
+        success : true,
+        data : review
+      })
+    }
+    else
+    {
+      res.json({success : false, data : null})
+    }
+  } catch (error) {
+    res.json({success :false, data : null, message: error.message})
+    console.error(error);
+  }
+})
