@@ -67,9 +67,14 @@ const Profile = () => {
     };
 
     const images = [
-        "https://i.pinimg.com/564x/13/ac/c5/13acc5169bb5040b48a38168be255cde.jpg",
-        "https://i.pinimg.com/564x/3d/d5/5c/3dd55c1301ff9bf6ace8d7760625c07c.jpg",
-        "https://i.pinimg.com/564x/6b/6e/f3/6b6ef332144043c71979051af05a842e.jpg"
+        
+        "https://img.freepik.com/free-psd/3d-illustration-human-avatar-profile_23-2150671140.jpg?ga=GA1.1.784385548.1718181495",
+        "https://img.freepik.com/free-psd/3d-illustration-human-avatar-profile_23-2150671142.jpg?size=626&ext=jpg&ga=GA1.1.784385548.1718181495&semt=ais_user",
+        // "https://img.freepik.com/free-psd/3d-illustration-person-with-glasses_23-2149436185.jpg?size=626&ext=jpg&ga=GA1.1.784385548.1718181495&semt=ais_user",
+        "https://img.freepik.com/free-vector/gradient-avatar-illustration_23-2150891933.jpg?ga=GA1.1.784385548.1718181495",
+        // "https://img.freepik.com/free-psd/3d-illustration-human-avatar-profile_23-2150671138.jpg?ga=GA1.1.784385548.1718181495",
+        "https://img.freepik.com/free-vector/gradient-avatar-illustration_23-2150891915.jpg?ga=GA1.1.784385548.1718181495",
+
     ];
 
     return (
@@ -133,7 +138,7 @@ const Profile = () => {
                         <dt className="text-sm font-medium text-gray-500">
                             Avatar
                         </dt>
-                        <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2 flex justify-between">
+                        <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2 flex justify-between overflow-auto">
                             {images.map((src, index) => (
                                 <img
                                     key={index}
