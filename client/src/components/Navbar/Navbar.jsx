@@ -63,7 +63,7 @@ const Navbar = () => {
         
 
         // bg-opacity-90  backdrop-filter backdrop-blur-sm -----------use this to blur the navbar
-        <nav className="    text-white  w-full md:static md:text-sm shadow-lg z-50" id='navbar'    >
+        <nav className="   fixed top-0 left-0  text-white backdrop-blur-[2px]   w-full  md:text-sm shadow-lg z-50" id='navbar'    >
             <div className="items-center px-4 max-w-screen-xl mx-auto md:flex md:px-8">
                 <div className="flex items-center justify-between py-3 md:py-5 md:block">
                     <Link to="/" className='font-hand'>
