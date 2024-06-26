@@ -4,13 +4,10 @@ import toast from 'react-hot-toast';
 import Navbar from '../../components/Navbar/Navbar';
 // import ReviewCard from '../../components/ReviewCard';
 import ReviewCard from '../../components/ReviewCards/ReviewCard';
+import axios from 'axios';
 
 export default function Reviews() {
-  const userName = localStorage.getItem('userName');
-  const uPhoto = localStorage.getItem('userPhoto');
-
-  const [message, setMessage] = useState('');
-  const [reviews, setReviews] = useState([]);
+  const [reviews, setReviews] = useState([])
 
   const loadReview = async () => {
     // try {
@@ -23,46 +20,19 @@ export default function Reviews() {
     // }
   };
 
+  const fetch_reviews = async () => {
+    const res = await axios.get('http://localhost:5000/getreviews')
+
+    if(res.data.success)
+    {
+      console.log(res.data.data);
+      setReviews(res.data.data)
+    }
+  }
+
   useEffect(() => {
-    loadReview();
-  }, []);
-
-  const addReview = async () => {
-    // try {
-    //   const response = await axios.post(`${import.meta.env.VITE_API_URL}/review`, {
-    //     name: userName,
-    //     message: message,
-    //     userPhoto: uPhoto,
-    //   });
-    //   toast.success(response.data.message);
-    //   loadReview();
-    //   reset();
-    // } catch (error) {
-    //   console.error('Error adding review:', error);
-    //   toast.error('Failed to add review');
-    // }
-  };
-
-  const reset = () => {
-    setMessage('');
-  };
-
-
-    
-    // useEffect(() => {
-
-    //   const scroll = new LocomotiveScroll({
-    //     el: document.querySelector('[data-scroll-container]'),
-    //     smooth: true,
-    //     lerp: 0.05,
-    //     // lerp : 0.95,
-
-    //   });
-
-      
-
-
-    // }, [])
+    fetch_reviews()
+  }, [])
 
 
   return (
@@ -84,40 +54,7 @@ export default function Reviews() {
 
 
       {/* <Navbar /> */}
-      <div className="container mt-10 mx-auto w-3/5">
-        <div className=" card m-auto shadow-md border border-t-white rounded p-4 mt-5 animate-fade-up ">
-          <h1 className="text-center mb-10 text-info-emphasis text-4xl font-bold">Add Review</h1>
-          <hr className="my-4" />
-          <p className="mb-2">
-            Name: <span className="font-semibold">{userName}</span>
-          </p>
-          <p className="my-4">Review:</p>
-          <input
-            type="text"
-            placeholder="Enter Message"
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-            className="mb-8 p-2 px-3 rounded border border-black w-full"
-          />
-          <div className="flex justify-start">
-            <button
-              type="button"
-              onClick={reset}
-              className="border rounded-lg hover:bg-green-100 px-4 py-2 mr-3 text-sm font-semibold"
-            >
-              Reset
-            </button>
-            <button
-              type="button"
-              onClick={addReview}
-              className="border rounded-lg bg-green-600 text-white hover:bg-green-500 px-4 py-2 text-sm font-semibold"
-            >
-              Save
-            </button>
-          </div>
-        </div>
-      </div>
-
+      
 
       <div className="container mt-5 mx-auto">
 
@@ -131,7 +68,12 @@ export default function Reviews() {
               <ul className="grid items-center gap-6 sm:grid-cols-2 lg:grid-cols-3">
 
                 {reviews.map((review) => (
-                  <ReviewCard key={review._id} {...review} loadReview={loadReview} />
+                  <ReviewCard 
+                  key={review._id} 
+                  name={review.userName} 
+                  message={review.review}
+                  userPhoto='https://img.freepik.com/free-psd/3d-illustration-human-avatar-profile_23-2150671140.jpg?ga=GA1.1.784385548.1718181495'
+                  loadReview={loadReview} />
                 ))}
 
 

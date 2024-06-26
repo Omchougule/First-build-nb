@@ -25,8 +25,9 @@ const userN = encodeURIComponent("AmitKumbhar4_24")
 
 const connectDB = async () => {
     try {
-        // await mongoose.connect("mongodb+srv://OmNandurkar:9881954344@mongodb.mmqhprc.mongodb.net/nutribites");
-        await mongoose.connect(`mongodb+srv://${userN}:${pass}@cluster0.qkvogem.mongodb.net/Nutribites?retryWrites=true&w=majority&appName=Cluster0`);
+      
+        await mongoose.connect("mongodb+srv://nandurkarom172:Pass%40123@cluster0.jkq4ihm.mongodb.net/");
+        // await mongoose.connect(`mongodb+srv://${userN}:${pass}@cluster0.qkvogem.mongodb.net/Nutribites?retryWrites=true&w=majority&appName=Cluster0`);
         console.log('Database Connected');
     } catch (error) {
         console.log(error.message);
@@ -333,17 +334,17 @@ app.post('/getadd', async (req, res) => {
 
 app.post('/addproduct', async (req, res) => {
   try {
-    const res = await Products.create(req.body);
-    if(res)
+    const product = await Products.create(req.body);
+    if(product)
     {
-      res.send({
+      res.json({
         success : true,
-        data : res
+        data : product
       })
     }
     else
     {
-      res.send({
+      res.json({
         success : false,
         data : null
       })
@@ -735,5 +736,27 @@ app.post('/addreview', async (req, res) => {
   } catch (error) {
     res.json({success :false, data : null, message: error.message})
     console.error(error);
+  }
+})
+
+app.get('/getreviews', async (req,res) => {
+  try {
+    const reviews = await Reviews.find()
+    if(reviews.length > 0)
+    {
+      res.json({
+        success : true,
+        data : reviews
+      })
+    }
+    else
+    {
+      res.json({
+        success : false,
+        data : []
+      })
+    }
+  } catch (error) {
+    console.log(error);
   }
 })
