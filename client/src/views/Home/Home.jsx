@@ -16,11 +16,11 @@ import Founder from '../../components/HomeComp/Founder/Founder';
 import Products from '../../components/HomeComp/Products/Products';
 import Reciept from '../../components/Reciept/Reciept';
 import AboutUs from '../../components/HomeComponents/AboutUs/AboutUs';
-import MenuC from '../../components/HomeComponents/MenuC/MenuC';
-import MenuList from '../../components/HomeComponents/MenuList/MenuList';
-import SpecialItems from '../../components/HomeComponents/SpecialItems/SpecialItems';
-import { OurBlogs } from '../../components/HomeComponents/OurBlogs/OurBlogs';
-import { TestimonialsComp } from '../../components/HomeComponents/TestimonialsComps/TestimonialsComp';
+import Appetizers from '../../components/HomeComponents/Appetizers/Appetizers';
+import Meals from '../../components/HomeComponents/Meals/Meals';
+import Smothies from '../../components/HomeComponents/Smothies/Smothies';
+import  OurBlogs  from '../../components/HomeComponents/OurBlogs/OurBlogs';
+import TestimonialsComp from '../../components/HomeComponents/TestimonialsComps/TestimonialsComp';
 import { useUserContext } from '../../context/Authcontext';
 import { Link } from 'react-router-dom';
 import DisplayF from '../../components/HomeComponents/DisplayF/DisplayF';
@@ -73,17 +73,17 @@ export default function Home() {
       </div>
 
       <div className=' bg-slate-700  '  >
-        <MenuC />
+        <Appetizers />
 
       </div>
 
       <div className=' bg-slate-700  ' data-scroll data-scroll-speed="-1" >
-        <MenuList />
+        <Meals />
 
       </div>
 
       <div className=' bg-slate-700  '>
-        <SpecialItems />
+        <Smothies />
 
       </div>
 
