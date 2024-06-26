@@ -28,7 +28,7 @@ export default function Contact() {
 
       <div className='
        md:bg-[url("https://dt-faryita.myshopify.com/cdn/shop/files/breadcrumb_bc57e145-dc2e-410c-9c11-4c22d1a357eb.png?v=1655187284")] 
-      bg-inherit bg-no-repeat bg-cover  flex flex-col justify-between items-center
+      bg-inherit bg-no-repeat bg-cover  flex flex-col justify-between items-center pt-20
       '>
 
         <Navbar />

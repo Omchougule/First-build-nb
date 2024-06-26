@@ -16,18 +16,21 @@ import Founder from '../../components/HomeComp/Founder/Founder';
 import Products from '../../components/HomeComp/Products/Products';
 import Reciept from '../../components/Reciept/Reciept';
 import AboutUs from '../../components/HomeComponents/AboutUs/AboutUs';
-import MenuC from '../../components/HomeComponents/MenuC/MenuC';
-import MenuList from '../../components/HomeComponents/MenuList/MenuList';
-import SpecialItems from '../../components/HomeComponents/SpecialItems/SpecialItems';
-import { OurBlogs } from '../../components/HomeComponents/OurBlogs/OurBlogs';
-import { TestimonialsComp } from '../../components/HomeComponents/TestimonialsComps/TestimonialsComp';
+import Appetizers from '../../components/HomeComponents/Appetizers/Appetizers';
+import Meals from '../../components/HomeComponents/Meals/Meals';
+import Smothies from '../../components/HomeComponents/Smothies/Smothies';
+import  OurBlogs  from '../../components/HomeComponents/OurBlogs/OurBlogs';
+import TestimonialsComp from '../../components/HomeComponents/TestimonialsComps/TestimonialsComp';
 import { useUserContext } from '../../context/Authcontext';
+import { Link } from 'react-router-dom';
+import DisplayF from '../../components/HomeComponents/DisplayF/DisplayF';
 export default function Home() {
 
-  const {user, products} = useUserContext();
+  const { user, products } = useUserContext();
   useEffect(() => {
     Aos.init({ duration: 1000, delay: 300 });
   })
+
   // useEffect(() => {
 
   //   const scroll = new LocomotiveScroll({
@@ -47,15 +50,19 @@ export default function Home() {
   // }, [])
 
   return (
-    <div className='bg-[#ff679a]' data-scroll-container >
+
+    <div className='bg-[#ff679a] pt-20' data-scroll-container >
+      {/* md:bg-[url("https://dt-faryita.myshopify.com/cdn/shop/files/slider01_c82beff2-7ccb-48cb-8194-98e1e197b1e9.jpg?v=1658472890")] bg-[url("https://dt-faryita.myshopify.com/cdn/shop/files/slider01_c82beff2-7ccb-48cb-8194-98e1e197b1e9.jpg?v=1658472890")] */}
       <div className='
-       md:bg-[url("https://dt-faryita.myshopify.com/cdn/shop/files/slider01_c82beff2-7ccb-48cb-8194-98e1e197b1e9.jpg?v=1658472890")] bg-[url("https://dt-faryita.myshopify.com/cdn/shop/files/slider01_c82beff2-7ccb-48cb-8194-98e1e197b1e9.jpg?v=1658472890")]
-      bg-cover bg-center bg-no-repeat h-screen flex flex-col justify-between items-center mb-20  
+        md:bg-[#fe669e] 
+       bg-cover bg-center bg-no-repeat h-screen flex flex-col justify-center items-center mb-20 
       '>
 
         <Navbar />
 
-        <button className='text-white bg-transparent z-50 border py-2 px- w-32 focus:outline-none hover:bg-white hover:text-black active:scale-90 duration-200  rounded-full text-lg mb-10 -translate-y-20 '>Shop Now</button>
+        <DisplayF />
+
+
 
       </div>
 
@@ -65,17 +72,17 @@ export default function Home() {
       </div>
 
       <div className=' bg-slate-700  '  >
-        <MenuC />
+        <Appetizers />
 
       </div>
 
       <div className=' bg-slate-700  ' data-scroll data-scroll-speed="-1" >
-        <MenuList />
+        <Meals />
 
       </div>
 
       <div className=' bg-slate-700  '>
-        <SpecialItems />
+        <Smothies />
 
       </div>
 

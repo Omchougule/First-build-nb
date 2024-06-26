@@ -1,59 +1,61 @@
-import React from 'react'
+import React from 'react';
+import OrangeTop from '../../../assets/orange_top.webp';
 
-export const TestimonialsComp = () => {
-    return (
-        <>
+// Testimonial data array
+const testimonials = [
+  {
+    name: 'Holden Caulfield',
+    role: 'Senior Product Designer',
+    image: 'https://randomuser.me/api/portraits/men/54.jpg',
+    quote: "Edison bulb retro cloud bread echo park, helvetica stumptown taiyaki taxidermy 90's cronut +1 kinfolk."
+  },
+  {
+    name: 'Alper Kamu',
+    role: 'UI Developer',
+    image: 'https://randomuser.me/api/portraits/men/55.jpg',
+    quote: "Edison bulb retro cloud bread echo park, helvetica stumptown taiyaki taxidermy 90's cronut +1 kinfolk."
+  },
+  {
+    name: 'Henry Letham',
+    role: 'CTO',
+    image: 'https://randomuser.me/api/portraits/men/56.jpg',
+    quote: "Edison bulb retro cloud bread echo park, helvetica stumptown taiyaki taxidermy 90's cronut +1 kinfolk."
+  }
+];
 
-            <div className='bg-[#f76d3c]    flex justify-center flex-col 
-          '>
-                {/* <div className="custom-shape-2  ">
-                <svg className='custom-shape-2-svg ' data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
-                    <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z" className="shape-fill"></path>
-                </svg>
-            </div> */}
+const TestimonialsComp = () => {
+  return (
+    <>
+      <div className='bg-[#f76d3c] flex justify-center flex-col'>
+        <div>
+          <img className='shade hidden md:block md:-translate-y-28 rotate-180' src={OrangeTop} alt="Orange Top Background" />
+        </div>
 
-                <div>
-                    <img className=' shade hidden md:block md:-translate-y-28 rotate-180   ' src='https://dt-faryita.myshopify.com/cdn/shop/files/after_image-orange_top.png?v=1657021307' alt="" />
-                </div>
-
-                <div className=' flex flex-col space-y-10     justify-center items-center'>
-                    <h1 className='font-hand text-4xl  text-white'>Testimonials</h1>
-                    {/* <img className='w-96     object-cover' src="https://dt-faryita.myshopify.com/cdn/shop/files/grid15_8c36583c-9f32-498a-9e44-59507412669e.png?v=1655093327" alt="" /> */}
-                    <section className="text-white body-font">
-                        <div className="container w-4/5 px-5 pb-24 mx-auto">
-                            <div className="grid lg:grid-cols-3 grid-col-1 gap-10 -m-4">
-                                <div className=" lg:mb-0 mb-6 p-4">
-                                    <div className="h-full text-center">
-                                        <img alt="testimonial" className="w-20 h-20 mb-8 object-cover object-center rounded-full inline-block border-2 border-gray-200 bg-gray-100" src="https://randomuser.me/api/portraits/men/54.jpg"/>
-                                            <p className="leading-relaxed">Edison bulb retro cloud bread echo park, helvetica stumptown taiyaki taxidermy 90's cronut +1 kinfolk. </p>
-                                            <span className="inline-block h-1 w-10 rounded bg-yellow-500 mt-6 mb-4"></span>
-                                            <h2 className="text-white font-medium title-font tracking-wider text-2xl font-hand">HOLDEN CAULFIELD</h2>
-                                            <p className="text-white">Senior Product Designer</p>
-                                    </div>
-                                </div>
-                                <div className=" lg:mb-0 mb-6 p-4">
-                                    <div className="h-full text-center">
-                                        <img alt="testimonial" className="w-20 h-20 mb-8 object-cover object-center rounded-full inline-block border-2 border-gray-200 bg-gray-100" src="https://randomuser.me/api/portraits/men/55.jpg"/>
-                                            <p className="leading-relaxed">Edison bulb retro cloud bread echo park, helvetica stumptown taiyaki taxidermy 90's cronut +1 kinfolk.</p>
-                                            <span className="inline-block h-1 w-10 rounded bg-yellow-500 mt-6 mb-4"></span>
-                                            <h2 className="text-white font-medium title-font tracking-wider text-2xl font-hand">ALPER KAMU</h2>
-                                            <p className="text-white">UI Develeoper</p>
-                                    </div>
-                                </div>
-                                <div className=" lg:mb-0 p-4">
-                                    <div className="h-full text-center">
-                                        <img alt="testimonial" className="w-20 h-20 mb-8 object-cover object-center rounded-full inline-block border-2 border-gray-200 bg-gray-100" src="https://randomuser.me/api/portraits/men/56.jpg"/>
-                                            <p className="leading-relaxed">Edison bulb retro cloud bread echo park, helvetica stumptown taiyaki taxidermy 90's cronut +1 kinfolk. </p>
-                                            <span className="inline-block h-1 w-10 rounded bg-yellow-500 mt-6 mb-4"></span>
-                                            <h2 className="text-white font-medium title-font tracking-wider text-2xl font-hand">HENRY LETHAM</h2>
-                                            <p className="text-white">CTO</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </section>
-                </div>
+        <div className='flex flex-col space-y-10 justify-center items-center'>
+          <h1 className='font-hand text-4xl text-white'>Testimonials</h1>
+          
+          <section className="text-white body-font">
+            <div className="container w-4/5 px-5 pb-24 mx-auto">
+              <div className="grid lg:grid-cols-3 grid-col-1 gap-10 -m-4">
+                {/* Map over testimonial data */}
+                {testimonials.map((testimonial, index) => (
+                  <div key={index} className="lg:mb-0 mb-6 p-4" data-aos="fade-up">
+                    <div className="h-full text-center">
+                      <img alt={`Portrait of ${testimonial.name}`} className="w-20 h-20 mb-8 object-cover object-center rounded-full inline-block border-2 border-gray-200 bg-gray-100" src={testimonial.image} />
+                      <p className="leading-relaxed">{testimonial.quote}</p>
+                      <span className="inline-block h-1 w-10 rounded bg-yellow-500 mt-6 mb-4"></span>
+                      <h2 className="text-white font-medium title-font tracking-wider text-2xl font-hand">{testimonial.name}</h2>
+                      <p className="text-white">{testimonial.role}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
-        </>
-    )
+          </section>
+        </div>
+      </div>
+    </>
+  );
 }
+
+export default TestimonialsComp;

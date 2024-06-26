@@ -6,6 +6,7 @@ import axios from 'axios';
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
 import { useUserContext } from '../../context/Authcontext';
+import CartIcon from '../../assets/cart-icon.png';
 
 const Navbar = () => {
     // const [user, setUser] = useState(null);
@@ -59,70 +60,10 @@ const Navbar = () => {
     ];
 
     return (
-        // <nav className="bg-transparent bg-opacity-50  text-white w-full md:static md:text-sm shadow-lg z-50 navbar">
-        //     <div className="flex justify-evenly  items-center px-4 max-w-screen-xl mx-auto md:flex md:justify-between  md:px-8">
-        //         <div className="flex items-center justify-between  py-3 md:py-5 md:block">
-        //             <Link to="/">
-        //                 <h1 className='text-2xl font-bold navbar-logo'>NUTRIBITES</h1>
-        //             </Link>
-        //             <div className="md:hidden flex items-center">
-        //                 <button className="text-gray-500 my hover:text-gray-800 navbar-item" onClick={() => setState(!state)}>
-        //                     {state ? (
-        //                         <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" viewBox="0 0 20 20" fill="currentColor">
-        //                             <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
-        //                         </svg>
-        //                     ) : (
-        //                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-        //                             <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
-        //                         </svg>
-        //                     )}
-        //                 </button>
-        //             </div>
-        //         </div>
-        //         <div className={`flex justify-center pb-3 mt-8 md:block md:pb-0 md:mt-0 ${state ? 'block' : 'hidden'}`}>
-        //             <ul className="justify-end items-center space-y-6 md:flex md:space-x-6 md:space-y-0">
-        //                 {navigation.map((item, idx) => (
-        //                     <li key={idx} className="    font-semibold hover:text-slate-600 cursor-pointer navbar-item">
-        //                         <Link to={item.path} className="block">
-        //                             {item.title}
-        //                         </Link>
-        //                     </li>
-        //                 ))}
-
-        //             </ul>
-        //         </div>
-        //         <div className={`flex justify-center pb-3 mt-8 md:block md:pb-0 md:mt-0 ${state ? 'block' : 'hidden'}`}>
-        //             <ul className="justify-end items-center space-y-6 md:flex md:space-x-6 md:space-y-0">
-        //                 <span className='hidden w-px h-6 bg-gray-300 md:block navbar-item'></span>
-        //                 <div className='space-y-3 items-center gap-x-6 md:flex md:space-y-0'>
-        //                     {user ? (
-        //                         <div className="flex items-center space-x-6">
-        //                             <Link to="/" className='flex items-center navbar-item '>
-        //                                 <img src={user.photoURL} alt="Profile" className="rounded-full w-8 h-8 mr-2" />
-        //                                 <span className="text-green-600">{user.displayName}</span>
-        //                             </Link>
-        //                             <li>
-        //                                 <Link onClick={handleLogout} className="block py-2 px-4 font-medium text-center text-white bg-green-600 hover:bg-green-500 active:bg-green-700 active:shadow-none rounded-lg shadow md:inline-block navbar-item">
-        //                                     Log Out
-        //                                 </Link>
-        //                             </li>
-        //                         </div>
-        //                     ) : (
-        //                         <li>
-        //                             <Link to="/login" className="block py-2 px-4 font-medium text-center text-white bg-green-600 hover:bg-green-500 active:bg-green-700 active:shadow-none rounded-lg shadow md:inline-block navbar-item">
-        //                                 Log in
-        //                             </Link>
-        //                         </li>
-        //                     )}
-        //                 </div>
-
-        //             </ul>
-        //         </div>
-        //     </div>
-        // </nav>
+        
 
         // bg-opacity-90  backdrop-filter backdrop-blur-sm -----------use this to blur the navbar
-        <nav className="    text-white  w-full md:static md:text-sm shadow-lg z-50" id='navbar'    >
+        <nav className="   fixed top-0 left-0  text-white backdrop-blur-[2px]   w-full  md:text-sm shadow-lg z-50" id='navbar'    >
             <div className="items-center px-4 max-w-screen-xl mx-auto md:flex md:px-8">
                 <div className="flex items-center justify-between py-3 md:py-5 md:block">
                     <Link to="/" className='font-hand'>
@@ -165,7 +106,7 @@ const Navbar = () => {
                             {user?.id ? (
                                 <div className="flex items-center space-x-6">
                                     <Link to='/cart'>
-                                        <img className='h-8 w-8 cursor-pointer' src="https://uxwing.com/wp-content/themes/uxwing/download/e-commerce-currency-shopping/shopping-cart-icon.png" alt="" />
+                                        <img className='h-6 w-6 cursor-pointer' src={CartIcon} alt="" />
                                     </Link>
 
                                     <Link to="/dashboard" className='flex items-center'>
