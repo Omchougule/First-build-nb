@@ -5,7 +5,7 @@ const productschema = new Schema({
     imageUrl: String,
     description: String,
     price: Number,
-    category : { type: String, enum: ['Smoothie', 'Appetizer', 'Meals'], default: 'Smoothie' }
+    category : { type: String, enum: ['Smoothie', 'Appetizer','Shakes', 'Meals'], default: 'Smoothie' }
 })
 
 const Products = model("products", productschema);

@@ -65,7 +65,7 @@ const ProductCartItem = ({ imageUrl, initialQuantity, price, description, onQuan
                         </button>
                     </div>
                     <div className="text-end md:order-4 md:w-32">
-                        <p className="text-base font-bold text-gray-900 light:text-white">${price * quantity}</p>
+                        <p className="text-base font-bold text-gray-900 light:text-white">&#8377;{price * quantity}</p>
                     </div>
                 </div>
                 <div className="w-full min-w-0 flex-1 space-y-4 md:order-2 md:max-w-md">
@@ -271,28 +271,28 @@ const Cart = () => {
                                     <div className="space-y-2">
                                         <dl className="flex items-center justify-between gap-4">
                                             <dt className="text-base font-normal text-gray-500 light:text-gray-400">Original price</dt>
-                                            <dd className="text-base font-medium text-gray-900 light:text-white"> ${originalPrice.toFixed(2)}</dd>
+                                            <dd className="text-base font-medium text-gray-900 light:text-white"> &#8377;{originalPrice.toFixed(2)}</dd>
                                         </dl>
 
                                         <dl className="flex items-center justify-between gap-4">
                                             <dt className="text-base font-normal text-gray-500 light:text-gray-400">Savings</dt>
-                                            <dd className="text-base font-medium text-green-600">-${summary?.discountedAmmount}</dd>
+                                            <dd className="text-base font-medium text-green-600">- &#8377;{summary?.discountedAmmount}</dd>
                                         </dl>
 
                                         <dl className="flex items-center justify-between gap-4">
                                             <dt className="text-base font-normal text-gray-500 light:text-gray-400">Store Pickup</dt>
-                                            <dd className="text-base font-medium text-gray-900 light:text-white">${summary?.storePickup}</dd>
+                                            <dd className="text-base font-medium text-gray-900 light:text-white">&#8377;{summary?.storePickup}</dd>
                                         </dl>
 
                                         <dl className="flex items-center justify-between gap-4">
                                             <dt className="text-base font-normal text-gray-500 light:text-gray-400">Tax</dt>
-                                            <dd className="text-base font-medium text-gray-900 light:text-white">${summary?.tax}</dd>
+                                            <dd className="text-base font-medium text-gray-900 light:text-white">&#8377;{summary?.tax}</dd>
                                         </dl>
                                     </div>
 
                                     <dl className="flex items-center justify-between gap-4 border-t border-gray-200 pt-2 light:border-gray-700">
                                         <dt className="text-base font-bold text-gray-900 light:text-white">Total</dt>
-                                        <dd className="text-base font-bold text-gray-900 light:text-white">$ {finalTotal.toFixed(2)} </dd>
+                                        <dd className="text-base font-bold text-gray-900 light:text-white">&#8377; {finalTotal.toFixed(2)} </dd>
                                     </dl>
                                 </div>
                                 <Link
