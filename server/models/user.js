@@ -11,7 +11,7 @@ const userSchema = new Schema({
         default : '',
         expires : '1h'
     },
-    // userPhoto : String,
+    userPhoto : String,
     createdAt : Date,
     isLoggedIn : {
         type : Boolean,

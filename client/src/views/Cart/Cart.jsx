@@ -105,7 +105,7 @@ const Cart = () => {
     }
 
     const updateOrderSummary = (Newcart) => {
-        const totalPrice = Newcart.reduce((acc, item) => acc + item.quantity * item.price, 0); 
+        const totalPrice = Newcart.reduce((acc, item) => acc + item.quantity * item.price, 0);
         const storePickup = 99;
         const tax = 799;
         const discountedAmmount = ((discount / 100) * totalPrice).toFixed(2);
@@ -134,8 +134,8 @@ const Cart = () => {
 
     useEffect(() => {
         updateOrderSummary(cart)
-    },[discount])
-    
+    }, [discount])
+
     const updateCart = async (index) => {
         const res = await axios.post('http://localhost:5000/removecart', { userId: user?.id, proId: index })
         if (res.data.success) {
@@ -154,10 +154,10 @@ const Cart = () => {
             updateCart(index);
         }
     };
-    
+
 
     // const updateItemQuantity = (itemId, newQuantity) => {
-        //     setCart(prevCart =>
+    //     setCart(prevCart =>
     //       prevCart.map(item =>
     //         item._id === itemId ? { ...item, quantity: newQuantity } : item
     //       )
@@ -166,10 +166,11 @@ const Cart = () => {
 
     const updateItemQuantity = async (itemId, newQuantity) => {
         const newcart = cart.filter(item => item.proId === itemId)
+        const tst = newQuantity > newcart[0].quantity ? '+1' : '-1'
         const updatedCart = { ...newcart[0], quantity: newQuantity }
         const res = await axios.post('http://localhost:5000/addcart', updatedCart)
         if (res.data.success == true) {
-            toast.success(+1)
+            toast.success(tst)
         }
         fetch_cart()
     }
@@ -187,19 +188,17 @@ const Cart = () => {
     }
 
     const handleCode = async (code) => {
-        const res = await axios.post('http://localhost:5000/getcode', {code : discountcode})
+        const res = await axios.post('http://localhost:5000/getcode', { code: discountcode })
 
-        if(res.data.success)
-        {
+        if (res.data.success) {
             setDiscount(res.data.data.discountPercentage)
             toast.success("Code applied successfully!")
         }
-        else
-        {
+        else {
             toast.error('Invalid code!')
         }
     }
-    
+
 
     if (isloading) {
         return (<h1>Loading</h1>)
@@ -283,9 +282,9 @@ const Cart = () => {
                                     <div className="space-y-4">
                                         <div>
                                             <label htmlFor="voucher" className="mb-2 block text-sm font-medium text-gray-900 light:text-white"> Do you have a voucher or gift card? </label>
-                                            <input maxLength={6} value={discountcode} onChange={(e)=>setDiscountcode(e.target.value.toUpperCase())} type="text" id="voucher" className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-green-500 focus:ring-green-500 light:border-gray-600 light:bg-gray-700 light:text-white light:placeholder-gray-400 light:focus:border-green-500 light:focus:ring-green-500 font-bold" placeholder="" required />
+                                            <input maxLength={6} value={discountcode} onChange={(e) => setDiscountcode(e.target.value.toUpperCase())} type="text" id="voucher" className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-green-500 focus:ring-green-500 light:border-gray-600 light:bg-gray-700 light:text-white light:placeholder-gray-400 light:focus:border-green-500 light:focus:ring-green-500 font-bold" placeholder="" required />
                                         </div>
-                                        <button onClick={(e) => handleCode(discountcode)}className="flex w-full items-center justify-center rounded-lg bg-green-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-green-800 focus:outline-none focus:ring-4 focus:ring-green-300 light:bg-green-600 light:hover:bg-green-700 light:focus:ring-green-800">Apply Code</button>
+                                        <button onClick={(e) => handleCode(discountcode)} className="flex w-full items-center justify-center rounded-lg bg-green-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-green-800 focus:outline-none focus:ring-4 focus:ring-green-300 light:bg-green-600 light:hover:bg-green-700 light:focus:ring-green-800">Apply Code</button>
                                     </div>
                                 </div>
                             </div>

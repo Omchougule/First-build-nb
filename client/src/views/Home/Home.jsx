@@ -28,7 +28,6 @@ export default function Home() {
   useEffect(() => {
     Aos.init({ duration: 1000, delay: 300 });
   })
-  console.log(user);
   // useEffect(() => {
 
   //   const scroll = new LocomotiveScroll({

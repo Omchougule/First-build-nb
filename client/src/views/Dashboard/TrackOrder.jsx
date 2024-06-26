@@ -2,8 +2,9 @@ import React, { useEffect, useState } from 'react'
 import Navbar from '../../components/Navbar/Navbar'
 import { auth } from '../../views/Login/config'
 import toast from 'react-hot-toast'
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import axios from 'axios';
+import { useUserContext } from '../../context/Authcontext';
 
 
 const OrderTracking = ({ status }) => {
@@ -13,7 +14,7 @@ const OrderTracking = ({ status }) => {
         { title: 'Shipped', description: 'Your order has been shipped.', iconPath: 'M5 12l5 5L20 7', status: 'Shipped' },
         { title: 'In Transit', description: 'Your order is on its way.', iconPath: 'M5 12l5 5L20 7', status: 'In Transit' },
         { title: 'Delivered', description: 'Your order has been delivered.', iconPath: 'M5 12l5 5L20 7', status: 'Delivered' }
-      ];
+    ];
     const currentStatusIndex = statusSteps.findIndex(step => step.status === status);
     return (
         <div>
@@ -30,6 +31,16 @@ const OrderTracking = ({ status }) => {
                         <p className="text-sm font-normal text-gray-500 light:text-gray-400">{step.description}</p>
                     </li>
                 ))}
+                {status == 'Cancelled' &&
+                    <li className={`mb-10 ms-6 text-red-700 light:text-green-500`}>
+                    <span className={`absolute -start-3 flex h-6 w-6 items-center justify-center rounded-full  ring-8 ring-white light:ring-gray-800`}>
+                        <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                            <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d='M6 18L18 6M6 6l12 12' />
+                        </svg>
+                    </span>
+                    <h4 className={`mb-0.5 text-base font-semibold`}>Cancelled</h4>
+                    <p className="text-sm font-normal text-gray-500 light:text-gray-400">Your order has been Cancelled.</p>
+                </li>}
             </ol>
         </div>
     );
@@ -41,7 +52,9 @@ const OrderTracking = ({ status }) => {
 
 const TrackOrder = () => {
     const [orderSummary, setOrderSummary] = useState(null);
+    const [reviews, setReviews] = useState({});
     const { id } = useParams()
+    const { user } = useUserContext()
 
     const getorder = async () => {
         const res = await axios.post('http://localhost:5000/getorder', { orderId: id })
@@ -56,7 +69,7 @@ const TrackOrder = () => {
         // const storedOrderSummary = JSON.parse(localStorage.getItem('orderSummary')) || null;
         // setOrderSummary(storedOrderSummary);
     }, []);
-    console.log(orderSummary);
+
     const clearOrderSummaryAndNavigate = () => {
         const isConfirmed = window.confirm('Are you sure you want to clear the order summary?');
         if (isConfirmed) {
@@ -67,6 +80,28 @@ const TrackOrder = () => {
         }
     };
 
+    const handleReviewChange = (productId, value) => {
+        setReviews((prevReviews) => ({
+            ...prevReviews,
+            [productId]: value,
+        }));
+    };
+
+    const addReview = async (productId) => {
+        const review = reviews[productId];
+        if (!review || review == '') {
+            toast.error('Please enter a review!')
+            return;
+        }
+        const res = await axios.post('http://localhost:5000/addreview', { productId: productId, review: review, userName: user?.userName, userId: user?.id })
+        if (res.data.success) {
+            toast.success('Review added successfully!')
+            handleReviewChange(productId, '')
+        } else {
+            toast.error('Failed to add review!')
+        }
+    }
+
     if (!orderSummary) {
         return (
             <>
@@ -76,7 +111,7 @@ const TrackOrder = () => {
                 </div>
                 <section className="bg-white py-8 antialiased light:bg-gray-900 md:py-16">
                     <div className="mx-auto max-w-screen-xl px-4 2xl:px-0">
-                        <h2 className="text-xl font-semibold text-gray-900 light:text-white sm:text-2xl">Track the delivery of order #957684673</h2>
+                        <h2 className="text-xl font-semibold text-gray-900 light:text-white sm:text-2xl">Track the delivery of order #{id}</h2>
                         <p className="mt-4 text-lg font-medium text-gray-900 light:text-white">No order details found!</p>
                     </div>
                 </section>
@@ -106,7 +141,7 @@ const TrackOrder = () => {
 
                 <section className="bg-white py-8 antialiased light:bg-gray-900 md:py-16">
                     <div className="mx-auto max-w-screen-xl px-4 2xl:px-0">
-                        <h2 className="text-xl font-semibold text-gray-900 light:text-white sm:text-2xl">Track the delivery of order #957684673</h2>
+                        <h2 className="text-xl font-semibold text-gray-900 light:text-white sm:text-2xl">Track the delivery of order #{id}</h2>
 
                         <div className="mt-6 sm:mt-8 lg:flex lg:gap-8">
 
@@ -118,11 +153,11 @@ const TrackOrder = () => {
 
                                         <div className="space-y-4 p-6 ">
                                             <div className="flex items-center gap-6">
-                                                <a href="#" className="h-14 w-14 shrink-0">
+                                                <Link to={`/product/${product.productId}`} className="h-14 w-14 shrink-0">
                                                     <img className="h-full w-full light:hidden" src={product.image} alt="imac image" />
-                                                </a>
+                                                </Link>
 
-                                                <a href="#" className="min-w-0 flex-1 font-medium text-gray-900 hover:underline light:text-white"> {product.productName} </a>
+                                                <Link to={`/product/${product.productId}`} className="min-w-0 flex-1 font-medium text-gray-900 hover:underline light:text-white"> {product.productName} </Link>
                                             </div>
 
                                             <div className="flex items-center justify-between gap-4">
@@ -134,6 +169,22 @@ const TrackOrder = () => {
                                                     <p className="text-xl font-bold leading-tight text-gray-900 light:text-white">${product.productPrice * product.quantity}</p>
                                                 </div>
                                             </div>
+                                            {orderSummary.status === "Delivered" && <div className="flex items-center justify-between gap-4">
+                                                <div >
+                                                    <label className='mr-6' htmlFor={`review-${product.productId}`}>Review :</label>
+                                                    <input
+                                                        value={reviews[product.productId] || ''}
+                                                        onChange={(e) => handleReviewChange(product.productId, e.target.value)}
+                                                        className='border-2 border-black p-2 rounded-lg'
+                                                        type="text"
+                                                        placeholder='Enter Review'
+                                                        id={`review-${product.productId}`}
+                                                    />
+                                                </div>
+                                                <button onClick={() => addReview(product.productId)} className='border-[1px] border-black rounded-lg p-1 cursor-pointer bg-green-600 text-white font-semibold'>
+                                                    Add Review
+                                                </button>
+                                            </div>}
                                         </div>
                                     </div>
                                 ))}
@@ -170,96 +221,16 @@ const TrackOrder = () => {
                                         <dd className="text-lg font-bold text-gray-900 light:text-white">${orderSummary.summary.finalTotal}</dd>
                                     </dl>
                                 </div>
-
-
                             </div>
 
                             {/* Tracking logic */}
-
-                            {/* <div className="mt-6 grow sm:mt-8 lg:mt-0">
-                                <div className="space-y-6 rounded-lg border border-gray-200 bg-white p-6 shadow-sm light:border-gray-700 light:bg-gray-800">
-                                    <h3 className="text-xl font-semibold text-gray-900 light:text-white">Order history</h3>
-
-                                    <ol className="relative ms-3 border-s border-gray-200 light:border-gray-700">
-                                        <li className="mb-10 ms-6">
-                                            <span className="absolute -start-3 flex h-6 w-6 items-center justify-center rounded-full bg-gray-100 ring-8 ring-white light:bg-gray-700 light:ring-gray-800">
-                                                <svg className="h-4 w-4 text-gray-500 light:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                                    <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m4 12 8-8 8 8M6 10.5V19a1 1 0 0 0 1 1h3v-3a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3h3a1 1 0 0 0 1-1v-8.5" />
-                                                </svg>
-                                            </span>
-                                            <h4 className="mb-0.5 text-base font-semibold text-gray-900 light:text-white">Estimated delivery in 24 Nov 2023</h4>
-                                            <p className="text-sm font-normal text-gray-500 light:text-gray-400">Products delivered</p>
-                                        </li>
-
-                                        <li className="mb-10 ms-6">
-                                            <span className="absolute -start-3 flex h-6 w-6 items-center justify-center rounded-full bg-gray-100 ring-8 ring-white light:bg-gray-700 light:ring-gray-800">
-                                                <svg className="h-4 w-4 text-gray-500 light:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                                    <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 7h6l2 4m-8-4v8m0-8V6a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v9h2m8 0H9m4 0h2m4 0h2v-4m0 0h-5m3.5 5.5a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0Zm-10 0a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0Z" />
-                                                </svg>
-                                            </span>
-                                            <h4 className="mb-0.5 text-base font-semibold text-gray-900 light:text-white">Today</h4>
-                                            <p className="text-sm font-normal text-gray-500 light:text-gray-400">Products being delivered</p>
-                                        </li>
-
-                                        <li className="mb-10 ms-6 text-green-700 light:text-green-500">
-                                            <span className="absolute -start-3 flex h-6 w-6 items-center justify-center rounded-full bg-green-100 ring-8 ring-white light:bg-green-900 light:ring-gray-800">
-                                                <svg className="h-4 w-4 text-green-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                                    <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 11.917 9.724 16.5 19 7.5" />
-                                                </svg>
-                                            </span>
-                                            <h4 className="mb-0.5 font-semibold">23 Nov 2023, 15:15</h4>
-                                            <p className="text-sm">Products in the courier's warehouse</p>
-                                        </li>
-
-                                        <li className="mb-10 ms-6 text-green-700 light:text-green-500">
-                                            <span className="absolute -start-3 flex h-6 w-6 items-center justify-center rounded-full bg-green-100 ring-8 ring-white light:bg-green-900 light:ring-gray-800">
-                                                <svg className="h-4 w-4 text-green-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                                    <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 11.917 9.724 16.5 19 7.5" />
-                                                </svg>
-                                            </span>
-                                            <h4 className="mb-0.5 text-base font-semibold">22 Nov 2023, 12:27</h4>
-                                            <p className="text-sm">Products delivered to the courier - DHL Express</p>
-                                        </li>
-
-                                        <li className="mb-10 ms-6 text-green-700 light:text-green-500">
-                                            <span className="absolute -start-3 flex h-6 w-6 items-center justify-center rounded-full bg-green-100 ring-8 ring-white light:bg-green-900 light:ring-gray-800">
-                                                <svg className="h-4 w-4 text-green-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                                    <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 11.917 9.724 16.5 19 7.5" />
-                                                </svg>
-                                            </span>
-                                            <h4 className="mb-0.5 font-semibold">19 Nov 2023, 10:47</h4>
-                                            <p className="text-sm">Payment accepted - VISA Credit Card</p>
-                                        </li>
-
-                                        <li className="ms-6 text-green-700 light:text-green-500">
-                                            <span className="absolute -start-3 flex h-6 w-6 items-center justify-center rounded-full bg-green-100 ring-8 ring-white light:bg-green-900 light:ring-gray-800">
-                                                <svg className="h-4 w-4 text-green-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                                    <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 11.917 9.724 16.5 19 7.5" />
-                                                </svg>
-                                            </span>
-                                            <div>
-                                                <h4 className="mb-0.5 font-semibold">19 Nov 2023, 10:45</h4>
-                                                <a href="#" className="text-sm font-medium hover:underline">Order placed - Receipt #647563</a>
-                                            </div>
-                                        </li>
-                                    </ol>
-
-                                    <div className="gap-4 sm:flex sm:items-center">
-                                        <button type="button" onClick={clearOrderSummaryAndNavigate} className="w-full rounded-lg  border border-gray-200 bg-white px-5  py-2.5 text-sm font-medium text-gray-900 hover:bg-gray-100 hover:text-green-700 focus:z-10 focus:outline-none focus:ring-4 focus:ring-gray-100 light:border-gray-600 light:bg-gray-800 light:text-gray-400 light:hover:bg-gray-700 light:hover:text-white light:focus:ring-gray-700">Cancel the order</button>
-
-                                        <a href="#" className="mt-4 flex w-full items-center justify-center rounded-lg bg-green-700  px-5 py-2.5 text-sm font-medium text-white hover:bg-green-800 focus:outline-none focus:ring-4 focus:ring-green-300  light:bg-green-600 light:hover:bg-green-700 light:focus:ring-green-800 sm:mt-0">Order details</a>
-                                    </div>
-                                </div>
-                            </div> */}
                             <OrderTracking status={orderSummary.status} />
 
                         </div>
                     </div>
                 </section>
-
-
-
             </>
+
         </>
     );
 };

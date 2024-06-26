@@ -58,7 +58,8 @@ const AuthProvider = ({children}) => {
           phoneNumber : currentAccout.phoneNumber,
           email : currentAccout.email,
           address : currentAccout.address,
-          sessionId : currentAccout.sessionId
+          sessionId : currentAccout.sessionId,
+          userPhoto : currentAccout.userPhoto
         });
 
         setIsAuthenticated(true)

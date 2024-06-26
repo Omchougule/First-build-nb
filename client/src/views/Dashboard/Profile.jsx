@@ -10,7 +10,7 @@ const Profile = () => {
     const [userEmail, setUserEmail] = useState("");
     const [phoneNumber, setPhoneNumber] = useState("");
     const [address, setAddress] = useState("");
-    // const [userPhoto, setUserPhoto] = useState(localStorage.getItem('userPhoto'));
+    const [userPhoto, setUserPhoto] = useState("")
 
     useEffect(() => {
         if (user?.id) {
@@ -39,7 +39,8 @@ const Profile = () => {
             updatedemail: userEmail,
             userName: userName,
             phoneNumber: phoneNumber,
-            address: address
+            address: address,
+            userPhoto : userPhoto
         })
 
         if (res.data.success) {
@@ -50,7 +51,8 @@ const Profile = () => {
                     sessionId: res.data.data.sessionId,
                     userName: res.data.data.userName,
                     phoneNumber: res.data.data.phoneNumber,
-                    address: res.data.data.address
+                    address: res.data.data.address,
+                    userPhoto : res.data.data.userPhoto
                 })
                 toast.success('Profile updated!');
             }
@@ -64,9 +66,10 @@ const Profile = () => {
 
     };
 
-    // if(!auth.currentUser){
-    //     return <div className="text-center text-5xl font-hand md:-translate-x-28 items-center text-gray-500">User information is not available.</div>;
-    // }
+    const selectimg = (e)=>{
+        // console.log(e.target.src);
+        setUserPhoto(e.target.src)
+    }
 
     return (
         <div className="bg-white overflow-hidden shadow rounded-lg border max-w-2xl mx-auto my-5">
@@ -125,19 +128,17 @@ const Profile = () => {
                             />
                         </dd>
                     </div>
-                    {/* <div className="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                    <div className="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                         <dt className="text-sm font-medium text-gray-500">
-                            Address
+                            Avatar
                         </dt>
-                        <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                            <textarea
-                                value={address}
-                                onChange={handleAddressChange}
-                                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm"
-                                placeholder="Enter address"
-                            />
+                        <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2 flex justify-between">
+
+                            <img onClick={selectimg} className='h-20 w-20 rounded-full object-cover cursor-pointer border-black ' src="https://i.pinimg.com/564x/13/ac/c5/13acc5169bb5040b48a38168be255cde.jpg" alt="" />
+                            <img onClick={selectimg} className='h-20 w-20 rounded-full object-cover cursor-pointer' src="https://i.pinimg.com/564x/3d/d5/5c/3dd55c1301ff9bf6ace8d7760625c07c.jpg" alt="" />
+                            <img onClick={selectimg}  className='h-20 w-20 rounded-full object-cover cursor-pointer' src="https://i.pinimg.com/564x/6b/6e/f3/6b6ef332144043c71979051af05a842e.jpg" alt="" />
                         </dd>
-                    </div> */}
+                    </div>
                 </dl>
             </div>
             <div className="px-4 py-4 sm:px-6">

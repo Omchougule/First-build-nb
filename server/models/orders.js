@@ -22,7 +22,7 @@ const orderschema = new Schema({
   paymentAmmount: { type: Number, required: true },
   order: [OrderItemSchema],
   summary : {type : Object, required: true},
-  status: { type: String, enum: ['Processing', 'Shipped', 'In Transit', 'Delivered'], default: 'Processing' }
+  status: { type: String, enum: ['Processing', 'Shipped', 'In Transit', 'Delivered', 'Cancelled'], default: 'Processing' }
 });
 
 const Orders = model("orders", orderschema);
