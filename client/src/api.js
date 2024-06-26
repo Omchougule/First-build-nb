@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 export async function getCurrentUser() {
-  let data = 10;
+  let data;
   console.log('call');
   try {
     const user = JSON.parse(localStorage.getItem("auth"));

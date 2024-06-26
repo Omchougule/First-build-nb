@@ -34,7 +34,6 @@ const Payment = () => {
         
 
     }, []);
-    console.log(address);
     const handleorder = async () => {
         const randomId = Math.random().toString(16).substring(2, 8) + Math.random().toString(16).substring(2, 8);
         const address = selectedAddress.gym_name + ', ' + selectedAddress.city + ', ' + selectedAddress.country;

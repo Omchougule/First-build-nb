@@ -1,6 +1,4 @@
 import { createContext, useContext, useEffect, useState } from "react"
-// import {IUser} from '../types'
-// import { getCurrentUser } from "@/lib/appwrite/api";
 import { getCurrentUser, getProducts } from "../api";
 import { useNavigate } from "react-router-dom";
 
@@ -15,26 +13,27 @@ import { useNavigate } from "react-router-dom";
 //  }
 
 
- const INITIAL_STATE = {
-    user: null,
-    isLoading: false,
-    isAuthenticated: false,
-    products : [],
-    order : [],
-    summary : {},
-    address : {},
-    setUser: (user)=>{},
-    setOrder: (order)=>{},
-    setSummary : (summary)=>{},
-    setIsAuthenticated: (val)=>{},
-    checkAuthUser: async () => false,
-    setAddress : (address)=>{},
- }
+const INITIAL_STATE = {
+  user: null,
+  isLoading: false,
+  isAuthenticated: false,
+  products: [],
+  order: [],
+  summary: {},
+  address: {},
+  setUser: (user) => { },
+  setOrder: (order) => { },
+  setSummary: (summary) => { },
+  setIsAuthenticated: (val) => { },
+  checkAuthUser: async () => false,
+  setAddress: (address) => { },
+  setProducts: (products) => { }
+}
 
- const Authcontext = createContext(INITIAL_STATE);
+const Authcontext = createContext(INITIAL_STATE);
 
-const AuthProvider = ({children}) => {
-  
+const AuthProvider = ({ children }) => {
+
   const navigate = useNavigate()
   const [user, setUser] = useState(null);
   const [products, setProducts] = useState([]);
@@ -44,22 +43,26 @@ const AuthProvider = ({children}) => {
   const [summary, setSummary] = useState({})
   const [address, setAddress] = useState({})
 
-  const  checkAuthUser = async () => {
+
+  const fetchProducts = async () => {
+    const pro = await getProducts();
+    setProducts(pro);
+  }
+
+
+  const checkAuthUser = async () => {
     try {
       const currentAccout = await getCurrentUser();
-      const pro = await getProducts();
-      setProducts(pro);
-    //   console.log(currentAccout);
-      if(currentAccout)
-      {
+
+      if (currentAccout) {
         setUser({
-          id : currentAccout._id,
-          userName : currentAccout.userName,
-          phoneNumber : currentAccout.phoneNumber,
-          email : currentAccout.email,
-          address : currentAccout.address,
-          sessionId : currentAccout.sessionId,
-          userPhoto : currentAccout.userPhoto
+          id: currentAccout._id,
+          userName: currentAccout.userName,
+          phoneNumber: currentAccout.phoneNumber,
+          email: currentAccout.email,
+          address: currentAccout.address,
+          sessionId: currentAccout.sessionId,
+          userPhoto: currentAccout.userPhoto
         });
 
         setIsAuthenticated(true)
@@ -67,26 +70,24 @@ const AuthProvider = ({children}) => {
         return true;
       }
       return false;
-      
+
     } catch (error) {
       console.log(error);
       return false;
     }
-    finally{
+    finally {
       setisLoading(false);
     }
   };
 
-  useEffect(()=>{
-    // 
-    // const usersession = JSON.parse(localStorage.getItem('auth'))
-    if(!user)
-    {
+  useEffect(() => {
+
+    if (!user) {
       checkAuthUser()
+      fetchProducts()
     }
-    //   navigate('sign-in');
-    
-  },[])
+
+  }, [])
 
   const values = {
     user,
@@ -95,7 +96,9 @@ const AuthProvider = ({children}) => {
     isAuthenticated,
     setIsAuthenticated,
     checkAuthUser,
+    fetchProducts,
     products,
+    setProducts,
     order,
     setOrder,
     summary,
@@ -114,4 +117,4 @@ const AuthProvider = ({children}) => {
 
 export default AuthProvider
 
-export const useUserContext = ()=> useContext(Authcontext);
+export const useUserContext = () => useContext(Authcontext);

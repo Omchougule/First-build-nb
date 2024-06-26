@@ -26,28 +26,14 @@ import { Link } from 'react-router-dom';
 import DisplayF from '../../components/HomeComponents/DisplayF/DisplayF';
 export default function Home() {
 
-  const { user, products } = useUserContext();
+  const { user, products, checkAuthUser } = useUserContext();
   useEffect(() => {
     Aos.init({ duration: 1000, delay: 300 });
   })
 
-  // useEffect(() => {
-
-  //   const scroll = new LocomotiveScroll({
-  //     el: document.querySelector('[data-scroll-container]'),
-  //     smooth: true,
-  //     lerp: 0.05,
-  //     // lerp : 0.95,
-
-  //   });
-
-  //   document.querySelector("#scroll-to-top").addEventListener("click", () => {
-
-  //     scroll.scrollTo(0)
-  //   })
-
-
-  // }, [])
+  useEffect(() => {
+    checkAuthUser()
+  }, [])
 
   return (
 
