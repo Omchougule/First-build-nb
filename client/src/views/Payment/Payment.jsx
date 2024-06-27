@@ -201,18 +201,18 @@ const Payment = () => {
                                         htmlFor="credit-card"
                                         className="font-medium leading-none text-gray-900 light:text-white"
                                     >
-                                        Credit Card
+                                        Online
                                     </label>
                                     <p
                                         id="credit-card-text"
                                         className="mt-1 text-xs font-normal text-gray-500 light:text-gray-400"
                                     >
-                                        Pay with your credit card
+                                        Pay with RazorPay
                                     </p>
                                 </div>
                             </div>
                         </div>
-                        <div className="rounded-lg border shadow-md border-gray-200 bg-gray-50 p-4 ps-4 light:border-gray-700 light:bg-gray-800">
+                        {/* <div className="rounded-lg border shadow-md border-gray-200 bg-gray-50 p-4 ps-4 light:border-gray-700 light:bg-gray-800">
                             <div className="flex items-start">
                                 <div className="flex h-5 items-center">
                                     <input
@@ -242,7 +242,7 @@ const Payment = () => {
                                     </p>
                                 </div>
                             </div>
-                        </div>
+                        </div> */}
                     </div>
 
                     <div className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2">
