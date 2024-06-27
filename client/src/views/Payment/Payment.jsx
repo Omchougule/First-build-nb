@@ -125,26 +125,25 @@ const Payment = () => {
                 order_id: data.id,
                 handler: async function (response) {
                     console.log(response);
-                    const res = await axios.post('http://localhost:5000/authpayment',{...response, 
-                    order_id: data.id,
-                    amount : data.amount,
-                    userId : user.id,
-                    userName: selectedAddress.your_name,
-                    address: address,
-                    phoneNumber: selectedAddress.phone,
-                    paymentMethod: paymentMethod,
-                    order: arr,
-                    summary: orderSummary,
-                })
-                if(res.data.success)
-                {
-                    toast.success("Success !")
-                    navigate(`/cart/checkout/payment/confirmation/${res.data.orderId}`)
-                }
-                else
-                {
-                    toast.error("Something went wrong !")
-                }
+                    const res = await axios.post('http://localhost:5000/authpayment', {
+                        ...response,
+                        order_id: data.id,
+                        amount: data.amount,
+                        userId: user.id,
+                        userName: selectedAddress.your_name,
+                        address: address,
+                        phoneNumber: selectedAddress.phone,
+                        paymentMethod: paymentMethod,
+                        order: arr,
+                        summary: orderSummary,
+                    })
+                    if (res.data.success) {
+                        toast.success("Success !")
+                        navigate(`/cart/checkout/payment/confirmation/${res.data.orderId}`)
+                    }
+                    else {
+                        toast.error("Something went wrong !")
+                    }
                 },
                 prefill: {
                     name: 'Gaurav Kumar',
@@ -174,15 +173,15 @@ const Payment = () => {
                 bg-inherit bg-no-repeat bg-cover flex flex-col justify-between items-center
             '>
                 <Navbar />
-                <h1 className='font-hand text-5xl py-36 mt-2 text-orange-400'>Payment</h1>
+                <h1 className='font-hand text-5xl py-32 mt-2 text-orange-400'>Payment</h1>
             </div>
 
             <div className='mx-auto max-w-screen-xl px-4 2xl:px-0 pb-20'>
                 <div className="mx-auto max-w-5xl">
-                    <h3 className="text-xl font-semibold text-gray-900 light:text-white my-5">Payment</h3>
+                    <h3 className="text-3xl  font-hand text-gray-900 light:text-white my-5">Pay To Proceed</h3>
 
                     <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-                        <div className="rounded-lg border shadow-md border-gray-200 bg-gray-50 p-4 ps-4 light:border-gray-700 light:bg-gray-800">
+                        <div className="hidden rounded-lg border shadow-md border-gray-200 bg-gray-50 p-4 ps-4 light:border-gray-700 light:bg-gray-800">
                             <div className="flex items-start">
                                 <div className="flex h-5 items-center">
                                     <input
@@ -212,7 +211,7 @@ const Payment = () => {
                                 </div>
                             </div>
                         </div>
-                        <div className="rounded-lg border shadow-md border-gray-200 bg-gray-50 p-4 ps-4 light:border-gray-700 light:bg-gray-800">
+                        {/* <div className="rounded-lg border shadow-md border-gray-200 bg-gray-50 p-4 ps-4 light:border-gray-700 light:bg-gray-800">
                             <div className="flex items-start">
                                 <div className="flex h-5 items-center">
                                     <input
@@ -242,56 +241,51 @@ const Payment = () => {
                                     </p>
                                 </div>
                             </div>
-                        </div>
+                        </div> */}
                     </div>
 
-                    <div className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2">
-                        {paymentMethod === 'credit-card' && (
-                            <button onClick={handlePayment}>Pay now</button>
-                        )}
-                        {paymentMethod === 'pay-on-delivery' && (
-                            <button onClick={handlePayment}></button>
-                        )}
+                    <div className="mt-6 grid grid-cols-1 gap-4 justify-center items-center md:grid-cols-2">
 
 
 
 
-                        <div className="mt-6 grow sm:mt-8 lg:mt-0 shadow-md rounded-lg border">
-                            <div className="space-y-4 rounded-lg border border-gray-100 bg-gray-50 p-6 light:border-gray-700 light:bg-gray-800 ">
+                        <div className="mt-6 grow sm:mt-8 p-6 lg:mt-0 shadow-md rounded-lg border">
+                            <div className="space-y-4 rounded-lg border border-gray-100 bg-gray-50  light:border-gray-700 light:bg-gray-800 ">
                                 {orderSummary && (
                                     <>
                                         <div className="space-y-2">
                                             <dl className="flex items-center justify-between gap-4">
                                                 <dt className="text-base font-normal text-gray-500 light:text-gray-400">Original price</dt>
-                                                <dd className="text-base font-medium text-gray-900 light:text-white">${orderSummary.originalPrice.toFixed(2)}</dd>
+                                                <dd className="text-base font-medium text-gray-900 light:text-white"> &#8377; {orderSummary.originalPrice.toFixed(2)}</dd>
                                             </dl>
 
                                             <dl className="flex items-center justify-between gap-4">
                                                 <dt className="text-base font-normal text-gray-500 light:text-gray-400">Savings</dt>
-                                                <dd className="text-base font-medium text-green-500">{orderSummary.discountedAmmount}</dd>
+                                                <dd className="text-base font-medium text-green-500">- &#8377; {orderSummary.discountedAmmount}</dd>
                                             </dl>
 
                                             <dl className="flex items-center justify-between gap-4">
                                                 <dt className="text-base font-normal text-gray-500 light:text-gray-400">Store Pickup</dt>
-                                                <dd className="text-base font-medium text-gray-900 light:text-white">${orderSummary.storePickup.toFixed(2)}</dd>
+                                                <dd className="text-base font-medium text-gray-900 light:text-white">&#8377; {orderSummary.storePickup.toFixed(2)}</dd>
                                             </dl>
 
                                             <dl className="flex items-center justify-between gap-4">
                                                 <dt className="text-base font-normal text-gray-500 light:text-gray-400">Tax</dt>
-                                                <dd className="text-base font-medium text-gray-900 light:text-white">${orderSummary.tax.toFixed(2)}</dd>
+                                                <dd className="text-base font-medium text-gray-900 light:text-white">&#8377; {orderSummary.tax.toFixed(2)}</dd>
                                             </dl>
                                         </div>
 
                                         <dl className="flex items-center justify-between gap-4 border-t border-gray-200 pt-2 light:border-gray-700">
                                             <dt className="text-base font-bold text-gray-900 light:text-white">Total</dt>
-                                            <dd className="text-base font-bold text-gray-900 light:text-white">${orderSummary.finalTotal.toFixed(2)}</dd>
+                                            <dd className="text-base font-bold text-gray-900 light:text-white">&#8377; {orderSummary.finalTotal.toFixed(2)}</dd>
                                         </dl>
                                     </>
                                 )}
                             </div>
 
-                            <div className="mt-6 flex items-center justify-center gap-8">
-                                <img className="h-8 w-auto light:hidden" src="https://flowbite.s3.amazonaws.com/blocks/e-commerce/brand-logos/paypal.svg" alt="" />
+                            <div className="mt-6 flex items-center justify-center  gap-8">
+                                <img className="h-6 w-auto light:hidden" src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/UPI-Logo-vector.svg/1280px-UPI-Logo-vector.svg.png" alt="" />
+                                <img className="h-7 w-auto " src="https://upload.wikimedia.org/wikipedia/commons/8/89/Razorpay_logo.svg" alt="" />
                                 <img className="hidden h-8 w-auto light:flex" src="https://flowbite.s3.amazonaws.com/blocks/e-commerce/brand-logos/paypal-light.svg" alt="" />
                                 <img className="h-8 w-auto light:hidden" src="https://flowbite.s3.amazonaws.com/blocks/e-commerce/brand-logos/visa.svg" alt="" />
                                 <img className="hidden h-8 w-auto light:flex" src="https://flowbite.s3.amazonaws.com/blocks/e-commerce/brand-logos/visa-light.svg" alt="" />
@@ -300,6 +294,14 @@ const Payment = () => {
                             </div>
 
                         </div>
+
+
+                        {paymentMethod === 'credit-card' && (
+                            <button className='p-2 h-10 rounded-lg text-white bg-green-500 hover:bg-green-600 active:scale-95 ' onClick={handlePayment}  >Pay Now</button>
+                        )}
+                        {paymentMethod === 'pay-on-delivery' && (
+                            <button onClick={handlePayment}></button>
+                        )}
 
                         {paymentMethod == 'pay-on-delivery' && <div className="flex justify-center mt-6">
                             <button onClick={handleorder} className="w-full rounded-lg bg-green-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-green-800 focus:outline-none focus:ring-4 focus:ring-green-300 light:bg-green-600 light:hover:bg-green-700 light:focus:ring-green-800 sm:w-auto">

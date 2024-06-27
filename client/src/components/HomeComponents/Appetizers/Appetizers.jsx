@@ -46,15 +46,15 @@ const appetizerConfig = [
 // AppetizerItem component
 const AppetizerItem = ({ appetizer, index }) => (
   <div
-    className='bg-yellow-400 hover:bg-[#ff679a] duration-300 cursor-pointer h-24 w-80 flex justify-center items-center rounded-md shadow-md space-x-5'
+  className='bg-yellow-400 h-72 px-10 w-full flex justify-center items-center rounded-md shadow-md space-x-5'
     data-aos={index % 2 === 0 ? "fade-right" : "fade-left"}
   >
-    <div className="bg-white h-16 w-16 rounded-md flex justify-center items-center">
+    <div className="bg-white h-56 w-44 rounded-md flex justify-center items-center">
       <img src={appetizer.imageUrl} alt={appetizer.title} className="h-full w-full object-cover rounded-md" />
     </div>
-    <div className="bg-black h-16 w-44 rounded-md p-2 text-white flex flex-col justify-center">
+    <div className="bg-black h-56 w-96 rounded-md p-5 text-white flex flex-col justify-around">
       <h2 className="text-lg font-bold">{appetizer.title}</h2>
-      {/* <p className="text-sm mt-1">{appetizer.description}</p> */}
+      <p className="text-sm mt-1">{appetizer.description}</p>
     </div>
   </div>
 );
