@@ -109,8 +109,8 @@ const Cart = () => {
 
     const updateOrderSummary = (Newcart) => {
         const totalPrice = Newcart.reduce((acc, item) => acc + item.quantity * item.price, 0);
-        const storePickup = 99;
-        const tax = 799;
+        const storePickup = 0;
+        const tax = 0;
         const discountedAmmount = ((discount / 100) * totalPrice).toFixed(2);
         const total = totalPrice - discountedAmmount + storePickup + tax;
         setOriginalPrice(totalPrice);

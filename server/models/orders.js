@@ -1,5 +1,15 @@
 import { model, Schema } from "mongoose";
 
+const PaymentSchema = new Schema({
+  razorpay_payment_id: { type: String, required: true },
+  razorpay_order_id: { type: String, required: true },
+  razorpay_signature: { type: String, required: true },
+  status: { type: String, required: true },
+  amount: { type: Number, required: true },
+  date: { type: Date, default: Date.now }
+});
+
+
 const OrderItemSchema = new Schema(
   {
     productId: { type: Schema.Types.ObjectId, ref: "products", required: true },
@@ -19,10 +29,11 @@ const orderschema = new Schema({
   phoneNumber: { type: String, required: true },
   paymentMethod: { type: String, required: true },
   date: { type: Date, default: Date.now },
-  paymentAmmount: { type: Number, required: true },
+  paymentAmount: { type: Number, required: true },
   order: [OrderItemSchema],
   summary : {type : Object, required: true},
-  status: { type: String, enum: ['Processing', 'Shipped', 'In Transit', 'Delivered', 'Cancelled'], default: 'Processing' }
+  status: { type: String, enum: ['Processing', 'Shipped', 'In Transit', 'Delivered', 'Cancelled'], default: 'Processing' },
+  payment: PaymentSchema // Include payment details
 });
 
 const Orders = model("orders", orderschema);

@@ -4,6 +4,7 @@ import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import { v4 as uuidv4 } from 'uuid';
 import Razorpay from 'razorpay'
+import crypto from 'crypto';
 
 import User from './models/user.js';
 import Products from './models/product.js';
@@ -27,8 +28,8 @@ const userN = encodeURIComponent("AmitKumbhar4_24")
 const connectDB = async () => {
   try {
 
-    await mongoose.connect("mongodb+srv://nandurkarom172:Pass%40123@cluster0.jkq4ihm.mongodb.net/nutribites");
-    // await mongoose.connect(`mongodb+srv://${userN}:${pass}@cluster0.qkvogem.mongodb.net/Nutribites?retryWrites=true&w=majority&appName=Cluster0`);
+    // await mongoose.connect("mongodb+srv://nandurkarom172:Pass%40123@cluster0.jkq4ihm.mongodb.net/nutribites");
+    await mongoose.connect(`mongodb+srv://${userN}:${pass}@cluster0.qkvogem.mongodb.net/Nutribites?retryWrites=true&w=majority&appName=Cluster0`);
     console.log('Database Connected');
   } catch (error) {
     console.log(error.message);
@@ -734,5 +735,59 @@ app.post('/paymentorder', async (req,res) => {
   } catch (error) {
     console.error(error);
     res.status(500).send('Internal Server Error');
+  }
+})
+
+app.post('/authpayment', async (req, res) => {
+  try {
+    const secret = 'xRYssCTOb3Anpg3yBiRDCOlP'
+    const {razorpay_payment_id, razorpay_order_id, razorpay_signature, order_id, amount, userId, userName, address, phoneNumber, paymentMethod, order, summary} = req.body
+    // console.log(req.body);
+    function generateHmacSha256Signature(data, secret) {
+      return crypto.createHmac('sha256', secret)
+      .update(data)
+      .digest('hex');
+    }
+    const data = `${order_id}|${razorpay_payment_id}`;
+    const generated_signature = generateHmacSha256Signature(data, secret);
+    if (generated_signature === razorpay_signature) {
+      // Create order with payment details and confirmed status
+      const paymentDetails = {
+          razorpay_payment_id,
+          razorpay_order_id,
+          razorpay_signature,
+          status: 'confirmed',
+          amount : amount / 100
+      };
+
+      const newOrder = new Orders({
+          userId,
+          orderId: order_id,
+          userName,
+          address,
+          phoneNumber,
+          paymentMethod, 
+          paymentAmount: amount / 100,
+          order,
+          summary,
+          payment: paymentDetails,
+          status: 'Processing'
+      });
+
+      await newOrder.save();
+
+      // Redirect to frontend with success message
+      res.json({
+        success : true,
+        orderId : order_id
+      })
+  } else {
+      // Handle payment verification failure
+      res.json({
+        success : false
+      })
+  }
+  } catch (error) {
+    console.log(error);
   }
 })

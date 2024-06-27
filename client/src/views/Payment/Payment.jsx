@@ -16,68 +16,64 @@ const Payment = () => {
         address: '',
         phone: ''
     });
-    
+
     let arr = []
     const navigate = useNavigate()
-    
+
     useEffect(() => {
         // const storedOrderSummary = JSON.parse(localStorage.getItem('orderSummary')) || null;
         // const storedSelectedAddress = JSON.parse(localStorage.getItem('selectedAddress')) || {};
         setSelectedAddress(address);
 
         setOrderSummary(summary);
-        if(order.length == 0 )
-        {
+        if (order.length == 0) {
             navigate('/cart')
         }
 
-        
+
 
     }, []);
     const handleorder = async () => {
         const randomId = Math.random().toString(16).substring(2, 8) + Math.random().toString(16).substring(2, 8);
         const address = selectedAddress.gym_name + ', ' + selectedAddress.city + ', ' + selectedAddress.country;
 
-        order.forEach((item)=>{
-            products.forEach((product)=>{
-                if(item.proId == product._id)
-                {
+        order.forEach((item) => {
+            products.forEach((product) => {
+                if (item.proId == product._id) {
                     arr.push({
-                        productId : product._id,
-                        productName : product.title,
-                        productPrice : product.price,
-                        quantity : item.quantity,
-                        image : product.imageUrl
+                        productId: product._id,
+                        productName: product.title,
+                        productPrice: product.price,
+                        quantity: item.quantity,
+                        image: product.imageUrl
                         // total : product.price * item.quantity,
                     })
                 }
             })
         })
 
-        const res = await axios.post('http://localhost:5000/addorder',{
-            userId : user.id,
-            orderId : randomId,
-            userName : selectedAddress.your_name,
-            address : address,
-            phoneNumber : selectedAddress.phone,
-            paymentMethod : paymentMethod,
-            date : new Date(),
-            paymentAmmount : summary.finalTotal,
-            order : arr,
-            summary : orderSummary,
-            status : 'Processing'
+        const res = await axios.post('http://localhost:5000/addorder', {
+            userId: user.id,
+            orderId: randomId,
+            userName: selectedAddress.your_name,
+            address: address,
+            phoneNumber: selectedAddress.phone,
+            paymentMethod: paymentMethod,
+            date: new Date(),
+            paymentAmmount: summary.finalTotal,
+            order: arr,
+            summary: orderSummary,
+            status: 'Processing'
         })
-        if(res.data.success)
-        {
-            toast.success("Success !")    
+        if (res.data.success) {
+            toast.success("Success !")
             navigate(`/cart/checkout/payment/confirmation/${randomId}`)
         }
-        else
-        {
+        else {
             toast.error("Something went wrong !")
         }
     }
-    
+
     const updateOrderSummary = () => {
 
     }
@@ -88,50 +84,88 @@ const Payment = () => {
 
     const handlePayment = async () => {
         try {
-          const { data } = await axios.post('http://localhost:5000/paymentorder', {
-            amount: 500,
-            currency: 'INR',
-            receipt: 'receipt#1',
-            notes: {
-              key1: 'value3',
-              key2: 'value2'
+            const randomId = Math.random().toString(16).substring(2, 8) + Math.random().toString(16).substring(2, 8);
+            const address = selectedAddress.gym_name + ', ' + selectedAddress.city + ', ' + selectedAddress.country;
+
+            order.forEach((item) => {
+                products.forEach((product) => {
+                    if (item.proId == product._id) {
+                        arr.push({
+                            productId: product._id,
+                            productName: product.title,
+                            productPrice: product.price,
+                            quantity: item.quantity,
+                            image: product.imageUrl
+                            // total : product.price * item.quantity,
+                        })
+                    }
+                })
+            })
+            const { data } = await axios.post('http://localhost:5000/paymentorder', {
+                amount: summary.finalTotal,
+                currency: 'INR',
+                receipt: 'receipt#1',
+                notes: {
+                    key1: 'value3',
+                    key2: 'value2'
+                }
+            });
+            console.log(data);
+
+            if (!data || !data.id) {
+                throw new Error('Failed to create Razorpay order');
             }
-          });
-    
-          if (!data || !data.id) {
-            throw new Error('Failed to create Razorpay order');
-          }
-    
-          const options = {
-            key: 'rzp_test_lq1pO46Zam0Zpz', // Enter the Key ID generated from the Dashboard
-            amount: data.amount,
-            currency: data.currency,
-            name: 'Your Company Name',
-            description: 'Test Transaction',
-            order_id: data.id,
-            handler: function (response) {
-              alert(`Payment successful. Razorpay Payment ID: ${response.razorpay_payment_id}`);
-            },
-            prefill: {
-              name: 'Gaurav Kumar',
-              email: 'gaurav.kumar@example.com',
-              contact: '9999999999'
-            },
-            notes: {
-              address: 'Razorpay Corporate Office'
-            },
-            theme: {
-              color: '#F37254'
-            }
-          };
-    
-          const rzp1 = new window.Razorpay(options);
-          rzp1.open();
+
+            const options = {
+                key: 'rzp_test_lq1pO46Zam0Zpz', // Enter the Key ID generated from the Dashboard
+                amount: data.amount,
+                currency: data.currency,
+                name: 'Your Company Name',
+                description: 'Test Transaction',
+                order_id: data.id,
+                handler: async function (response) {
+                    console.log(response);
+                    const res = await axios.post('http://localhost:5000/authpayment',{...response, 
+                    order_id: data.id,
+                    amount : data.amount,
+                    userId : user.id,
+                    userName: selectedAddress.your_name,
+                    address: address,
+                    phoneNumber: selectedAddress.phone,
+                    paymentMethod: paymentMethod,
+                    order: arr,
+                    summary: orderSummary,
+                })
+                if(res.data.success)
+                {
+                    toast.success("Success !")
+                    navigate(`/cart/checkout/payment/confirmation/${res.data.orderId}`)
+                }
+                else
+                {
+                    toast.error("Something went wrong !")
+                }
+                },
+                prefill: {
+                    name: 'Gaurav Kumar',
+                    email: 'gaurav.kumar@example.com',
+                    contact: '9999999999'
+                },
+                notes: {
+                    address: 'Razorpay Corporate Office'
+                },
+                theme: {
+                    color: '#F37254'
+                }
+            };
+
+            const rzp1 = new window.Razorpay(options);
+            rzp1.open();
         } catch (error) {
-          console.error('Error opening Razorpay checkout:', error);
-          alert('Oops! Something went wrong while opening Razorpay checkout.');
+            console.error('Error opening Razorpay checkout:', error);
+            alert('Oops! Something went wrong while opening Razorpay checkout.');
         }
-      };
+    };
 
     return (
         <>
@@ -196,6 +230,7 @@ const Payment = () => {
                                     <label
                                         htmlFor="pay-on-delivery"
                                         className="font-medium leading-none text-gray-900 light:text-white"
+                                        onClick={() => setPaymentMethod('pay-on-delivery')}
                                     >
                                         Payment on delivery
                                     </label>
@@ -212,54 +247,12 @@ const Payment = () => {
 
                     <div className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2">
                         {paymentMethod === 'credit-card' && (
-                            <form onSubmit={handlePayment} action="#" className="w-full rounded-lg border border-gray-200 bg-white p-4 shadow-md light:border-gray-700 light:bg-gray-800 sm:p-6 lg:max-w-xl lg:p-8">
-                                <div className="mb-6 grid grid-cols-2 gap-4">
-                                    <div className="col-span-2 sm:col-span-1">
-                                        <label htmlFor="full_name" className="mb-2 block text-sm font-medium text-gray-900 light:text-white"> Full name (as displayed on card)* </label>
-                                        <input type="text" id="full_name" className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-green-500 focus:ring-green-500 light:border-gray-600 light:bg-gray-700 light:text-white light:placeholder-gray-400 light:focus:border-green-500 light:focus:ring-green-500" placeholder="Bonnie Green" required />
-                                    </div>
-                                    <div className="col-span-2 sm:col-span-1">
-                                        <label htmlFor="card-number-input" className="mb-2 block text-sm font-medium text-gray-900 light:text-white"> Card number* </label>
-                                        <input type="text" id="card-number-input" className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 pe-10 text-sm text-gray-900 focus:border-green-500 focus:ring-green-500 light:border-gray-600 light:bg-gray-700 light:text-white light:placeholder-gray-400 light:focus:border-green-500 light:focus:ring-green-500" placeholder="xxxx-xxxx-xxxx-xxxx" required />
-                                    </div>
-                                    <div>
-                                        <label htmlFor="card-expiration-input" className="mb-2 block text-sm font-medium text-gray-900 light:text-white">Card expiration* </label>
-                                        <div className="relative">
-                                            <input type="text" id="card-expiration-input" className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 ps-9 text-sm text-gray-900 focus:border-green-500 focus:ring-green-500 light:border-gray-600 light:bg-gray-700 light:text-white light:placeholder-gray-400 light:focus:border-green-500 light:focus:ring-green-500" placeholder="12/23" required />
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <label htmlFor="cvv-input" className="mb-2 flex items-center gap-1 text-sm font-medium text-gray-900 light:text-white">
-                                            CVV*
-                                            <button data-tooltip-target="cvv-desc" data-tooltip-trigger="hover" className="text-gray-400 hover:text-gray-900 light:text-gray-500 light:hover:text-white">
-                                                <svg className="h-4 w-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
-                                                    <path fillRule="evenodd" d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm9.408-5.5a1 1 0 1 0 0 2h.01a1 1 0 1 0 0-2h-.01ZM10 10a1 1 0 1 0 0 2h1v3h-1a1 1 0 1 0 0 2h4a1 1 0 1 0 0-2h-1v-4a1 1 0 0 0-1-1h-2Z" clipRule="evenodd" />
-                                                </svg>
-                                            </button>
-                                            <div id="cvv-desc" role="tooltip" className="tooltip invisible absolute z-10 inline-block rounded-lg bg-gray-900 px-3 py-2 text-sm font-medium text-white opacity-0 shadow-sm transition-opacity duration-300 light:bg-gray-700">
-                                                The last 3 digits on back of card
-                                                <div className="tooltip-arrow" data-popper-arrow></div>
-                                            </div>
-                                        </label>
-                                        <input type="password" id="cvv-input" aria-describedby="helper-text-explanation" className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-green-500 focus:ring-green-500 light:border-gray-600 light:bg-gray-700 light:text-white light:placeholder-gray-400 light:focus:border-green-500 light:focus:ring-green-500" placeholder="•••" required />
-                                    </div>
-                                </div>
-                                <button type="submit" className="w-full rounded-lg bg-green-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-green-800 focus:outline-none focus:ring-4 focus:ring-green-300 light:bg-green-600 light:hover:bg-green-700 light:focus:ring-green-800 sm:w-auto">
-                                    Confirm Your Payment Method
-                                </button>
-                                <button onClick={handlePayment}>pay</button>
-                            </form>
+                            <button onClick={handlePayment}>Pay now</button>
                         )}
-
                         {paymentMethod === 'pay-on-delivery' && (
-                            <div className="flex justify-center items-center mt-6">
-
-                                <button onClick={handleSubmit} className="w-full h-10 rounded-lg bg-green-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-green-800 focus:outline-none focus:ring-4 focus:ring-green-300 light:bg-green-600 light:hover:bg-green-700 light:focus:ring-green-800 sm:w-auto">
-                                    Confirm Your Payment Method
-                                </button>
-
-                            </div>
+                            <button onClick={handlePayment}></button>
                         )}
+
 
 
 
@@ -308,11 +301,11 @@ const Payment = () => {
 
                         </div>
 
-                        <div className="flex justify-center mt-6">
-                                <button onClick={handleorder} className="w-full rounded-lg bg-green-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-green-800 focus:outline-none focus:ring-4 focus:ring-green-300 light:bg-green-600 light:hover:bg-green-700 light:focus:ring-green-800 sm:w-auto">
-                                    Place Your Order
-                                </button>
-                        </div>
+                        {paymentMethod == 'pay-on-delivery' && <div className="flex justify-center mt-6">
+                            <button onClick={handleorder} className="w-full rounded-lg bg-green-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-green-800 focus:outline-none focus:ring-4 focus:ring-green-300 light:bg-green-600 light:hover:bg-green-700 light:focus:ring-green-800 sm:w-auto">
+                                Place Your Order
+                            </button>
+                        </div>}
                     </div>
                 </div>
             </div>
