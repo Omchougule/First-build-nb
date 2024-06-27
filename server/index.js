@@ -25,15 +25,15 @@ const pass = encodeURIComponent("7EKxdvV6vv4N-nr")
 const userN = encodeURIComponent("AmitKumbhar4_24")
 
 const connectDB = async () => {
-    try {
-      
-        await mongoose.connect("mongodb+srv://nandurkarom172:Pass%40123@cluster0.jkq4ihm.mongodb.net/nutribites");
-        // await mongoose.connect(`mongodb+srv://${userN}:${pass}@cluster0.qkvogem.mongodb.net/Nutribites?retryWrites=true&w=majority&appName=Cluster0`);
-        console.log('Database Connected');
-    } catch (error) {
-        console.log(error.message);
-        process.exit(1);
-    }
+  try {
+
+    await mongoose.connect("mongodb+srv://nandurkarom172:Pass%40123@cluster0.jkq4ihm.mongodb.net/nutribites");
+    // await mongoose.connect(`mongodb+srv://${userN}:${pass}@cluster0.qkvogem.mongodb.net/Nutribites?retryWrites=true&w=majority&appName=Cluster0`);
+    console.log('Database Connected');
+  } catch (error) {
+    console.log(error.message);
+    process.exit(1);
+  }
 }
 
 connectDB();
@@ -41,11 +41,11 @@ connectDB();
 const PORT = process.env.PORT || 5000;
 
 app.get("/health", (req, res) => {
-    res.json({
-        success: true,
-        message: "Server is up and running",
-        data : null
-    })
+  res.json({
+    success: true,
+    message: "Server is up and running",
+    data: null
+  })
 
 });
 
@@ -54,37 +54,34 @@ app.get("/health", (req, res) => {
 
 app.post('/updateuser', async (req, res) => {
 
-  const {email, updatedemail, userName, phoneNumber, address, userPhoto} = req.body
-  const user = await User.find({email})
+  const { email, updatedemail, userName, phoneNumber, address, userPhoto } = req.body
+  const user = await User.find({ email })
 
-  if(user)
-  {
-    const updateuser = {userName, phoneNumber, address, email : updatedemail, userPhoto}
-    const updateduser = await User.findOneAndUpdate({email}, updateuser, {new : true, runValidators : true})
+  if (user) {
+    const updateuser = { userName, phoneNumber, address, email: updatedemail, userPhoto }
+    const updateduser = await User.findOneAndUpdate({ email }, updateuser, { new: true, runValidators: true })
     res.json({
-      success : true,
-      message : "User updated successfully",
-      data : updateduser
+      success: true,
+      message: "User updated successfully",
+      data: updateduser
     })
   }
-  else
-  {
+  else {
     res.json({
-      success : true,
-      message : "User not found!",
-      data : null
+      success: true,
+      message: "User not found!",
+      data: null
     })
   }
 
 })
 
-app.post('/oauth', async (req,res) => {
+app.post('/oauth', async (req, res) => {
   try {
     const sid = uuidv4()
-    const {email, userName} = req.body
-    const user = await User.findOne({email})
-    if(user)
-    {
+    const { email, userName } = req.body
+    const user = await User.findOne({ email })
+    if (user) {
       user.sessionId = sid
       user.save()
       res.json({
@@ -92,14 +89,13 @@ app.post('/oauth', async (req,res) => {
         data: user
       });
     }
-    else
-    {
+    else {
       const newUser = await User.create({
         email,
         userName,
-        sessionId : sid,
-        createdAt : new Date() ,
-        address : "",
+        sessionId: sid,
+        createdAt: new Date(),
+        address: "",
         isLoggedIn: true
       });
       res.json({
@@ -113,7 +109,7 @@ app.post('/oauth', async (req,res) => {
 })
 
 app.post("/signin", async (req, res) => {
-  const { email, password, userName, phoneNumber} = req.body;
+  const { email, password, userName, phoneNumber } = req.body;
   const sid = uuidv4()
   try {
 
@@ -136,9 +132,9 @@ app.post("/signin", async (req, res) => {
         password,
         phoneNumber,
         userName,
-        sessionId : sid,
-        createdAt : new Date() ,
-        address : "",
+        sessionId: sid,
+        createdAt: new Date(),
+        address: "",
         isLoggedIn: true
       });
 
@@ -163,13 +159,11 @@ app.get("/login", async (req, res) => {
   try {
     const email = req.query.email;
     const password = req.query.password;
-    const user = await User.find({email});
+    const user = await User.find({ email });
     // console.log(user);
     // console.log(uuidv4());
-    if(user.length > 0)
-    {
-      if(user[0].password ==  password)
-      {
+    if (user.length > 0) {
+      if (user[0].password == password) {
         user[0].sessionId = uuidv4();
         user[0].save();
         // console.log("user :",user[0]);
@@ -179,8 +173,7 @@ app.get("/login", async (req, res) => {
           data: user[0]
         });
       }
-      else
-      {
+      else {
         res.json({
           success: true,
           message: "Wrong password",
@@ -188,8 +181,7 @@ app.get("/login", async (req, res) => {
         });
       }
     }
-    else
-    {
+    else {
       res.json({
         success: true,
         message: "User not found",
@@ -209,72 +201,70 @@ app.get("/login", async (req, res) => {
 
 // Logout Api
 app.post("/user/logout", async (req, res) => {
-    const { email } = req.body;
-  
-    try {
-  
-      let user = await User.findOne({ email });
-  
-      if (user) {
-  
-        user.isLoggedIn = false;
-        await user.save();
-  
-        res.json({
-          success: true,
-          message: "User logged out successfully",
-          data: user
-        });
-      } else {
-        res.status(404).json({
-          success: false,
-          message: "User not found",
-          data: null
-        });
-      }
-    } catch (error) {
-      console.error("Error logging out user:", error);
-      res.status(500).json({
+  const { email } = req.body;
+
+  try {
+
+    let user = await User.findOne({ email });
+
+    if (user) {
+
+      user.isLoggedIn = false;
+      await user.save();
+
+      res.json({
+        success: true,
+        message: "User logged out successfully",
+        data: user
+      });
+    } else {
+      res.status(404).json({
         success: false,
-        message: "Internal server error",
+        message: "User not found",
         data: null
       });
     }
-  });
+  } catch (error) {
+    console.error("Error logging out user:", error);
+    res.status(500).json({
+      success: false,
+      message: "Internal server error",
+      data: null
+    });
+  }
+});
 
 //get user 
 
-app.post('/getuser',async (req,res)=>{
+app.post('/getuser', async (req, res) => {
   try {
-    const {email, sessionId} = req.body
-    const user = await User.findOne({email, sessionId});
-    if(user)
-    {
+    const { email, sessionId } = req.body
+    const user = await User.findOne({ email, sessionId });
+    if (user) {
       res.json({
         success: true,
         message: "User fetched",
         data: user
       })
     }
-    else
-    {
+    else {
       res.json({
         success: true,
         message: "User not found",
         data: null
       })
-        }
+    }
   } catch (error) {
     console.log("Server error", error);
   }
 })
 
-app.get('/getusers', async (req,res) => {
+app.get('/getusers', async (req, res) => {
   try {
     const users = await User.find()
     res.json({
-      success : true,
-      data : users
+      success: true,
+      data: users
     })
   } catch (error) {
     console.log(error);
@@ -284,22 +274,20 @@ app.get('/getusers', async (req,res) => {
 // address
 app.post('/address', async (req, res) => {
   try {
-    const {userId, addresses} = req.body
+    const { userId, addresses } = req.body
     const addresses_string = JSON.stringify(addresses)
-    const user = await Address.findOneAndUpdate({userId}, {address : addresses_string}, {new : true})
-    if(user)
-    {
+    const user = await Address.findOneAndUpdate({ userId }, { address: addresses_string }, { new: true })
+    if (user) {
       res.json({
-        success : true,
-        data : user
+        success: true,
+        data: user
       })
     }
-    else
-    {
-      const Nuser = await Address.create({userId, address : addresses_string})
+    else {
+      const Nuser = await Address.create({ userId, address: addresses_string })
       res.json({
-        success : true,
-        data : Nuser
+        success: true,
+        data: Nuser
       })
     }
   } catch (error) {
@@ -309,20 +297,18 @@ app.post('/address', async (req, res) => {
 
 app.post('/getadd', async (req, res) => {
   try {
-    const {userId} = req.body
-    const userAdd = await Address.findOne({userId})
-    if(userAdd)
-    {
+    const { userId } = req.body
+    const userAdd = await Address.findOne({ userId })
+    if (userAdd) {
       res.json({
-        success : true,
-        data : userAdd
+        success: true,
+        data: userAdd
       })
     }
-    else
-    {
+    else {
       res.json({
-        success : false,
-        data : null
+        success: false,
+        data: null
       })
     }
   } catch (error) {
@@ -336,18 +322,16 @@ app.post('/getadd', async (req, res) => {
 app.post('/addproduct', async (req, res) => {
   try {
     const product = await Products.create(req.body);
-    if(product)
-    {
+    if (product) {
       res.json({
-        success : true,
-        data : product
+        success: true,
+        data: product
       })
     }
-    else
-    {
+    else {
       res.json({
-        success : false,
-        data : null
+        success: false,
+        data: null
       })
     }
   } catch (error) {
@@ -355,15 +339,13 @@ app.post('/addproduct', async (req, res) => {
   }
 })
 
-app.get('/getproducts',async (req, res) => {
+app.get('/getproducts', async (req, res) => {
   try {
     const products = await Products.find();
-    if (products.length > 0)
-    {
+    if (products.length > 0) {
       res.json(products)
     }
-    else
-    {
+    else {
       res.json([])
     }
   } catch (error) {
@@ -371,22 +353,20 @@ app.get('/getproducts',async (req, res) => {
   }
 })
 
-app.post('/getproduct', async(req,res) => {
+app.post('/getproduct', async (req, res) => {
   try {
-    const {id} = req.body
-    const product = await Products.findOne({_id : id})
-    if(product)
-    {
+    const { id } = req.body
+    const product = await Products.findOne({ _id: id })
+    if (product) {
       res.json({
-        success : true,
-        data : product
+        success: true,
+        data: product
       })
     }
-    else
-    {
+    else {
       res.json({
-        success : false,
-        data : null
+        success: false,
+        data: null
       })
     }
   } catch (error) {
@@ -394,19 +374,17 @@ app.post('/getproduct', async(req,res) => {
   }
 })
 
-app.delete('/deleteproduct/:id', async (req,res) => {
+app.delete('/deleteproduct/:id', async (req, res) => {
   try {
     const id = req.params.id
-    const prod = Products.findOne({_id : id})
-    if(prod)
-    {
-      await Products.deleteOne({_id : id})
-      res.json({success : true})
+    const prod = Products.findOne({ _id: id })
+    if (prod) {
+      await Products.deleteOne({ _id: id })
+      res.json({ success: true })
     }
-    else
-    {
+    else {
       res.json({
-        success : false
+        success: false
       })
     }
   } catch (error) {
@@ -416,44 +394,40 @@ app.delete('/deleteproduct/:id', async (req,res) => {
 
 //-----------------------------------------------------Favorites----------------------->
 
-app.post('/addfav', async (req,res)=>{
+app.post('/addfav', async (req, res) => {
   try {
-    const {userId, favourites} = req.body
+    const { userId, favourites } = req.body
     const fav_string = favourites.join(', ');
-    const fav = await Favourite.findOne({userId});
-    if(fav)
-    {
+    const fav = await Favourite.findOne({ userId });
+    if (fav) {
       fav.favourites = fav_string;
       await fav.save();
-      res.json({success: true})
+      res.json({ success: true })
     }
-    else
-    {
-      await Favourite.create({userId, favourites : fav_string});
-      res.json({success: true})
+    else {
+      await Favourite.create({ userId, favourites: fav_string });
+      res.json({ success: true })
     }
   } catch (error) {
     console.log(error);
   }
 })
 
-app.post('/getfav', async (req,res)=>{
+app.post('/getfav', async (req, res) => {
   try {
-    const {userId} = req.body
-    const fav = await Favourite.findOne({userId});
-    if(fav)
-    {
+    const { userId } = req.body
+    const fav = await Favourite.findOne({ userId });
+    if (fav) {
       //convert string to array and send
       res.json({
-        success : true,
-        favourites : fav.favourites
+        success: true,
+        favourites: fav.favourites
       })
     }
-    else
-    {
+    else {
       res.json(
         {
-          success : false
+          success: false
         }
       )
     }
@@ -464,28 +438,26 @@ app.post('/getfav', async (req,res)=>{
 
 // ----------------------------------------------------------Cart------------------------------->
 
-app.post('/addcart',async (req, res)=>{
+app.post('/addcart', async (req, res) => {
   try {
     const product = req.body
-    let pro = await Cart.findOne({proId : product.proId, userId : product.userId})
-    if(pro)
-    {
+    let pro = await Cart.findOne({ proId: product.proId, userId: product.userId })
+    if (pro) {
       pro.set(product)
       await pro.save()
     }
-    else
-    {
+    else {
       await Cart.create(product)
     }
     res.json({
-      success : true
+      success: true
     })
   } catch (error) {
     console.log(error);
   }
 })
 
-app.get('/getcart', async(req, res)=>{
+app.get('/getcart', async (req, res) => {
   try {
     let cart = await Cart.find()
     res.json(cart)
@@ -494,22 +466,20 @@ app.get('/getcart', async(req, res)=>{
   }
 })
 
-app.post('/removecart', async(req,res) => {
+app.post('/removecart', async (req, res) => {
   try {
-    const {userId, proId} = req.body
-    const deletedUser = await Cart.findOneAndDelete({userId, proId})
-    if(deletedUser)
-    {
+    const { userId, proId } = req.body
+    const deletedUser = await Cart.findOneAndDelete({ userId, proId })
+    if (deletedUser) {
       res.json({
-        success : true,
-        data : deletedUser
+        success: true,
+        data: deletedUser
       })
     }
-    else
-    {
+    else {
       res.json({
-        success : false,
-        data : null
+        success: false,
+        data: null
       })
     }
   } catch (error) {
@@ -518,7 +488,7 @@ app.post('/removecart', async(req,res) => {
 })
 
 app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`)
+  console.log(`Server is running on port ${PORT}`)
 });
 
 
@@ -526,40 +496,36 @@ app.listen(PORT, () => {
 
 app.post('/addorder', async (req, res) => {
   try {
-    
+
     const order = await Orders.create(req.body);
-    if(order)
-    {
+    if (order) {
       res.json({
-        success : true,
-        data : order
+        success: true,
+        data: order
       })
     }
-    else
-    {
-      res.json({success : false, data : null})
+    else {
+      res.json({ success: false, data: null })
     }
   } catch (error) {
     console.error(error);
   }
 })
 
-app.post('/getorders',async (req, res) => {
+app.post('/getorders', async (req, res) => {
   try {
-    const {userId} = req.body
-    const orders = await Orders.find({userId});
-    if (orders.length > 0)
-    {
+    const { userId } = req.body
+    const orders = await Orders.find({ userId });
+    if (orders.length > 0) {
       res.json({
-        success : true,
-        data : orders
+        success: true,
+        data: orders
       })
     }
-    else
-    {
+    else {
       res.json({
-        success : false,
-        data : []
+        success: false,
+        data: []
       })
     }
   } catch (error) {
@@ -567,22 +533,20 @@ app.post('/getorders',async (req, res) => {
   }
 })
 
-app.post('/getorder', async (req,res) => {
+app.post('/getorder', async (req, res) => {
   try {
-    const {orderId} = req.body
-    const order = await Orders.findOne({orderId});
-    if(order)
-    {
+    const { orderId } = req.body
+    const order = await Orders.findOne({ orderId });
+    if (order) {
       res.json({
-        success : true,
-        data : order
+        success: true,
+        data: order
       })
     }
-    else
-    {
+    else {
       res.json({
-        success : false,
-        data : null
+        success: false,
+        data: null
       })
     }
   } catch (error) {
@@ -590,21 +554,19 @@ app.post('/getorder', async (req,res) => {
   }
 })
 
-app.get('/orders', async (req,res) => {
+app.get('/orders', async (req, res) => {
   try {
     const orders = await Orders.find();
-    if(orders)
-    {
+    if (orders) {
       res.json({
-        success : true,
-        data : orders
+        success: true,
+        data: orders
       })
     }
-    else
-    {
+    else {
       res.json({
-        success : false,
-        data : []
+        success: false,
+        data: []
       })
     }
   } catch (error) {
@@ -612,22 +574,20 @@ app.get('/orders', async (req,res) => {
   }
 })
 
-app.put('/updatestatus/:orderId', async (req,res)=>{
+app.put('/updatestatus/:orderId', async (req, res) => {
   try {
     const orderId = req.params.orderId
-    const {status} = req.body
-    const order = await Orders.findOneAndUpdate({orderId}, {status},{new : true})
-    if(order)
-    {
+    const { status } = req.body
+    const order = await Orders.findOneAndUpdate({ orderId }, { status }, { new: true })
+    if (order) {
       res.json({
-        success :true,
-        data : order
+        success: true,
+        data: order
       })
     }
-    else
-    {
+    else {
       res.json({
-        success : false
+        success: false
       })
     }
   } catch (error) {
@@ -635,22 +595,20 @@ app.put('/updatestatus/:orderId', async (req,res)=>{
   }
 })
 
-app.post('/cancelorder', async(req,res)=>{
+app.post('/cancelorder', async (req, res) => {
   try {
-    const {userId, orderID} = req.body
-    const order = await Orders.findOneAndUpdate({userId,orderId : orderID}, {status : 'Cancelled'}, {new : true})
-    if(order)
-    {
+    const { userId, orderID } = req.body
+    const order = await Orders.findOneAndUpdate({ userId, orderId: orderID }, { status: 'Cancelled' }, { new: true })
+    if (order) {
       res.json({
-        success : true,
-        data : order
+        success: true,
+        data: order
       })
     }
-    else
-    {
+    else {
       res.json({
-        success : false,
-        data : null
+        success: false,
+        data: null
       })
     }
   } catch (error) {
@@ -662,41 +620,37 @@ app.post('/cancelorder', async(req,res)=>{
 
 app.post('/addcode', async (req, res) => {
   try {
-    
+
     const code = await DiscountCode.create(req.body);
-    if(code)
-    {
+    if (code) {
       res.json({
-        success : true,
-        data : code
+        success: true,
+        data: code
       })
     }
-    else
-    {
-      res.json({success : false, data : null})
+    else {
+      res.json({ success: false, data: null })
     }
   } catch (error) {
-    res.json({success :false, data : null, message: error.message})
+    res.json({ success: false, data: null, message: error.message })
     console.error(error);
   }
 })
 
-app.post('/getcode', async (req,res) => {
+app.post('/getcode', async (req, res) => {
   try {
-    const {code} = req.body
-    const val = await DiscountCode.findOne({code});
-    if(val)
-    {
+    const { code } = req.body
+    const val = await DiscountCode.findOne({ code });
+    if (val) {
       res.json({
-        success : true,
-        data : val
+        success: true,
+        data: val
       })
     }
-    else
-    {
+    else {
       res.json({
-        success : false,
-        data : null
+        success: false,
+        data: null
       })
     }
   } catch (error) {
@@ -723,38 +677,34 @@ setInterval(deactivateExpiredDiscountCodes, 3600000); // Run every hour
 app.post('/addreview', async (req, res) => {
   try {
     const review = await Reviews.create(req.body);
-    if(review)
-    {
+    if (review) {
       res.json({
-        success : true,
-        data : review
+        success: true,
+        data: review
       })
     }
-    else
-    {
-      res.json({success : false, data : null})
+    else {
+      res.json({ success: false, data: null })
     }
   } catch (error) {
-    res.json({success :false, data : null, message: error.message})
+    res.json({ success: false, data: null, message: error.message })
     console.error(error);
   }
 })
 
-app.get('/getreviews', async (req,res) => {
+app.get('/getreviews', async (req, res) => {
   try {
     const reviews = await Reviews.find()
-    if(reviews.length > 0)
-    {
+    if (reviews.length > 0) {
       res.json({
-        success : true,
-        data : reviews
+        success: true,
+        data: reviews
       })
     }
-    else
-    {
+    else {
       res.json({
-        success : false,
-        data : []
+        success: false,
+        data: []
       })
     }
   } catch (error) {

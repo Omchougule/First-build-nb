@@ -81,7 +81,7 @@ const Profile = () => {
         <div className="bg-white overflow-hidden shadow rounded-lg border max-w-2xl mx-auto my-5">
             <div className='flex items-center p-4'>
                 <div className="px-4 py-5 sm:px-6">
-                    <h3 className="text-lg leading-6 font-medium text-gray-900">
+                    <h3 className="text-4xl leading-6 font-hand  text-gray-900">
                         User Profile
                     </h3>
                     <p className="mt-1 max-w-2xl text-sm text-gray-500">

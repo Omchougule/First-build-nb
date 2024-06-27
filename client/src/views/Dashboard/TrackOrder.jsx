@@ -18,8 +18,8 @@ const OrderTracking = ({ status }) => {
     const currentStatusIndex = statusSteps.findIndex(step => step.status === status);
     return (
         <div>
-            <h2>Order Tracking</h2>
-            <ol className="relative ms-3 border-s border-gray-200 light:border-gray-700">
+            <h2 className='text-2xl '>Order Tracking</h2>
+            <ol className="relative ms-3 border-s mt-5 border-gray-200 light:border-gray-700">
                 {statusSteps.map((step, index) => (
                     <li key={index} className={`mb-10 ms-6 ${index <= currentStatusIndex ? 'text-green-700 light:text-green-500' : ''}`}>
                         <span className={`absolute -start-3 flex h-6 w-6 items-center justify-center rounded-full ${index <= currentStatusIndex ? 'bg-green-100 light:bg-green-900' : 'bg-gray-100 light:bg-gray-700'} ring-8 ring-white light:ring-gray-800`}>
@@ -166,7 +166,7 @@ const TrackOrder = () => {
                                                 <div className="flex items-center justify-end gap-4">
                                                     <p className="text-base font-normal text-gray-900 light:text-white">x{product.quantity}</p>
 
-                                                    <p className="text-xl font-bold leading-tight text-gray-900 light:text-white">${product.productPrice * product.quantity}</p>
+                                                    <p className="text-xl font-bold leading-tight text-gray-900 light:text-white">&#8377; {product.productPrice * product.quantity}</p>
                                                 </div>
                                             </div>
                                             {orderSummary.status === "Delivered" && <div className="flex items-center justify-between gap-4">
@@ -197,28 +197,28 @@ const TrackOrder = () => {
                                     <div className="space-y-2">
                                         <dl className="flex items-center justify-between gap-4">
                                             <dt className="font-normal text-gray-500 light:text-gray-400">Original price</dt>
-                                            <dd className="font-medium text-gray-900 light:text-white">${orderSummary.summary.originalPrice}</dd>
+                                            <dd className="font-medium text-gray-900 light:text-white"> &#8377; {orderSummary.summary.originalPrice}</dd>
                                         </dl>
 
                                         <dl className="flex items-center justify-between gap-4">
                                             <dt className="font-normal text-gray-500 light:text-gray-400">Savings</dt>
-                                            <dd className="text-base font-medium text-green-500">-${orderSummary.summary.discountedAmmount}</dd>
+                                            <dd className="text-base font-medium text-green-500">- &#8377;{orderSummary.summary.discountedAmmount}</dd>
                                         </dl>
 
                                         <dl className="flex items-center justify-between gap-4">
                                             <dt className="font-normal text-gray-500 light:text-gray-400">Store Pickup</dt>
-                                            <dd className="font-medium text-gray-900 light:text-white">${orderSummary.summary.storePickup}</dd>
+                                            <dd className="font-medium text-gray-900 light:text-white">&#8377;{orderSummary.summary.storePickup}</dd>
                                         </dl>
 
                                         <dl className="flex items-center justify-between gap-4">
                                             <dt className="font-normal text-gray-500 light:text-gray-400">Tax</dt>
-                                            <dd className="font-medium text-gray-900 light:text-white">${orderSummary.summary.tax}</dd>
+                                            <dd className="font-medium text-gray-900 light:text-white">&#8377;{orderSummary.summary.tax}</dd>
                                         </dl>
                                     </div>
 
                                     <dl className="flex items-center justify-between gap-4 border-t border-gray-200 pt-2 light:border-gray-700">
                                         <dt className="text-lg font-bold text-gray-900 light:text-white">Total</dt>
-                                        <dd className="text-lg font-bold text-gray-900 light:text-white">${orderSummary.summary.finalTotal}</dd>
+                                        <dd className="text-lg font-bold text-gray-900 light:text-white">&#8377;    {orderSummary.summary.finalTotal}</dd>
                                     </dl>
                                 </div>
                             </div>
