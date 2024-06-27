@@ -4,7 +4,7 @@ import img from './image.png';
 const BlogCard = ({ image, category, title, description, views, comments }) => (
   <div className="p-4">
     <div className="h-full shadow-lg border-opacity-60 rounded-lg overflow-hidden"
-    data-aos="fade-up"
+      data-aos="fade-up"
     >
       <img className="lg:h-48 md:h-36 w-full object-cover object-center" src={image} alt="blog" />
       <div className="p-6">
@@ -38,24 +38,24 @@ const BlogCard = ({ image, category, title, description, views, comments }) => (
 const OurBlogs = () => {
   const blogs = [
     {
-      image: 'https://dummyimage.com/720x400',
-      category: 'CATEGORY',
+      image: 'https://dishingouthealth.com/wp-content/uploads/2021/04/BroccoliFriedRiceUpdate_Styled2.jpg',
+      category: 'MEAL',
       title: 'The Catalyzer',
       description: 'Photo booth fam kinfolk cold-pressed sriracha leggings jianbing microdosing tousled waistcoat.',
       views: '1.2K',
       comments: '6',
     },
     {
-      image: 'https://dummyimage.com/721x401',
-      category: 'CATEGORY',
+      image: 'https://www.allrecipes.com/thmb/0VXMwCY9RVNrNvWcF_9v0iZpNqA=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/JF_241160_CreamyCottageCheeseScrambled_4x3_12902-619d00dc88594ea9b8ed884a108db16d.jpg',
+      category: 'APPETIZERS',
       title: 'The 400 Blows',
       description: 'Photo booth fam kinfolk cold-pressed sriracha leggings jianbing microdosing tousled waistcoat.',
       views: '1.2K',
       comments: '6',
     },
     {
-      image: 'https://dummyimage.com/722x402',
-      category: 'CATEGORY',
+      image: 'https://carveyourcraving.com/wp-content/uploads/2019/09/Quinoa-Paneer-patties-for-burger.jpg',
+      category: 'APPETIZERS',
       title: 'Shooting Stars',
       description: 'Photo booth fam kinfolk cold-pressed sriracha leggings jianbing microdosing tousled waistcoat.',
       views: '1.2K',
@@ -74,7 +74,7 @@ const OurBlogs = () => {
           <div className="container px-5 w-4/5 pb-24 mx-auto">
             <div className="grid grid-cols-1 gap-12 lg:grid-cols-3 md:grid-cols-1 mx-auto">
               {blogs.map((blog, index) => (
-                <BlogCard 
+                <BlogCard
                   key={index}
                   image={blog.image}
                   category={blog.category}

@@ -19,7 +19,7 @@ import AboutUs from '../../components/HomeComponents/AboutUs/AboutUs';
 import Appetizers from '../../components/HomeComponents/Appetizers/Appetizers';
 import Meals from '../../components/HomeComponents/Meals/Meals';
 import Smothies from '../../components/HomeComponents/Smothies/Smothies';
-import  OurBlogs  from '../../components/HomeComponents/OurBlogs/OurBlogs';
+import OurBlogs from '../../components/HomeComponents/OurBlogs/OurBlogs';
 import TestimonialsComp from '../../components/HomeComponents/TestimonialsComps/TestimonialsComp';
 import { useUserContext } from '../../context/Authcontext';
 import { Link } from 'react-router-dom';
@@ -34,6 +34,11 @@ export default function Home() {
   useEffect(() => {
     checkAuthUser()
   }, [])
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+  
 
   return (
 
@@ -57,15 +62,17 @@ export default function Home() {
 
       </div>
 
+      <div className=' bg-slate-700  ' data-scroll data-scroll-speed="-1" >
+        <Meals />
+
+      </div>
+
       <div className=' bg-slate-700  '  >
         <Appetizers />
 
       </div>
 
-      <div className=' bg-slate-700  ' data-scroll data-scroll-speed="-1" >
-        <Meals />
 
-      </div>
 
       <div className=' bg-slate-700  '>
         <Smothies />
@@ -83,7 +90,7 @@ export default function Home() {
       </div>
 
       <div className='fixed bottom-5 right-5'>
-        <button className='' id="scroll-to-top">
+        <button onClick={scrollToTop} className='' >
           <img src='https://cdn-icons-png.flaticon.com/128/833/833102.png' className='w-10 h-10' alt='Go Up' />
         </button>
       </div>

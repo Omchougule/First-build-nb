@@ -1,16 +1,33 @@
 import React from 'react';
 import PinkTop from '../../../assets/pink_top.svg';
+import { Link } from 'react-router-dom';
 
-const SmoothieItem = ({index}) => (
-    <div className='bg-yellow-400 h-80 w-56 flex justify-center items-center rounded-md shadow-md space-x-5' 
-    data-aos={index < 2 ? "fade-right" : "fade-left"}>
-        <div className="bg-white hover:bg-[#5a2f96] duration-150 ease-in-out shadow-lg h-64 w-32 rounded-md"></div>
+const smoothiesConfig = [
+    { name: 'Berry Blast', image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR4ioUI7dO2ZEDWUDCzsUkLYAG-Kv1uUYwMPA&s' },
+    { name: 'Tropical Paradise', image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR4ioUI7dO2ZEDWUDCzsUkLYAG-Kv1uUYwMPA&s' },
+    { name: 'Green Machine', image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR4ioUI7dO2ZEDWUDCzsUkLYAG-Kv1uUYwMPA&s' },
+    { name: 'Citrus Sunshine', image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR4ioUI7dO2ZEDWUDCzsUkLYAG-Kv1uUYwMPA&s' },
+];
+
+const SmoothieItem = ({ index, name, image }) => (
+    <div className='space-y-6' data-aos={index < 2 ? "fade-right" : "fade-left"}>
+        <div
+            className='bg-yellow-400  flex justify-center items-center rounded-md shadow-lg space-x-5'
+
+        >
+            <div className="bg-white hover:bg-[#5a2f96] duration-150 h-80 w-56 ease-in-out shadow-lg  rounded-md flex flex-col justify-center items-center overflow-hidden">
+                <img src={image} alt={name} className="h-full w-full object-cover hover:scale-110 transition duration-500" />
+                {/* <h2 className="text-lg font-semibold">{name}</h2> */}
+            </div>
+
+        </div>
+
+        <h1 className='font-hand text-3xl text-center'>{name}</h1>
+
     </div>
 );
 
-const Smothies = () => {
-    const smoothieItems = [1, 2, 3, 4]; // Adjust the number of items as needed
-
+const Smoothies = () => {
     return (
         <div className='bg-[#ff679a] flex justify-center flex-col'>
             <div>
@@ -21,13 +38,24 @@ const Smothies = () => {
                 <h1 className='font-hand text-4xl'>Our Delicious Smoothies</h1>
                 <h1 className='font-hand text-3xl my-5 opacity-80'>Menu List</h1>
                 <div className='grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-20'>
-                    {smoothieItems.map((item, index) => (
-                        <SmoothieItem key={index} index={index}  />
+                    {smoothiesConfig.map((smoothie, index) => (
+                        <SmoothieItem
+                            key={index}
+                            index={index}
+                            name={smoothie.name}
+                            image={smoothie.image}
+                        />
                     ))}
                 </div>
+
+                <Link to='/products'>
+                    <button className='mt-10 bg-[#ffc935] text-black  z-50 font-light py-2 px-4 focus:outline-none hover:bg-white hover:text-black active:scale-90 duration-200  rounded-full text-lg mb-10  '>View All Products</button>
+                </Link>
+
             </div>
+
         </div>
     );
 }
 
-export default Smothies;
+export default Smoothies;
