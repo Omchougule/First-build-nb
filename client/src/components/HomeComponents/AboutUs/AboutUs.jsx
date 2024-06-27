@@ -2,24 +2,49 @@ import React from 'react';
 
 import "./AboutUs.css"
 import img from "./image.png"
+import img2 from "./AboutUs.png"
+import img3 from "./aboutUs2.png"
+import img4 from "./Natural.png"
+import { Link } from 'react-router-dom';
 
 const AboutUs = () => {
     return (
-        <div className='bg-[#f4f73c] pb-20  flex justify-center flex-col  '>
-            {/* <div className="custom-shape-divider-bottom-1717052264">
-                <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
-                    <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z" className="shape-fill"></path>
-                </svg>
-            </div> */}
+        <div className='bg-[#f4f73c]  flex justify-center flex-col  '>
 
             <div>
                 <img className=' hidden md:block md:-translate-y-28 rotate-180' src={img} alt="" />
             </div>
 
-            <div className=' flex flex-col space-y-10 -translate-y-28    justify-center items-center'>
-                <h1 className='font-hand text-4xl'>About Us</h1>
-                <img className='w-96 blur-sm    object-cover' src="https://dt-faryita.myshopify.com/cdn/shop/files/grid15_8c36583c-9f32-498a-9e44-59507412669e.png?v=1655093327" alt="" />
+            <div className="flex flex-col  justify-center items-center py-20 md:py-0 md:-translate-y-28 p-10 ">
+                <h1 className="font-hand text-6xl  text-gray-800">About Us</h1>
+
+                <div className="flex flex-col md:flex-row items-center space-y-10 md:space-y-0 md:space-x-10">
+                    <div className="flex flex-col space-y-4 max-w-lg ms-10">
+                        <img className='w-20 animate-shake animate-infinite animate-duration-[6000ms]  ' src="https://faryita.wpengine.com/wp-content/uploads/2024/03/Mint-leaves-Img.png" alt="" />
+                        <h2 className="text-7xl font-hand  text-gray-700">Natural Café With Smoothies, Appetizers and Fresh Meals</h2>
+                        <h4 className="text-gray-600 leading-relaxed">
+                            Arcu cursus vitae congue mauris rhoncus aenean vel elit scelerisque. Mollis aliquam ut porttitor leo a diam sollicitudin tempor. Congue eu consequat ac felis donec. Ante in nibh mauris cursus.
+                        </h4>
+
+
+                        <Link to="/contact">
+
+                            <button className="bg-[#fe669e] text-white  z-50 font-light py-2 px- w-32 focus:outline-none hover:bg-white hover:text-black active:scale-90 duration-200  rounded-full text-lg mb-10 mt-5  ">
+                                Contact Us
+
+                            </button>
+                            
+
+                        </Link>
+                    </div>
+
+                    <img className="h-96 md:h-[600px] drop-shadow-2xl object-cover rounded-lg -translate-y-24" src={img2} alt="About Us" />
+                    <div className="hidden md:flex flex-col -translate-y-36 -translate-x-32 justify-start ">
+                        <img src={img4} alt="100% natural Stamp" className=" h-32 object-contain animate-spin animate-infinite animate-duration-[6000ms]" />
+                    </div>
+                </div>
             </div>
+
 
 
 

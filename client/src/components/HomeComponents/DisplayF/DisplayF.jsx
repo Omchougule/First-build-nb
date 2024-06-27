@@ -5,7 +5,7 @@ const DisplayF = () => {
     return (
         <>
 
-            <div className=' flex flex-col md:flex-row space-x-10   justify-center items-center ' >
+            <div id='top' className=' flex flex-col md:flex-row space-x-10   justify-center items-center ' >
                 <div className='md:flex flex-col justify-center h-2/3  hidden'>
 
                     <img className='w-20 animate-bounce animate-infinite animate-duration-[6000ms]' src="https://faryita.wpengine.com/wp-content/uploads/2024/03/cub.png" alt="" />

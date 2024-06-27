@@ -4,23 +4,24 @@ import OrangeTop from '../../../assets/orange_top.webp';
 // Testimonial data array
 const testimonials = [
   {
-    name: 'Holden Caulfield',
-    role: 'Senior Product Designer',
+    name: 'Om Nandurkar',
+    role: ' Product Designer',
     image: 'https://randomuser.me/api/portraits/men/54.jpg',
     quote: "Edison bulb retro cloud bread echo park, helvetica stumptown taiyaki taxidermy 90's cronut +1 kinfolk."
   },
   {
-    name: 'Alper Kamu',
+    name: 'Amit Kumbhar',
+    role: 'CTO',
+    image: 'https://randomuser.me/api/portraits/men/56.jpg',
+    quote: "Edison bulb retro cloud bread echo park, helvetica stumptown taiyaki taxidermy 90's cronut +1 kinfolk."
+  },
+  {
+    name: 'Anni Kumawat',
     role: 'UI Developer',
     image: 'https://randomuser.me/api/portraits/men/55.jpg',
     quote: "Edison bulb retro cloud bread echo park, helvetica stumptown taiyaki taxidermy 90's cronut +1 kinfolk."
   },
-  {
-    name: 'Henry Letham',
-    role: 'CTO',
-    image: 'https://randomuser.me/api/portraits/men/56.jpg',
-    quote: "Edison bulb retro cloud bread echo park, helvetica stumptown taiyaki taxidermy 90's cronut +1 kinfolk."
-  }
+  
 ];
 
 const TestimonialsComp = () => {
