@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import './MenuC.css';
 import GreenTop from '../../../assets/green_top.webp';
 import OrangeTop from '../../../assets/orange_top.webp';
 import { Link } from 'react-router-dom';
+import { useUserContext } from '../../../context/Authcontext';
 
 // Dummy images
 const dummyImage1 = 'https://placekitten.com/200/300';
@@ -49,10 +50,10 @@ const AppetizerItem = ({ appetizer, index }) => (
     data-aos={index % 2 === 0 ? "fade-right" : "fade-left"}
   >
     <div className="bg-white h-16 w-16 rounded-md flex justify-center items-center">
-      <img src={appetizer.photo} alt={appetizer.name} className="h-full w-full object-cover rounded-md" />
+      <img src={appetizer.imageUrl} alt={appetizer.title} className="h-full w-full object-cover rounded-md" />
     </div>
     <div className="bg-black h-16 w-44 rounded-md p-2 text-white flex flex-col justify-center">
-      <h2 className="text-lg font-bold">{appetizer.name}</h2>
+      <h2 className="text-lg font-bold">{appetizer.title}</h2>
       {/* <p className="text-sm mt-1">{appetizer.description}</p> */}
     </div>
   </div>
@@ -60,6 +61,13 @@ const AppetizerItem = ({ appetizer, index }) => (
 
 // Appetizers component
 const Appetizers = () => {
+
+  const {products} = useUserContext()
+  const [appetizerConfig, setAppetizerConfig] = useState([])
+  useEffect(()=>{
+    setAppetizerConfig(products.filter((product) => product.category == 'Appetizer').slice(0,4))
+  },[products])
+
   return (
     <div className='bg-[#b4c817] flex justify-center flex-col '>
       <div>

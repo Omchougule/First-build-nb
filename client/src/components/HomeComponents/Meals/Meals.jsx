@@ -1,35 +1,36 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import OrangeTop from '../../../assets/orange_top.webp';
 import GreenTop from '../../../assets/green_top.webp';
 import { Link } from 'react-router-dom';
+import { useUserContext } from '../../../context/Authcontext';
 
 // Dummy images
-const dummyImage1 = 'https://dishingouthealth.com/wp-content/uploads/2021/04/BroccoliFriedRiceUpdate_Styled2.jpg';
-const dummyImage2 = 'https://placekitten.com/201/300';
+// const dummyImage1 = 'https://dishingouthealth.com/wp-content/uploads/2021/04/BroccoliFriedRiceUpdate_Styled2.jpg';
+// const dummyImage2 = 'https://placekitten.com/201/300';
 
 // Configuration for meal items
-const mealConfig = [
-  {
-    photo: dummyImage1,
-    name: 'Green Salad',
-    description: 'A healthy green salad with fresh vegetables. AND ALSO THE INGREDIENTS IN THE DESC'
-  },
-  {
-    photo: dummyImage1,
-    name: 'Orange Delight',
-    description: 'A refreshing orange-flavored dessert.'
-  },
-  {
-    photo: dummyImage1,
-    name: 'Veggie Platter',
-    description: 'An assortment of fresh and cooked vegetables.'
-  },
-  {
-    photo: dummyImage1,
-    name: 'Fruit Medley',
-    description: 'A mix of seasonal fruits for a refreshing treat.'
-  }
-];
+// const mealConfig = [
+//   {
+//     imageUrl: dummyImage1,
+//     title: 'Green Salad',
+//     description: 'A healthy green salad with fresh vegetables. AND ALSO THE INGREDIENTS IN THE DESC'
+//   },
+//   {
+//     imageUrl: dummyImage1,
+//     title: 'Orange Delight',
+//     description: 'A refreshing orange-flavored dessert.'
+//   },
+//   {
+//     imageUrl: dummyImage1,
+//     title: 'Veggie Platter',
+//     description: 'An assortment of fresh and cooked vegetables.'
+//   },
+//   {
+//     imageUrl: dummyImage1,
+//     title: 'Fruit Medley',
+//     description: 'A mix of seasonal fruits for a refreshing treat.'
+//   }
+// ];
 
 const MealItem = ({ meal, index }) => (
   <div
@@ -37,16 +38,22 @@ const MealItem = ({ meal, index }) => (
     data-aos={index % 2 === 0 ? "fade-right" : "fade-left"}
   >
     <div className="bg-white h-56 w-44 rounded-md flex justify-center items-center">
-      <img src={meal.photo} alt={meal.name} className="h-full w-full object-cover rounded-md" />
+      <img src={meal.imageUrl} alt={meal.title} className="h-full w-full object-cover rounded-md" />
     </div>
     <div className="bg-black h-56 w-96 rounded-md p-5 text-white flex flex-col justify-around">
-      <h2 className="text-2xl font-bold ">{meal.name}</h2>
+      <h2 className="text-2xl font-bold ">{meal.title}</h2>
       <p className="mt-2">{meal.description}</p>
     </div>
   </div>
 );
 
 const Meals = () => {
+
+  const {products} = useUserContext()
+  const [mealConfig, setMealConfig] = useState([])
+  useEffect(()=>{
+    setMealConfig(products.filter((product) => product.category == 'Meals').slice(0,4))
+  },[products])
   return (
     <div className='bg-[#f76d3c]  flex justify-center flex-col'>
       <div>

@@ -1,13 +1,14 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import PinkTop from '../../../assets/pink_top.svg';
 import { Link } from 'react-router-dom';
+import { useUserContext } from '../../../context/Authcontext';
 
-const smoothiesConfig = [
-    { name: 'Berry Blast', image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR4ioUI7dO2ZEDWUDCzsUkLYAG-Kv1uUYwMPA&s' },
-    { name: 'Tropical Paradise', image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR4ioUI7dO2ZEDWUDCzsUkLYAG-Kv1uUYwMPA&s' },
-    { name: 'Green Machine', image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR4ioUI7dO2ZEDWUDCzsUkLYAG-Kv1uUYwMPA&s' },
-    { name: 'Citrus Sunshine', image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR4ioUI7dO2ZEDWUDCzsUkLYAG-Kv1uUYwMPA&s' },
-];
+// const smoothiesConfig = [
+//     { name: 'Berry Blast', image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR4ioUI7dO2ZEDWUDCzsUkLYAG-Kv1uUYwMPA&s' },
+//     { name: 'Tropical Paradise', image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR4ioUI7dO2ZEDWUDCzsUkLYAG-Kv1uUYwMPA&s' },
+//     { name: 'Green Machine', image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR4ioUI7dO2ZEDWUDCzsUkLYAG-Kv1uUYwMPA&s' },
+//     { name: 'Citrus Sunshine', image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR4ioUI7dO2ZEDWUDCzsUkLYAG-Kv1uUYwMPA&s' },
+// ];
 
 const SmoothieItem = ({ index, name, image }) => (
     <div className='space-y-6' data-aos={index < 2 ? "fade-right" : "fade-left"}>
@@ -28,6 +29,13 @@ const SmoothieItem = ({ index, name, image }) => (
 );
 
 const Smoothies = () => {
+
+    const { products } = useUserContext()
+    const [smoothiesConfig, setSmoothiesConfig] = useState([])
+    useEffect(() => {
+        setSmoothiesConfig(products.filter((product) => product.category == 'Smoothie').slice(0, 4))
+    }, [products])
+
     return (
         <div className='bg-[#ff679a] flex justify-center flex-col'>
             <div>
@@ -42,8 +50,8 @@ const Smoothies = () => {
                         <SmoothieItem
                             key={index}
                             index={index}
-                            name={smoothie.name}
-                            image={smoothie.image}
+                            name={smoothie.title}
+                            image={smoothie.imageUrl}
                         />
                     ))}
                 </div>
