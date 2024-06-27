@@ -79,7 +79,13 @@ const Checkout = () => {
         }
     };
 
-    const topayment = () => {
+    const topayment = (e) => {
+        e.preventDefault();
+        if(formData.your_email == '' || formData.your_email == '' || formData.gym_name == '' || formData.phone == '')
+        {
+            toast.error('Please fill all the fields')
+           return
+        }
         setAddress(formData);
         navigate('/cart/checkout/payment')
     }
