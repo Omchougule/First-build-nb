@@ -5,7 +5,7 @@ import { useUserContext } from '../../context/Authcontext';
 const OrderConfirmation = () => {
     const {address} = useUserContext()
     const {id} = useParams()
-    const [paymentMethod, setPaymentMethod] = useState(() => localStorage.getItem('paymentMethod') || '');
+    const [paymentMethod, setPaymentMethod] = useState('Online');
     const [selectedAddress, setSelectedAddress] = useState({
         name: '',
         address: '',
@@ -13,27 +13,23 @@ const OrderConfirmation = () => {
     });
 
     useEffect(() => {
-        localStorage.setItem('paymentMethod', paymentMethod);
-    }, [paymentMethod]);
-
-    useEffect(() => {
         setSelectedAddress(address);
     }, []);
 
 
 
-    const getPaymentMethodDescription = useMemo(() => {
-        return (method) => {
-            switch (method) {
-                case 'credit-card':
-                    return 'Credit Card';
-                case 'pay-on-delivery':
-                    return 'Payment on Delivery';
-                default:
-                    return 'No payment method selected';
-            }
-        };
-    }, []);
+    // const getPaymentMethodDescription = useMemo(() => {
+    //     return (method) => {
+    //         switch (method) {
+    //             case 'credit-card':
+    //                 return 'Credit Card';
+    //             case 'pay-on-delivery':
+    //                 return 'Payment on Delivery';
+    //             default:
+    //                 return 'No payment method selected';
+    //         }
+    //     };
+    // }, []);
 
 
     const randomId = Math.random().toString(16).substring(2, 8) + Math.random().toString(16).substring(2, 8);
@@ -66,7 +62,7 @@ const OrderConfirmation = () => {
                         </dl>
                         <dl className="sm:flex items-center justify-between gap-4">
                             <dt className="font-normal mb-1 sm:mb-0 text-gray-500 light:text-gray-400">Payment Method</dt>
-                            <dd className="font-medium text-gray-900 light:text-white sm:text-end">{getPaymentMethodDescription(paymentMethod)}</dd>
+                            <dd className="font-medium text-gray-900 light:text-white sm:text-end">{paymentMethod}</dd>
                         </dl>
                         <dl className="sm:flex items-center justify-between gap-4">
                             <dt className="font-normal mb-1 sm:mb-0 text-gray-500 light:text-gray-400">Name</dt>

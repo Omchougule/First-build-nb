@@ -14,6 +14,7 @@ import Address from './models/addresses.js'
 import Orders from './models/orders.js'
 import DiscountCode from './models/code.js'
 import Reviews from './models/review.js'
+import Contact from './models/contact.js';
 
 dotenv.config();
 
@@ -797,6 +798,39 @@ app.post('/authpayment', async (req, res) => {
         success : false
       })
   }
+  } catch (error) {
+    console.log(error);
+  }
+})
+
+// ------------------------------------------------Feedback-----------------------------------------------------
+
+app.post('/contact', async(req,res) => {
+  try {
+    const {email, message} = req.body
+    const msg = await Contact.create({email, message})
+    if(msg)
+    {
+      res.json({
+        success : true,
+        data : msg
+      })
+    }
+    else
+    {
+      res.json({
+        success : false
+      })
+    }
+  } catch (error) {
+    console.log(error);
+  }
+})
+
+app.get('/getcontact',async (req,res) => {
+  try {
+    const msg = await Contact.find()
+    res.json(msg)
   } catch (error) {
     console.log(error);
   }

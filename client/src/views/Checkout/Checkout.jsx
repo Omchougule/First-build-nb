@@ -8,14 +8,14 @@ import axios from 'axios';
 
 
 const Checkout = () => {
-    const {user, summary, order, setAddress} = useUserContext()
+    const { user, summary, order, setAddress } = useUserContext()
     const [orderSummary, setOrderSummary] = useState(null);
     const [addresses, setAddresses] = useState([]);
     const [formData, setFormData] = useState({
         your_name: '',
         your_email: '',
-        country: 'United States',
-        city: 'San Francisco',
+        // country: 'United States',
+        // city: 'San Francisco',
         gym_name: '',
         phone: ''
     });
@@ -24,25 +24,21 @@ const Checkout = () => {
 
     useEffect(() => {
         setOrderSummary(summary);
-        if(order.length == 0 )
-        {
+        if (order.length == 0) {
             navigate('/cart')
         }
     }, []);
 
     useEffect(() => {
-       if(user?.id) 
-       {
+        if (user?.id) {
             getAdd()
-       }
-       localStorage.removeItem('selectedAddress')
+        }
     }, [user?.id]);
 
 
-    const getAdd = async () =>{
-        const res = await axios.post('http://localhost:5000/getadd', {userId : user?.id})
-        if(res.data.success)
-        {
+    const getAdd = async () => {
+        const res = await axios.post('http://localhost:5000/getadd', { userId: user?.id })
+        if (res.data.success) {
             const storedAddresses = JSON.parse(res.data.data?.address)
             setAddresses(storedAddresses);
         }
@@ -57,7 +53,7 @@ const Checkout = () => {
     };
 
     const handleAddressSelect = (index) => {
-        if(index == "select")
+        if (index == "select")
             return
         setFormData(addresses[index]);
     };
@@ -71,9 +67,8 @@ const Checkout = () => {
             const updatedAddresses = [...addresses, formData];
             // localStorage.setItem('addresses', JSON.stringify(updatedAddresses));
             toast.success('Address added successfully');
-            const res = await axios.post('http://localhost:5000/address', {userId : user.id, addresses : updatedAddresses})
-            if(res.data.success)
-            {
+            const res = await axios.post('http://localhost:5000/address', { userId: user.id, addresses: updatedAddresses })
+            if (res.data.success) {
                 getAdd()
             }
         }
@@ -81,10 +76,9 @@ const Checkout = () => {
 
     const topayment = (e) => {
         e.preventDefault();
-        if(formData.your_email == '' || formData.your_email == '' || formData.gym_name == '' || formData.phone == '')
-        {
+        if (formData.your_name == '' || formData.your_email == '' || formData.gym_name == '' || formData.phone == '') {
             toast.error('Please fill all the fields')
-           return
+            return
         }
         setAddress(formData);
         navigate('/cart/checkout/payment')
@@ -183,7 +177,7 @@ const Checkout = () => {
                                                         required
                                                     />
                                                 </div>
-                                                <div>
+                                                {/* <div>
                                                     <div className="mb-2 flex items-center gap-2">
                                                         <label htmlFor="country" className="block text-sm font-medium text-gray-900 light:text-white">Country*</label>
                                                     </div>
@@ -216,8 +210,8 @@ const Checkout = () => {
                                                         <option value="Madrid">Madrid</option>
                                                         <option value="London">London</option>
                                                     </select>
-                                                </div>
-                                                <div>
+                                                </div> */}
+                                                {/* <div>
                                                     <label htmlFor="gym_name" className="mb-2 block text-sm font-medium text-gray-900 light:text-white">Gym name</label>
                                                     <input
                                                         type="text"
@@ -228,6 +222,28 @@ const Checkout = () => {
                                                         placeholder="Flowbite Fitness"
                                                         required
                                                     />
+                                                </div> */}
+                                                <div>
+                                                    <div className="mb-2 flex items-center gap-2">
+                                                        <label htmlFor="city" className="block text-sm font-medium text-gray-900 light:text-white">Gym*</label>
+                                                    </div>
+                                                    <select
+                                                        id="gym_name"
+                                                        value={formData.gym_name}
+                                                        onChange={handleChange}
+                                                        className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-green-500 focus:ring-green-500 light:border-gray-600 light:bg-gray-700 light:text-white light:placeholder:text-gray-400 light:focus:border-green-500 light:focus:ring-green-500"
+                                                    >
+                                                        <option value="">Select</option>
+                                                        <option value="Faat to fit">Faat to fit</option>
+                                                        <option value="body guru">body guru</option>
+                                                        <option value="thopte">thopte</option>
+                                                        <option value="universal fitness">universal fitness</option>
+                                                        <option value="oxygen">oxygen</option>
+                                                        <option value="Spartans gym">Spartans gym</option>
+                                                        <option value="sparx gym">sparx gym</option>
+                                                        <option value="Golds gym">Golds gym</option>
+                                                        <option value="Fitness evongue">Fitness evongue</option>
+                                                    </select>
                                                 </div>
                                                 <div>
                                                     <label htmlFor="phone" className="mb-2 block text-sm font-medium text-gray-900 light:text-white">Phone number</label>
@@ -256,59 +272,59 @@ const Checkout = () => {
 
                                         </form>
 
-                                        </div>
-
-
-
-
                                     </div>
-                                </div>
-                            </div>
 
-                            {/* Order Summary */}
-                            <div className="mt-6 w-full space-y-6 sm:mt-8 lg:mt-0 lg:max-w-xs xl:max-w-md">
-                                <div className="flow-root">
-                                    <div className="-my-3 divide-y divide-gray-200 light:divide-gray-800">
-                                        {orderSummary && (
-                                            <>
-                                                <dl className="flex items-center justify-between gap-4 py-3">
-                                                    <dt className="text-base font-normal text-gray-500 light:text-gray-400">Subtotal</dt>
-                                                    <dd className="text-base font-medium text-gray-900 light:text-white">${orderSummary.originalPrice.toFixed(2)}</dd>
-                                                </dl>
 
-                                                <dl className="flex items-center justify-between gap-4 py-3">
-                                                    <dt className="text-base font-normal text-gray-500 light:text-gray-400">Savings</dt>
-                                                    <dd className="text-base font-medium text-green-500">-{orderSummary.discountedAmmount}</dd>
-                                                </dl>
 
-                                                <dl className="flex items-center justify-between gap-4 py-3">
-                                                    <dt className="text-base font-normal text-gray-500 light:text-gray-400">Store Pickup</dt>
-                                                    <dd className="text-base font-medium text-gray-900 light:text-white">${orderSummary.storePickup.toFixed(2)}</dd>
-                                                </dl>
 
-                                                <dl className="flex items-center justify-between gap-4 py-3">
-                                                    <dt className="text-base font-normal text-gray-500 light:text-gray-400">Tax</dt>
-                                                    <dd className="text-base font-medium text-gray-900 light:text-white">${orderSummary.tax.toFixed(2)}</dd>
-                                                </dl>
-
-                                                <dl className="flex items-center justify-between gap-4 py-3">
-                                                    <dt className="text-base font-bold text-gray-900 light:text-white">Total</dt>
-                                                    <dd className="text-base font-bold text-gray-900 light:text-white">${orderSummary.finalTotal.toFixed(2)}</dd>
-                                                </dl>
-                                            </>
-                                        )}
-                                    </div>
-                                </div>
-
-                                <div className="space-y-3">
-                                    
-                                        <button onClick={topayment} type="submit" className="flex w-full items-center justify-center rounded-lg bg-green-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-green-800 focus:outline-none focus:ring-4  focus:ring-green-300 light:bg-green-600 light:hover:bg-green-700 light:focus:ring-green-800">Proceed to Payment</button>
-                                    
-
-                                    <p className="text-sm font-normal text-gray-500 light:text-gray-400">One or more items in your cart require an account. <a href="#" title="" className="font-medium text-green-700 underline hover:no-underline light:text-green-500">Sign in or create an account now.</a>.</p>
                                 </div>
                             </div>
                         </div>
+
+                        {/* Order Summary */}
+                        <div className="mt-6 w-full space-y-6 sm:mt-8 lg:mt-0 lg:max-w-xs xl:max-w-md">
+                            <div className="flow-root">
+                                <div className="-my-3 divide-y divide-gray-200 light:divide-gray-800">
+                                    {orderSummary && (
+                                        <>
+                                            <dl className="flex items-center justify-between gap-4 py-3">
+                                                <dt className="text-base font-normal text-gray-500 light:text-gray-400">Subtotal</dt>
+                                                <dd className="text-base font-medium text-gray-900 light:text-white">${orderSummary.originalPrice.toFixed(2)}</dd>
+                                            </dl>
+
+                                            <dl className="flex items-center justify-between gap-4 py-3">
+                                                <dt className="text-base font-normal text-gray-500 light:text-gray-400">Savings</dt>
+                                                <dd className="text-base font-medium text-green-500">-{orderSummary.discountedAmmount}</dd>
+                                            </dl>
+
+                                            <dl className="flex items-center justify-between gap-4 py-3">
+                                                <dt className="text-base font-normal text-gray-500 light:text-gray-400">Store Pickup</dt>
+                                                <dd className="text-base font-medium text-gray-900 light:text-white">${orderSummary.storePickup.toFixed(2)}</dd>
+                                            </dl>
+
+                                            <dl className="flex items-center justify-between gap-4 py-3">
+                                                <dt className="text-base font-normal text-gray-500 light:text-gray-400">Tax</dt>
+                                                <dd className="text-base font-medium text-gray-900 light:text-white">${orderSummary.tax.toFixed(2)}</dd>
+                                            </dl>
+
+                                            <dl className="flex items-center justify-between gap-4 py-3">
+                                                <dt className="text-base font-bold text-gray-900 light:text-white">Total</dt>
+                                                <dd className="text-base font-bold text-gray-900 light:text-white">${orderSummary.finalTotal.toFixed(2)}</dd>
+                                            </dl>
+                                        </>
+                                    )}
+                                </div>
+                            </div>
+
+                            <div className="space-y-3">
+
+                                <button onClick={topayment} type="submit" className="flex w-full items-center justify-center rounded-lg bg-green-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-green-800 focus:outline-none focus:ring-4  focus:ring-green-300 light:bg-green-600 light:hover:bg-green-700 light:focus:ring-green-800">Proceed to Payment</button>
+
+
+                                <p className="text-sm font-normal text-gray-500 light:text-gray-400">One or more items in your cart require an account. <a href="#" title="" className="font-medium text-green-700 underline hover:no-underline light:text-green-500">Sign in or create an account now.</a>.</p>
+                            </div>
+                        </div>
+                    </div>
                 </form>
             </section>
 

@@ -84,8 +84,8 @@ const Payment = () => {
 
     const handlePayment = async () => {
         try {
-            const randomId = Math.random().toString(16).substring(2, 8) + Math.random().toString(16).substring(2, 8);
-            const address = selectedAddress.gym_name + ', ' + selectedAddress.city + ', ' + selectedAddress.country;
+            // const randomId = Math.random().toString(16).substring(2, 8) + Math.random().toString(16).substring(2, 8);
+            const address = selectedAddress.gym_name; {/*+ ', ' + selectedAddress.city + ', ' + selectedAddress.country*/}
 
             order.forEach((item) => {
                 products.forEach((product) => {
