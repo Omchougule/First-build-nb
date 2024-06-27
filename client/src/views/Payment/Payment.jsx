@@ -200,13 +200,13 @@ const Payment = () => {
                                         htmlFor="credit-card"
                                         className="font-medium leading-none text-gray-900 light:text-white"
                                     >
-                                        Credit Card
+                                        Online
                                     </label>
                                     <p
                                         id="credit-card-text"
                                         className="mt-1 text-xs font-normal text-gray-500 light:text-gray-400"
                                     >
-                                        Pay with your credit card
+                                        Pay with RazorPay
                                     </p>
                                 </div>
                             </div>
