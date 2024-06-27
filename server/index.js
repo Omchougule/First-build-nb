@@ -3,6 +3,7 @@ import cors from 'cors';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import { v4 as uuidv4 } from 'uuid';
+import Razorpay from 'razorpay'
 
 import User from './models/user.js';
 import Products from './models/product.js';
@@ -26,7 +27,7 @@ const userN = encodeURIComponent("AmitKumbhar4_24")
 const connectDB = async () => {
     try {
       
-        await mongoose.connect("mongodb+srv://nandurkarom172:Pass%40123@cluster0.jkq4ihm.mongodb.net/");
+        await mongoose.connect("mongodb+srv://nandurkarom172:Pass%40123@cluster0.jkq4ihm.mongodb.net/nutribites");
         // await mongoose.connect(`mongodb+srv://${userN}:${pass}@cluster0.qkvogem.mongodb.net/Nutribites?retryWrites=true&w=majority&appName=Cluster0`);
         console.log('Database Connected');
     } catch (error) {
@@ -758,5 +759,30 @@ app.get('/getreviews', async (req,res) => {
     }
   } catch (error) {
     console.log(error);
+  }
+})
+
+
+// --------------------------------------------------------------payment--------------------------------------------------
+
+const razorpay = new Razorpay({
+  key_id: 'rzp_test_lq1pO46Zam0Zpz',
+  key_secret: 'xRYssCTOb3Anpg3yBiRDCOlP'
+});
+
+app.post('/paymentorder', async (req,res) => {
+  try {
+    const { amount, currency, receipt, notes } = req.body;
+    const options = {
+      amount: amount * 100, // amount in the smallest currency unit (paise for INR)
+      currency,
+      receipt,
+      notes
+    };
+    const order = await razorpay.orders.create(options);
+    res.json(order);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Internal Server Error');
   }
 })

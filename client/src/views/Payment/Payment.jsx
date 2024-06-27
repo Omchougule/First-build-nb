@@ -86,10 +86,52 @@ const Payment = () => {
         setPaymentMethod(event.target.value);
     };
 
-    const handleSubmit = (event) => {
-        event.preventDefault();
-        localStorage.setItem('paymentMethod', paymentMethod);
-    };
+    const handlePayment = async () => {
+        try {
+          const { data } = await axios.post('http://localhost:5000/paymentorder', {
+            amount: 500,
+            currency: 'INR',
+            receipt: 'receipt#1',
+            notes: {
+              key1: 'value3',
+              key2: 'value2'
+            }
+          });
+    
+          if (!data || !data.id) {
+            throw new Error('Failed to create Razorpay order');
+          }
+    
+          const options = {
+            key: 'rzp_test_lq1pO46Zam0Zpz', // Enter the Key ID generated from the Dashboard
+            amount: data.amount,
+            currency: data.currency,
+            name: 'Your Company Name',
+            description: 'Test Transaction',
+            order_id: data.id,
+            handler: function (response) {
+              alert(`Payment successful. Razorpay Payment ID: ${response.razorpay_payment_id}`);
+            },
+            prefill: {
+              name: 'Gaurav Kumar',
+              email: 'gaurav.kumar@example.com',
+              contact: '9999999999'
+            },
+            notes: {
+              address: 'Razorpay Corporate Office'
+            },
+            theme: {
+              color: '#F37254'
+            }
+          };
+    
+          const rzp1 = new window.Razorpay(options);
+          rzp1.open();
+        } catch (error) {
+          console.error('Error opening Razorpay checkout:', error);
+          alert('Oops! Something went wrong while opening Razorpay checkout.');
+        }
+      };
 
     return (
         <>
@@ -170,7 +212,7 @@ const Payment = () => {
 
                     <div className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2">
                         {paymentMethod === 'credit-card' && (
-                            <form onSubmit={handleSubmit} action="#" className="w-full rounded-lg border border-gray-200 bg-white p-4 shadow-md light:border-gray-700 light:bg-gray-800 sm:p-6 lg:max-w-xl lg:p-8">
+                            <form onSubmit={handlePayment} action="#" className="w-full rounded-lg border border-gray-200 bg-white p-4 shadow-md light:border-gray-700 light:bg-gray-800 sm:p-6 lg:max-w-xl lg:p-8">
                                 <div className="mb-6 grid grid-cols-2 gap-4">
                                     <div className="col-span-2 sm:col-span-1">
                                         <label htmlFor="full_name" className="mb-2 block text-sm font-medium text-gray-900 light:text-white"> Full name (as displayed on card)* </label>
@@ -205,6 +247,7 @@ const Payment = () => {
                                 <button type="submit" className="w-full rounded-lg bg-green-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-green-800 focus:outline-none focus:ring-4 focus:ring-green-300 light:bg-green-600 light:hover:bg-green-700 light:focus:ring-green-800 sm:w-auto">
                                     Confirm Your Payment Method
                                 </button>
+                                <button onClick={handlePayment}>pay</button>
                             </form>
                         )}
 
