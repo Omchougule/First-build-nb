@@ -14,7 +14,7 @@ export default function ProductDetail() {
   const [products, setProducts] = useState([]);
   const [isloading, setIsloading] = useState(true);
   const [isLiked, setIsLiked] = useState(false);
-  const [favourites, setFavourites] = useState([]);
+  const [favlist, setFavlist] = useState([]);
   const [product, setProduct] = useState(null);
 
   const navigate = useNavigate()
@@ -42,10 +42,15 @@ export default function ProductDetail() {
       .then((res)=>{
         if(res.data.success == true)
         {
-          const fav = res.data.favourites.split(', ')
-          setFavourites(fav)
-          if(fav.includes(id))
-            setIsLiked(true)
+          const fav = res.data.favourites
+          fav.forEach((favprod)=>{
+            if(favprod.proId == id)
+            {
+              setIsLiked(true)
+              return
+            }
+          })
+          setFavlist(fav)
         }
       })
       .catch((err) => {
@@ -104,38 +109,45 @@ export default function ProductDetail() {
   }
 
   const handleAddToFavorites = () => {
-  //   let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
-  //   const isProductInFavorites = favorites.some(item => item.imageUrl === product.imageUrl);
-  if(user?.id)
-  {
-    let updatedFavourites = [];
-    if(!isLiked)
+    let newlist = []
+    
+    if(isLiked)
     {
-      updatedFavourites = [...favourites, id];
-      setFavourites(updatedFavourites);
-      setIsLiked(true);
-      setIsLiked(!isLiked);
-    } 
+      newlist = favlist.filter((pro)=>pro.proId != id)
+      setFavlist(newlist)
+      setIsLiked(false)
+    }
     else
     {
-      console.log(typeof(favourites));
-      const updatedFavourites = favourites.filter(item => item !== id);
-      setFavourites(updatedFavourites);
-      setIsLiked(false);
+      const favourites = {
+          proId : id,
+          imageUrl : product.imageUrl,
+          title : product.title,
+          description : product.description,
+      }
+      if(favlist)
+      {
+        newlist = [...favlist]
+      }
+      newlist.push(favourites)
+      setFavlist(newlist)
+      setIsLiked(true)
     }
-    axios.post('http://localhost:5000/addfav',{userId : user.id, favourites : updatedFavourites})
+
+    axios.post('http://localhost:5000/addfav',{userId : user.id, favourites : newlist})
     .then((response) => {
-      
+      if(response.data.success)
+      {
+        
+      }
+      else
+      {
+        toast.error("Something went wrong")
+      }
     })
     .catch((error) => {
       console.log(error);
     })
-
-  }
-  else
-  {
-    toast.error("Please login first !")
-  }
 
     // if (isProductInFavorites) {
     //   // If the product is already in the favorites, display a toast message

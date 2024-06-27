@@ -33,27 +33,29 @@ import { useUserContext } from '../../../context/Authcontext';
 // ];
 
 const MealItem = ({ meal, index }) => (
-  <div
-    className='bg-yellow-400 h-72 px-10 w-full flex justify-center items-center rounded-md shadow-md space-x-5'
-    data-aos={index % 2 === 0 ? "fade-right" : "fade-left"}
-  >
-    <div className="bg-white h-56 w-44 rounded-md flex justify-center items-center">
-      <img src={meal.imageUrl} alt={meal.title} className="h-full w-full object-cover rounded-md" />
+  <Link to={`/product/${meal._id}`}>
+    <div
+      className='bg-yellow-400 h-72 px-10 w-full flex justify-center items-center rounded-md shadow-md space-x-5'
+      data-aos={index % 2 === 0 ? "fade-right" : "fade-left"}
+    >
+      <div className="bg-white h-56 w-44 rounded-md flex justify-center items-center">
+        <img src={meal.imageUrl} alt={meal.title} className="h-full w-full object-cover rounded-md" />
+      </div>
+      <div className="bg-black h-56 w-96 rounded-md p-5 text-white flex flex-col justify-around">
+        <h2 className="text-2xl font-bold ">{meal.title}</h2>
+        <p className="mt-2">{meal.description}</p>
+      </div>
     </div>
-    <div className="bg-black h-56 w-96 rounded-md p-5 text-white flex flex-col justify-around">
-      <h2 className="text-2xl font-bold ">{meal.title}</h2>
-      <p className="mt-2">{meal.description}</p>
-    </div>
-  </div>
+  </Link>
 );
 
 const Meals = () => {
 
-  const {products} = useUserContext()
+  const { products } = useUserContext()
   const [mealConfig, setMealConfig] = useState([])
-  useEffect(()=>{
-    setMealConfig(products.filter((product) => product.category == 'Meals').slice(0,4))
-  },[products])
+  useEffect(() => {
+    setMealConfig(products.filter((product) => product.category == 'Meals').slice(0, 4))
+  }, [products])
   return (
     <div className='bg-[#f76d3c]  flex justify-center flex-col'>
       <div>

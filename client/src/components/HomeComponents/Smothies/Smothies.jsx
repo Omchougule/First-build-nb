@@ -10,22 +10,24 @@ import { useUserContext } from '../../../context/Authcontext';
 //     { name: 'Citrus Sunshine', image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR4ioUI7dO2ZEDWUDCzsUkLYAG-Kv1uUYwMPA&s' },
 // ];
 
-const SmoothieItem = ({ index, name, image }) => (
-    <div className='space-y-6' data-aos={index < 2 ? "fade-right" : "fade-left"}>
-        <div
-            className='bg-yellow-400  flex justify-center items-center rounded-md shadow-lg space-x-5'
+const SmoothieItem = ({id, index, name, image }) => (
+    <Link to={`/product/${id}`}>
+        <div className='space-y-6' data-aos={index < 2 ? "fade-right" : "fade-left"}>
+            <div
+                className='bg-yellow-400  flex justify-center items-center rounded-md shadow-lg space-x-5'
 
-        >
-            <div className="bg-white hover:bg-[#5a2f96] duration-150 h-80 w-56 ease-in-out shadow-lg  rounded-md flex flex-col justify-center items-center overflow-hidden">
-                <img src={image} alt={name} className="h-full w-full object-cover hover:scale-110 transition duration-500" />
-                {/* <h2 className="text-lg font-semibold">{name}</h2> */}
+            >
+                <div className="bg-white hover:bg-[#5a2f96] duration-150 h-80 w-56 ease-in-out shadow-lg  rounded-md flex flex-col justify-center items-center overflow-hidden">
+                    <img src={image} alt={name} className="h-full w-full object-cover hover:scale-110 transition duration-500" />
+                    {/* <h2 className="text-lg font-semibold">{name}</h2> */}
+                </div>
+
             </div>
 
+            <h1 className='font-hand text-3xl text-center'>{name}</h1>
+
         </div>
-
-        <h1 className='font-hand text-3xl text-center'>{name}</h1>
-
-    </div>
+    </Link>
 );
 
 const Smoothies = () => {
@@ -52,6 +54,7 @@ const Smoothies = () => {
                             index={index}
                             name={smoothie.title}
                             image={smoothie.imageUrl}
+                            id={smoothie._id}
                         />
                     ))}
                 </div>

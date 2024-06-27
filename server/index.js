@@ -398,16 +398,26 @@ app.delete('/deleteproduct/:id', async (req, res) => {
 app.post('/addfav', async (req, res) => {
   try {
     const { userId, favourites } = req.body
-    const fav_string = favourites.join(', ');
-    const fav = await Favourite.findOne({ userId });
-    if (fav) {
-      fav.favourites = fav_string;
-      await fav.save();
-      res.json({ success: true })
+    const user = await Favourite.findOne({userId})
+    if(user)
+    {
+        user.favourites = favourites
+        user.save()
+
+        res.json({
+        success : true,
+          })
     }
     else {
-      await Favourite.create({ userId, favourites: fav_string });
-      res.json({ success: true })
+      const fav = new Favourite({
+        userId : userId,
+        favourites : favourites
+      })
+      fav.save()
+      res.json({
+        success: true,
+        favourites: fav.favourites
+      })
     }
   } catch (error) {
     console.log(error);

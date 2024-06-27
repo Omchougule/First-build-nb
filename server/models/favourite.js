@@ -1,10 +1,19 @@
 import {model, Schema} from "mongoose";
 
-const productschema = new Schema({
+const ProductSchema = new Schema(
+    {
+        proId : String,
+        imageUrl : String,
+        title : String,
+        description : String,
+    }
+  );
+
+const FavouriteSchema = new Schema({
     userId: String,
-    favourites : String
+    favourites : [ProductSchema]
 })
 
-const Favourite = model("favourites", productschema);
+const Favourite = model("favourites", FavouriteSchema);
 
 export default Favourite;
