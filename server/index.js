@@ -15,6 +15,7 @@ import Orders from './models/orders.js'
 import DiscountCode from './models/code.js'
 import Reviews from './models/review.js'
 import Contact from './models/contact.js';
+import Gyms from './models/gym.js';
 
 dotenv.config();
 
@@ -859,5 +860,53 @@ app.get('/getcontact',async (req,res) => {
     res.json(msg)
   } catch (error) {
     console.log(error);
+  }
+})
+
+// --------------------------------------------------Gyms----------------------------------------------------------
+
+app.post('/addgym', async (req,res) => {
+  try {
+    const {gymlist} = req.body;
+    const gyms = await Gyms.findOne()
+    if(!gyms)
+    {
+      const gyms = Gyms.create({gyms: gymlist});
+      res.json(gyms);
+    }
+    else
+    {
+      gyms.gyms = gymlist
+      gyms.save()
+      res.json({
+        success: true,
+        data: gyms.gyms
+      })
+    }
+    
+  } catch (error) {
+    console.log(error);
+  }
+})
+
+app.get('/getgyms', async (req, res) => {
+  try {
+    const gyms = await Gyms.findOne()
+    if(gyms.gyms.length > 0)
+    {
+      res.json({
+        success: true,
+        data: gyms.gyms
+      })
+    }
+    else
+    {
+      res.json({
+        success: false,
+        data: []
+      })
+    }
+  } catch (error) {
+    console.error(error);
   }
 })
