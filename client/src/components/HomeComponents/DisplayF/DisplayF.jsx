@@ -22,9 +22,9 @@ const DisplayF = () => {
 
                         <img className='w-20 animate-shake animate-infinite animate-duration-[6000ms]  ' src="https://faryita.wpengine.com/wp-content/uploads/2024/03/Mint-leaves-Img.png" alt="" />
                     </div>
-                    <h1 className='  leading-loose text-shadow-sm  text-shadow text-shadow-white text-shadow-x-1   font-extrabold text-[#ffc935] text-6xl md:p-0 pe-5  md:text-9xl mb-10 font-title italic text-center' >Healthy <br /> <span className='text-[#3596C9] '>Smoothies </span>
+                    <h1 className='  leading-loose text-shadow-sm  text-shadow text-shadow-white text-shadow-x-1   font-extrabold text-[#fde047] text-6xl md:p-0 pe-5  md:text-9xl mb-10 font-title italic text-center' >Healthy <br /> <span className='text-[#fde047] '>Smoothies </span>
 
-                        & <br /> <span className='text-[#b4c817]'>Appetizers</span>
+                       <span className='text-[#b4c817]'> &</span> <br /> <span className='text-[#fde047]'>Appetizers</span>
                     </h1>
                     <div className='w-full flex justify-start'>
 

@@ -289,27 +289,27 @@ const Checkout = () => {
                                         <>
                                             <dl className="flex items-center justify-between gap-4 py-3">
                                                 <dt className="text-base font-normal text-gray-500 light:text-gray-400">Subtotal</dt>
-                                                <dd className="text-base font-medium text-gray-900 light:text-white">${orderSummary.originalPrice.toFixed(2)}</dd>
+                                                <dd className="text-base font-medium text-gray-900 light:text-white">&#8377;{orderSummary.originalPrice.toFixed(2)}</dd>
                                             </dl>
 
                                             <dl className="flex items-center justify-between gap-4 py-3">
                                                 <dt className="text-base font-normal text-gray-500 light:text-gray-400">Savings</dt>
-                                                <dd className="text-base font-medium text-green-500">-{orderSummary.discountedAmmount}</dd>
+                                                <dd className="text-base font-medium text-green-500">-&#8377;{orderSummary.discountedAmmount}</dd>
                                             </dl>
 
                                             <dl className="flex items-center justify-between gap-4 py-3">
                                                 <dt className="text-base font-normal text-gray-500 light:text-gray-400">Store Pickup</dt>
-                                                <dd className="text-base font-medium text-gray-900 light:text-white">${orderSummary.storePickup.toFixed(2)}</dd>
+                                                <dd className="text-base font-medium text-gray-900 light:text-white">&#8377;{orderSummary.storePickup.toFixed(2)}</dd>
                                             </dl>
 
                                             <dl className="flex items-center justify-between gap-4 py-3">
                                                 <dt className="text-base font-normal text-gray-500 light:text-gray-400">Tax</dt>
-                                                <dd className="text-base font-medium text-gray-900 light:text-white">${orderSummary.tax.toFixed(2)}</dd>
+                                                <dd className="text-base font-medium text-gray-900 light:text-white">&#8377;{orderSummary.tax.toFixed(2)}</dd>
                                             </dl>
 
                                             <dl className="flex items-center justify-between gap-4 py-3">
                                                 <dt className="text-base font-bold text-gray-900 light:text-white">Total</dt>
-                                                <dd className="text-base font-bold text-gray-900 light:text-white">${orderSummary.finalTotal.toFixed(2)}</dd>
+                                                <dd className="text-base font-bold text-gray-900 light:text-white">&#8377;{orderSummary.finalTotal.toFixed(2)}</dd>
                                             </dl>
                                         </>
                                     )}
