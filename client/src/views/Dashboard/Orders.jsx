@@ -81,7 +81,7 @@ const Orders = () => {
                                         </dl>
                                         <dl className="w-1/2 sm:w-1/4 lg:w-auto lg:flex-1">
                                             <dt className="text-base font-medium text-gray-500">Price:</dt>
-                                            <dd className="mt-1.5 text-base font-semibold text-gray-900">{`₹${product.paymentAmount}`}</dd>
+                                            <dd className="mt-1.5 text-base font-semibold text-gray-900">{` ₹ ${product.paymentAmount}`}</dd>
                                         </dl>
                                         <dl className="w-1/2 sm:w-1/4 lg:w-auto lg:flex-1">
                                             <dt className="text-base font-medium text-gray-500">Status:</dt>
