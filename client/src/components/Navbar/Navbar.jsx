@@ -8,6 +8,7 @@ import { useGSAP } from "@gsap/react";
 import { useUserContext } from '../../context/Authcontext';
 import CartIcon from '../../assets/cart-icon.png';
 import Logo from '../../assets/Logo.png';
+import Logo2 from "/LightBG-Straw.svg"
 
 const Navbar = () => {
     // const [user, setUser] = useState(null);
@@ -69,7 +70,7 @@ const Navbar = () => {
                 <div className="flex items-center justify-between py-3 md:py-5 md:block">
                     <div className="flex items-center space-x-2">
                         <Link to="/" className="flex items-center  space-x-3 font-hand ">
-                            <img className="w-12 drop-shadow-2xlxl navbar-logo " src={Logo} alt="Logo" />
+                            <img className="w-12 drop-shadow-2xlxl navbar-logo " src={Logo2} alt="Logo" />
                             <h1 className="text-2xl font-semibold  translate-y-1 tracking-widest">NUTRIBITES</h1>
                         </Link>
                     </div>
