@@ -8,23 +8,33 @@ import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
 
 
-const addToFavorites = (product) => {
-    const favorites = JSON.parse(localStorage.getItem('favorites')) || [];
 
-    const isProductInFavorites = favorites.some(item => item.imageUrl === product.imageUrl);
-
-    if (isProductInFavorites) {
-        toast.error("Product is already in Favorites!");
-    } else {
-        favorites.push(product);
-        localStorage.setItem('favorites', JSON.stringify(favorites));
-        toast.success("Product added to Favorites!");
-    }
-};
-
-const ProductCartItem = ({ imageUrl, initialQuantity, price, description, onQuantityChange, productName, removeFromCart }) => {
+const ProductCartItem = ({ imageUrl, initialQuantity, price, description, onQuantityChange, productName, removeFromCart, productId }) => {
+    const { user } = useUserContext();
     const [quantity, setQuantity] = useState(parseInt(initialQuantity));
     const [isLiked, setIsLiked] = useState(false);
+    const [favlist, setFavlist] = useState([])
+    useEffect(()=>{
+        axios.post('http://localhost:5000/getfav', {userId : user?.id})
+          .then((res)=>{
+            if(res.data.success == true)
+            {
+              const fav = res.data.favourites
+              fav.forEach((favprod)=>{
+                if(favprod.proId == productId)
+                {
+                  setIsLiked(true)
+                  return
+                }
+              })
+              setFavlist(fav)
+            }
+          })
+          .catch((err) => {
+            console.log(err);
+          })
+    },[user?.id])
+
     const decreaseQuantity = () => {
         if (quantity > 1) {
             setQuantity(quantity - 1);
@@ -39,9 +49,51 @@ const ProductCartItem = ({ imageUrl, initialQuantity, price, description, onQuan
         }
     };
 
+    const addToFavorites = () => {
+        let newlist = []
+        
+        if(isLiked)
+        {
+          newlist = favlist.filter((pro)=>pro.proId != productId)
+          setFavlist(newlist)
+          setIsLiked(false)
+        }
+        else
+        {
+          const favourites = {
+              proId : productId,
+              imageUrl : imageUrl,
+              title : productName,
+              description : description,
+          }
+          if(favlist)
+          {
+            newlist = [...favlist]
+          }
+          newlist.push(favourites)
+          setFavlist(newlist)
+          setIsLiked(true)
+        }
+    
+        axios.post('http://localhost:5000/addfav',{userId : user.id, favourites : newlist})
+        .then((response) => {
+          if(response.data.success)
+          {
+            
+          }
+          else
+          {
+            toast.error("Something went wrong")
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        })
+    };
+    
+
     const handleAddToFavorites = () => {
-        addToFavorites({ imageUrl, initialQuantity, price, productName, description });
-        setIsLiked(!isLiked);
+        addToFavorites();
     };
 
     return (
@@ -260,6 +312,7 @@ const Cart = () => {
                                         description={product.description}
                                         onQuantityChange={(newQuantity) => updateItemQuantity(product.proId, newQuantity)}
                                         removeFromCart={() => removeFromCart(product.proId)}
+                                        productId={product.proId}
                                     />
                                 ))}
                             </div>

@@ -45,7 +45,8 @@ const OrderConfirmation = () => {
     localStorage.setItem('todayDate', todayDate);
 
 
-    const add = selectedAddress.gym_name + ', ' + selectedAddress.city + ', ' + selectedAddress.country;
+    const add = selectedAddress.gym_name 
+    // + ', ' + selectedAddress.city + ', ' + selectedAddress.country;
 
     return (
         <>

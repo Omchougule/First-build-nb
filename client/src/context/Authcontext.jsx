@@ -26,6 +26,7 @@ const INITIAL_STATE = {
   setSummary: (summary) => { },
   setIsAuthenticated: (val) => { },
   checkAuthUser: async () => false,
+  fetchProducts: async () => false,
   setAddress: (address) => { },
   setProducts: (products) => { }
 }

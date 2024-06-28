@@ -66,8 +66,6 @@ const TrackOrder = () => {
 
     useEffect(() => {
         getorder()
-        // const storedOrderSummary = JSON.parse(localStorage.getItem('orderSummary')) || null;
-        // setOrderSummary(storedOrderSummary);
     }, []);
 
     const clearOrderSummaryAndNavigate = () => {

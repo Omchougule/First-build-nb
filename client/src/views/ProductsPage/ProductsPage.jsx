@@ -4,11 +4,16 @@ import Aos from 'aos';
 import 'aos/dist/aos.css'
 import { useEffect } from 'react';
 import Navbar from '../../components/Navbar/Navbar';
+import { useUserContext } from '../../context/Authcontext';
 
 const ProductsPage = () => {
-
+  const {fetchProducts, products} = useUserContext()
   useEffect(() => {
     Aos.init({ duration: 1000, delay: 300 });
+    if(products == [])
+    {
+      fetchProducts()
+    }
   })
 
   // useEffect(() => {
