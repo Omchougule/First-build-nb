@@ -394,6 +394,32 @@ app.delete('/deleteproduct/:id', async (req, res) => {
   }
 })
 
+app.post('/editproduct', async (req,res) => {
+  try {
+    const {id, title, imageUrl, description, price} = req.body
+    const product = await Products.findOne({_id : id})
+    if(product)
+    {
+      product.description = description
+      product.title = title
+      product.imageUrl = imageUrl
+      product.price = price
+      await product.save()
+      res.json({
+        success : true,
+        data : product
+      })
+    }
+    else
+    {
+      res.json({
+        success : false
+      })
+    }
+  } catch (error) {
+    console.log(error);
+  }
+})
 //-----------------------------------------------------Favorites----------------------->
 
 app.post('/addfav', async (req, res) => {
