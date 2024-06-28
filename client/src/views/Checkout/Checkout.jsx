@@ -19,10 +19,19 @@ const Checkout = () => {
         gym_name: '',
         phone: ''
     });
+    const [gyms, setGyms] = useState([])
 
     const navigate = useNavigate()
 
+    const getGym = async () => {
+        const res = await axios.get('http://localhost:5000/getgyms')
+        if (res.data.success) {
+            setGyms(res.data.data)
+        }
+    }
+
     useEffect(() => {
+        getGym()
         setOrderSummary(summary);
         if (order.length == 0) {
             navigate('/cart')
@@ -232,9 +241,9 @@ const Checkout = () => {
                                                         value={formData.gym_name}
                                                         onChange={handleChange}
                                                         className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-green-500 focus:ring-green-500 light:border-gray-600 light:bg-gray-700 light:text-white light:placeholder:text-gray-400 light:focus:border-green-500 light:focus:ring-green-500"
-                                                    >
-                                                        <option value="">Select</option>
-                                                        <option value="Faat to fit">Faat to fit</option>
+                                                        >
+                                                        <option value="">Select</option>    
+                                                        {/* <option value="Faat to fit">Faat to fit</option>
                                                         <option value="body guru">body guru</option>
                                                         <option value="thopte">thopte</option>
                                                         <option value="universal fitness">universal fitness</option>
@@ -242,7 +251,13 @@ const Checkout = () => {
                                                         <option value="Spartans gym">Spartans gym</option>
                                                         <option value="sparx gym">sparx gym</option>
                                                         <option value="Golds gym">Golds gym</option>
-                                                        <option value="Fitness evongue">Fitness evongue</option>
+                                                        <option value="Fitness evongue">Fitness evongue</option> */}
+                                                        {gyms.map((gym)=>{
+                                                            return(
+                                                                <option value={gym}>{gym}</option>
+                                                            )
+                                                        })}
+
                                                     </select>
                                                 </div>
                                                 <div>
